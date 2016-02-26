@@ -1,11 +1,13 @@
 package com.ratik.unsplashify.ui;
 
+import android.app.NotificationManager;
 import android.app.WallpaperManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Display;
@@ -40,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
     private Photo photo;
 
     int screenWidth;
+
+    int mNotificationId = 001;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -164,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(MainActivity.this, "Wallpaper set!", Toast.LENGTH_LONG).show();
+                            notifyUser();
                         }
                     });
                 } catch (IOException e) {
@@ -174,5 +178,16 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void notifyUser() {
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(MainActivity.this)
+                        .setSmallIcon(R.drawable.ic_launcher)
+                        .setContentTitle("New Wallpaper!")
+                        .setContentText("Photo by " + photo.getName())
+                        .setContentIntent(null);
 
+        NotificationManager mNotifyMgr =
+                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        mNotifyMgr.notify(mNotificationId, mBuilder.build());
+    }
 }
