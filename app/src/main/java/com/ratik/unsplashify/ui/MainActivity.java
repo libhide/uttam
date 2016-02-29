@@ -1,193 +1,81 @@
 package com.ratik.unsplashify.ui;
 
-import android.app.NotificationManager;
-import android.app.WallpaperManager;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Point;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.NotificationCompat;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
+import android.widget.ImageView;
 
 import com.ratik.unsplashify.Constants;
-import com.ratik.unsplashify.Keys;
+import com.ratik.unsplashify.NotificationReceiver;
 import com.ratik.unsplashify.R;
-import com.ratik.unsplashify.model.Photo;
-import com.ratik.unsplashify.utils.BitmapUtils;
+import com.ratik.unsplashify.utils.FileUtils;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
-
-    private Photo photo;
+    private static final int WALLPAPER_NOTIF_PENDING_INTENT_ID = 1;
 
     int screenWidth;
-
-    int mNotificationId = 001;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
-        Button button = (Button) findViewById(R.id.testButton);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getRandomPhoto();
-            }
-        });
+        Intent intent = getIntent();
 
-        getScreenSize();
-    }
+        if (!intent.hasExtra("from_intent")) {
+            setContentView(R.layout.activity_main);
 
-    private void getRandomPhoto() {
-        String randomUrl = Constants.BASE_URL + Keys.API_KEY;
-        OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder()
-                .url(randomUrl)
-                .build();
+            saveScreenSize();
 
-        Call call = client.newCall(request);
-        call.enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                try {
-                    String jsonData = response.body().string();
-                    if (response.isSuccessful()) {
-                        photo = parsePhoto(jsonData);
-                        new SetWallpaperTask().execute();
-                    } else {
-                        // ERROR
-                    }
-                } catch (IOException e) {
-                    Log.e(TAG, "Exception caught: ", e);
-                } catch (JSONException e) {
-                    Log.e(TAG, "Exception caught: ", e);
+            Button test = (Button) findViewById(R.id.testButton);
+            test.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    setNotification();
                 }
-            }
-        });
+            });
+        } else {
+            setContentView(R.layout.activity_main_show);
+
+            ImageView image = (ImageView) findViewById(R.id.wallpaper);
+            Bitmap wallpaper = FileUtils.getImageBitmap(this, "wallpaper", "png");
+            image.setImageBitmap(wallpaper);
+        }
     }
 
-    private void getScreenSize() {
+    private void setNotification() {
+        Calendar calendar = Calendar.getInstance();
+
+        Intent intent = new Intent(this, NotificationReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,
+                WALLPAPER_NOTIF_PENDING_INTENT_ID, intent, 0);
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC, calendar.getTimeInMillis(), pendingIntent);
+    }
+
+    private void saveScreenSize() {
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
         screenWidth = size.x;
 
-        // Log.i(TAG, "Screen width " + screenWidth + "px");
-    }
-
-    private Photo parsePhoto(String jsonData) throws JSONException {
-        Photo p = new Photo();
-        JSONObject object = new JSONObject(jsonData);
-
-        p.setWidth(object.getInt(Constants.CONST_WIDTH));
-        p.setHeight(object.getInt(Constants.CONST_HEIGHT));
-        p.setColor(object.getString(Constants.CONST_COLOR));
-
-        JSONObject urls = object.getJSONObject(Constants.CONST_URLS);
-        p.setUrlFull(urls.getString(Constants.CONST_URLS_FULL));
-        p.setUrlRegular(urls.getString(Constants.CONST_URLS_REGULAR));
-        p.setUrlSmall(urls.getString(Constants.CONST_URLS_SMALL));
-        p.setUrlThumb(urls.getString(Constants.CONST_URLS_THUMB));
-
-        JSONObject user = object.getJSONObject(Constants.CONST_USER);
-        p.setName(user.getString(Constants.CONST_NAME));
-
-        return p;
-    }
-
-    private class SetWallpaperTask extends AsyncTask<Void, Void, Void> {
-        private Bitmap bitmap;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(MainActivity.this, "Fetching wallpaper...",
-                            Toast.LENGTH_LONG).show();
-                }
-            });
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            try {
-                URL url;
-                if (screenWidth <= 720) {
-                    url = new URL(photo.getUrlRegular());
-                } else {
-                    url = new URL(photo.getUrlFull());
-                }
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setDoInput(true);
-                connection.connect();
-                InputStream input = connection.getInputStream();
-                bitmap = BitmapFactory.decodeStream(input);
-            } catch (IOException e) {
-                Log.e(TAG, "Exception caught: ", e);
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void v) {
-            super.onPostExecute(v);
-            if (bitmap != null) {
-                try {
-                    bitmap = BitmapUtils.cropBitmapFromCenterAndScreenSize(MainActivity.this, bitmap);
-                    WallpaperManager.getInstance(MainActivity.this).setBitmap(bitmap);
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            notifyUser();
-                        }
-                    });
-                } catch (IOException e) {
-                    Log.e(TAG, "Exception caught: ", e);
-                }
-            }
-        }
-    }
-
-    private void notifyUser() {
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(MainActivity.this)
-                        .setSmallIcon(R.drawable.ic_launcher)
-                        .setContentTitle("New Wallpaper!")
-                        .setContentText("Photo by " + photo.getName())
-                        .setContentIntent(null);
-
-        NotificationManager mNotifyMgr =
-                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        mNotifyMgr.notify(mNotificationId, mBuilder.build());
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putInt(Constants.SCREEN_WIDTH, screenWidth);
+        editor.apply();
     }
 }
