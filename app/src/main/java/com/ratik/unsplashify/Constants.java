@@ -24,6 +24,8 @@ public class Constants {
     public static final String CONST_NAME = "name";
 
     // Preference constants
-    public static final String SCREEN_WIDTH = "refresh_interval";
+    public static final String FIRST_RUN = "first_run";
+    public static final String SCREEN_WIDTH = "screen_width";
+    public static final String ALARM_SET = "alarm_set";
     public static final String PREF_REFRESH_INTERVAL = "refresh_interval";
 }

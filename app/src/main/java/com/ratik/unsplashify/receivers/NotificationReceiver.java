@@ -1,4 +1,4 @@
-package com.ratik.unsplashify;
+package com.ratik.unsplashify.receivers;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -14,8 +14,12 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.ratik.unsplashify.Constants;
+import com.ratik.unsplashify.Keys;
+import com.ratik.unsplashify.R;
 import com.ratik.unsplashify.model.Photo;
 import com.ratik.unsplashify.ui.MainActivity;
+import com.ratik.unsplashify.ui.ShowActivity;
 import com.ratik.unsplashify.utils.BitmapUtils;
 import com.ratik.unsplashify.utils.FileUtils;
 
@@ -165,8 +169,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 
     private void notifyUser(Bitmap wallpaper) {
         // Content Intent
-        Intent intent = new Intent(context, MainActivity.class);
-        intent.putExtra("from_intent", true);
+        Intent intent = new Intent(context, ShowActivity.class);
 
         // Content PendingIntent
         PendingIntent showWallpaperIntent = PendingIntent.getActivity(context,

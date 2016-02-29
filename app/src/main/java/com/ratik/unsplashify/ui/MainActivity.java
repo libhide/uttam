@@ -11,14 +11,14 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Display;
-import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.ratik.unsplashify.Constants;
-import com.ratik.unsplashify.NotificationReceiver;
 import com.ratik.unsplashify.R;
+import com.ratik.unsplashify.receivers.NotificationReceiver;
 import com.ratik.unsplashify.utils.FileUtils;
+import com.ratik.unsplashify.utils.Utils;
 
 import java.util.Calendar;
 
@@ -27,29 +27,31 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int WALLPAPER_NOTIF_PENDING_INTENT_ID = 1;
 
-    int screenWidth;
+    private int screenWidth;
+    private Bitmap wallpaper;
+    private int refreshInterval;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Intent intent = getIntent();
+        // Save the screen width for later use
+        saveScreenSize();
 
-        if (!intent.hasExtra("from_intent")) {
+        // Retrieve refresh interval
+        refreshInterval = Utils.getRefreshInterval(this);
+
+        wallpaper = FileUtils.getImageBitmap(this, "wallpaper", "png");
+        if (wallpaper == null) {
             setContentView(R.layout.activity_main);
-
-            saveScreenSize();
-
-            Button test = (Button) findViewById(R.id.testButton);
-            test.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    setNotification();
-                }
-            });
+            if (!Utils.isAlarmSet(this)) {
+                // Set the notification
+                setNotification();
+            } else {
+                // TODO: Show countdown to wallpaper fetch
+            }
         } else {
             setContentView(R.layout.activity_main_show);
-
             ImageView image = (ImageView) findViewById(R.id.wallpaper);
             Bitmap wallpaper = FileUtils.getImageBitmap(this, "wallpaper", "png");
             image.setImageBitmap(wallpaper);
@@ -57,14 +59,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setNotification() {
+        Toast.makeText(this, "Setting fetch alarm", Toast.LENGTH_LONG).show();
         Calendar calendar = Calendar.getInstance();
+        int minutes = calendar.get(Calendar.MINUTE);
+        calendar.set(Calendar.MINUTE, minutes + refreshInterval);
 
         Intent intent = new Intent(this, NotificationReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this,
                 WALLPAPER_NOTIF_PENDING_INTENT_ID, intent, 0);
 
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC, calendar.getTimeInMillis(), pendingIntent);
+        alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(),
+                refreshInterval * 60 * 1000, pendingIntent);
+
+        // Saving alarm-set state
+        Utils.setAlarmState(this, true);
     }
 
     private void saveScreenSize() {
