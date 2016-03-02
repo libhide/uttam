@@ -29,6 +29,15 @@
             android:theme="@style/AppTheme.Fullscreen" />
 
         <receiver android:name=".receivers.NotificationReceiver" />
+        <receiver
+            android:name=".receivers.RebootReceiver"
+            android:enabled="true"
+            android:exported="true"
+            android:label="RebootFixer">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
 
     </application>
 

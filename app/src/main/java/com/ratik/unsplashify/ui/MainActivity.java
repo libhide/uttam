@@ -28,7 +28,7 @@ import java.util.Calendar;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
-    private static final int WALLPAPER_NOTIF_PENDING_INTENT_ID = 1;
+    public static final int WALLPAPER_NOTIF_PENDING_INTENT_ID = 1;
 
     private int screenWidth;
     private Bitmap wallpaper;
@@ -109,6 +109,11 @@ public class MainActivity extends AppCompatActivity {
 
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         if (Utils.getRefreshInterval(this).equals("daily")) {
+            // Setting calendar to 7 AM
+            calendar.set(Calendar.HOUR_OF_DAY, 7);
+            calendar.set(Calendar.MINUTE, 0);
+            calendar.set(Calendar.SECOND, 0);
+
             alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(),
                     AlarmManager.INTERVAL_DAY, pendingIntent);
         } else {
