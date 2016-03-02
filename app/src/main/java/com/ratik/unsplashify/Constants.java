@@ -15,10 +15,8 @@ public class Constants {
     public static final String CONST_COLOR = "color";
 
     public static final String CONST_URLS = "urls";
-    public static final String CONST_URLS_FULL = "full";
-    public static final String CONST_URLS_REGULAR = "regular";
-    public static final String CONST_URLS_SMALL = "small";
-    public static final String CONST_URLS_THUMB = "thumb";
+    public static final String CONST_URL_FULL = "full";
+    public static final String CONST_URL_REGULAR = "regular";
 
     public static final String CONST_USER = "user";
     public static final String CONST_NAME = "name";

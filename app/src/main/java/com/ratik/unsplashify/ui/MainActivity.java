@@ -4,20 +4,21 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Point;
+import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Display;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.ratik.unsplashify.Constants;
 import com.ratik.unsplashify.R;
 import com.ratik.unsplashify.receivers.NotificationReceiver;
 import com.ratik.unsplashify.utils.FileUtils;
+import com.ratik.unsplashify.utils.PhotoUtils;
 import com.ratik.unsplashify.utils.Utils;
 
 import java.util.Calendar;
@@ -52,9 +53,38 @@ public class MainActivity extends AppCompatActivity {
             }
         } else {
             setContentView(R.layout.activity_main_show);
+
+            // Get photo data
+            final String photoUrlFull = PhotoUtils.getFullUrl(this);
+            final String photoUrlRegular = PhotoUtils.getRegularUrl(this);
+            String photographer = PhotoUtils.getPhotographerName(this);
+
+            // Set ImageView
             ImageView image = (ImageView) findViewById(R.id.wallpaper);
             Bitmap wallpaper = FileUtils.getImageBitmap(this, "wallpaper", "png");
             image.setImageBitmap(wallpaper);
+
+            final Intent viewInBrowserIntent = new Intent(Intent.ACTION_VIEW);
+            Button viewButton = (Button) findViewById(R.id.viewButton);
+            viewButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (photoUrlFull.isEmpty() || photoUrlRegular.isEmpty()) {
+                        // TODO: handle error
+                    } else {
+                        if (screenWidth > 720) {
+                            viewInBrowserIntent.setData(Uri.parse(photoUrlFull));
+                        } else {
+                            viewInBrowserIntent.setData(Uri.parse(photoUrlRegular));
+                        }
+                        startActivity(viewInBrowserIntent);
+                    }
+                }
+            });
+
+            // Settings
+            Button settingsButton = (Button) findViewById(R.id.settingsButton);
+            settingsButton.setVisibility(View.VISIBLE);
         }
     }
 
@@ -82,9 +112,6 @@ public class MainActivity extends AppCompatActivity {
         display.getSize(size);
         screenWidth = size.x;
 
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putInt(Constants.SCREEN_WIDTH, screenWidth);
-        editor.apply();
+        Utils.setScreenWidth(this, screenWidth);
     }
 }

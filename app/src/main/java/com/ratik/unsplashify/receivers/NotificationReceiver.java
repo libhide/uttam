@@ -5,11 +5,9 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
@@ -18,10 +16,11 @@ import com.ratik.unsplashify.Constants;
 import com.ratik.unsplashify.Keys;
 import com.ratik.unsplashify.R;
 import com.ratik.unsplashify.model.Photo;
-import com.ratik.unsplashify.ui.MainActivity;
 import com.ratik.unsplashify.ui.ShowActivity;
 import com.ratik.unsplashify.utils.BitmapUtils;
 import com.ratik.unsplashify.utils.FileUtils;
+import com.ratik.unsplashify.utils.PhotoUtils;
+import com.ratik.unsplashify.utils.Utils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -55,14 +54,9 @@ public class NotificationReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         this.context = context;
-        screenWidth = getScreenWidth();
+        screenWidth = Utils.getScreenWidth(context);
 
         getRandomPhoto();
-    }
-
-    private int getScreenWidth() {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        return sp.getInt(Constants.SCREEN_WIDTH, 1080);
     }
 
     private void getRandomPhoto() {
@@ -109,13 +103,11 @@ public class NotificationReceiver extends BroadcastReceiver {
         p.setColor(object.getString(Constants.CONST_COLOR));
 
         JSONObject urls = object.getJSONObject(Constants.CONST_URLS);
-        p.setUrlFull(urls.getString(Constants.CONST_URLS_FULL));
-        p.setUrlRegular(urls.getString(Constants.CONST_URLS_REGULAR));
-        p.setUrlSmall(urls.getString(Constants.CONST_URLS_SMALL));
-        p.setUrlThumb(urls.getString(Constants.CONST_URLS_THUMB));
+        p.setUrlFull(urls.getString(Constants.CONST_URL_FULL));
+        p.setUrlRegular(urls.getString(Constants.CONST_URL_REGULAR));
 
         JSONObject user = object.getJSONObject(Constants.CONST_USER);
-        p.setName(user.getString(Constants.CONST_NAME));
+        p.setPhotographer(user.getString(Constants.CONST_NAME));
 
         return p;
     }
@@ -162,6 +154,11 @@ public class NotificationReceiver extends BroadcastReceiver {
             // Save to internal storage
             FileUtils.saveImage(context, wallpaper, "wallpaper", "png");
 
+            // Save photo data into SharedPrefs
+            PhotoUtils.setFullUrl(context, photo.getUrlFull());
+            PhotoUtils.setRegularUrl(context, photo.getUrlRegular());
+            PhotoUtils.setPhotographerName(context, photo.getPhotographer());
+
             // Send Notification
             notifyUser(wallpaper);
         }
@@ -181,7 +178,7 @@ public class NotificationReceiver extends BroadcastReceiver {
                         .setLargeIcon(wallpaper)
                         .setAutoCancel(true)
                         .setContentTitle("New Wallpaper!")
-                        .setContentText("Photo by " + photo.getName())
+                        .setContentText("Photo by " + photo.getPhotographer())
                         .setStyle(new NotificationCompat.BigPictureStyle()
                                 .bigPicture(wallpaper)
                                 .setBigContentTitle("New Wallpaper!"))

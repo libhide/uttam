@@ -12,10 +12,8 @@ public class Photo implements Parcelable {
     private String color;
     private String urlFull;
     private String urlRegular;
-    private String urlSmall;
-    private String urlThumb;
     private String user;
-    private String name;
+    private String photographer;
 
     public Photo() {
         // Default constructor
@@ -61,22 +59,6 @@ public class Photo implements Parcelable {
         this.urlRegular = urlRegular;
     }
 
-    public String getUrlSmall() {
-        return urlSmall;
-    }
-
-    public void setUrlSmall(String urlSmall) {
-        this.urlSmall = urlSmall;
-    }
-
-    public String getUrlThumb() {
-        return urlThumb;
-    }
-
-    public void setUrlThumb(String urlThumb) {
-        this.urlThumb = urlThumb;
-    }
-
     public String getUser() {
         return user;
     }
@@ -85,12 +67,12 @@ public class Photo implements Parcelable {
         this.user = user;
     }
 
-    public String getName() {
-        return name;
+    public String getPhotographer() {
+        return photographer;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setPhotographer(String photographer) {
+        this.photographer = photographer;
     }
 
 
@@ -106,10 +88,8 @@ public class Photo implements Parcelable {
         dest.writeString(this.color);
         dest.writeString(this.urlFull);
         dest.writeString(this.urlRegular);
-        dest.writeString(this.urlSmall);
-        dest.writeString(this.urlThumb);
         dest.writeString(this.user);
-        dest.writeString(this.name);
+        dest.writeString(this.photographer);
     }
 
     protected Photo(Parcel in) {
@@ -118,10 +98,8 @@ public class Photo implements Parcelable {
         this.color = in.readString();
         this.urlFull = in.readString();
         this.urlRegular = in.readString();
-        this.urlSmall = in.readString();
-        this.urlThumb = in.readString();
         this.user = in.readString();
-        this.name = in.readString();
+        this.photographer = in.readString();
     }
 
     public static final Parcelable.Creator<Photo> CREATOR = new Parcelable.Creator<Photo>() {

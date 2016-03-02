@@ -11,6 +11,9 @@ import com.ratik.unsplashify.Constants;
  */
 public class Utils {
 
+    public static final int PHONE_1080 = 1;
+    public static final int PHONE_720 = 2;
+
     public static void setFirstRun(Context context, boolean value) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = sp.edit();
@@ -45,5 +48,17 @@ public class Utils {
     public static boolean isAlarmSet(Context context) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         return sp.getBoolean(Constants.ALARM_SET, false);
+    }
+
+    public static void setScreenWidth(Context context, int value) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putInt(Constants.SCREEN_WIDTH, value);
+        editor.apply();
+    }
+
+    public static int getScreenWidth(Context context) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        return sp.getInt(Constants.SCREEN_WIDTH, 1080);
     }
 }
