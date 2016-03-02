@@ -10,7 +10,6 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.ratik.unsplashify.Constants;
 import com.ratik.unsplashify.Keys;
@@ -60,7 +59,7 @@ public class NotificationReceiver extends BroadcastReceiver {
     }
 
     private void getRandomPhoto() {
-        Toast.makeText(context, "Getting random photo", Toast.LENGTH_LONG).show();
+        // Toast.makeText(context, "Getting random photo", Toast.LENGTH_LONG).show();
 
         String randomUrl = Constants.BASE_URL + Keys.API_KEY;
         OkHttpClient client = new OkHttpClient();
@@ -127,7 +126,7 @@ public class NotificationReceiver extends BroadcastReceiver {
                 }
 
                 // For Testing
-                url = new URL(photo.getUrlRegular());
+                // url = new URL(photo.getUrlRegular());
 
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setDoInput(true);

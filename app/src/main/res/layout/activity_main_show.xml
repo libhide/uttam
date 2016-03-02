@@ -16,22 +16,39 @@
         style="?android:attr/borderlessButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="10dp"
         android:text="View in Browser"
-        android:textSize="14sp"
-        android:textColor="@android:color/white" />
+        android:textColor="@android:color/white"
+        android:textSize="14sp" />
 
     <Button
         android:id="@+id/settingsButton"
         style="?android:attr/borderlessButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
         android:text="Settings"
+        android:textColor="@android:color/white"
         android:textSize="14sp"
-        android:visibility="invisible"
-        android:textColor="@android:color/white" />
+        android:visibility="invisible" />
+
+    <Button
+        android:id="@+id/wallpaperSetButton"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:text="Set as Wallpaper"
+        android:textColor="@android:color/white"
+        android:textSize="14sp" />
 
 </RelativeLayout>

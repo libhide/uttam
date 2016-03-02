@@ -1,11 +1,13 @@
 package com.ratik.unsplashify.ui;
 
+import android.app.WallpaperManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -15,10 +17,14 @@ import com.ratik.unsplashify.utils.FileUtils;
 import com.ratik.unsplashify.utils.PhotoUtils;
 import com.ratik.unsplashify.utils.Utils;
 
+import java.io.IOException;
+
 /**
  * Created by Ratik on 29/02/16.
  */
 public class ShowActivity extends AppCompatActivity {
+
+    private static final String TAG = ShowActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -31,7 +37,7 @@ public class ShowActivity extends AppCompatActivity {
         String photographer = PhotoUtils.getPhotographerName(this);
 
         ImageView image = (ImageView) findViewById(R.id.wallpaper);
-        Bitmap wallpaper = FileUtils.getImageBitmap(this, "wallpaper", "png");
+        final Bitmap wallpaper = FileUtils.getImageBitmap(this, "wallpaper", "png");
         image.setImageBitmap(wallpaper);
 
         final Intent viewInBrowserIntent = new Intent(Intent.ACTION_VIEW);
@@ -48,6 +54,20 @@ public class ShowActivity extends AppCompatActivity {
                         viewInBrowserIntent.setData(Uri.parse(photoUrlRegular));
                     }
                     startActivity(viewInBrowserIntent);
+                }
+            }
+        });
+
+        // Set Wallpaper Button
+        Button setWallpaperButton = (Button) findViewById(R.id.wallpaperSetButton);
+        setWallpaperButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Set wallpaper
+                try {
+                    WallpaperManager.getInstance(ShowActivity.this).setBitmap(wallpaper);
+                } catch (IOException e) {
+                    Log.e(TAG, "Exception caught: ", e);
                 }
             }
         });

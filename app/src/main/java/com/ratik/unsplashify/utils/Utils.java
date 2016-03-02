@@ -26,16 +26,16 @@ public class Utils {
         return sp.getBoolean(Constants.FIRST_RUN, true);
     }
 
-    public static void setRefreshInterval(Context context, int value) {
+    public static void setRefreshInterval(Context context, String value) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = sp.edit();
-        editor.putInt(Constants.PREF_REFRESH_INTERVAL, value);
+        editor.putString(Constants.PREF_REFRESH_INTERVAL, value);
         editor.apply();
     }
 
-    public static int getRefreshInterval(Context context) {
+    public static String getRefreshInterval(Context context) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        return sp.getInt(Constants.PREF_REFRESH_INTERVAL, 5);
+        return sp.getString(Constants.PREF_REFRESH_INTERVAL, "daily");
     }
 
     public static void setAlarmState(Context context, boolean value) {

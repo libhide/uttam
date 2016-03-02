@@ -2,6 +2,7 @@ package com.ratik.unsplashify.ui;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -9,11 +10,11 @@ import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.ratik.unsplashify.R;
 import com.ratik.unsplashify.receivers.NotificationReceiver;
@@ -21,6 +22,7 @@ import com.ratik.unsplashify.utils.FileUtils;
 import com.ratik.unsplashify.utils.PhotoUtils;
 import com.ratik.unsplashify.utils.Utils;
 
+import java.io.IOException;
 import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
@@ -30,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
 
     private int screenWidth;
     private Bitmap wallpaper;
-    private int refreshInterval;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,9 +39,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Save the screen width for later use
         saveScreenSize();
-
-        // Retrieve refresh interval
-        refreshInterval = Utils.getRefreshInterval(this);
 
         wallpaper = FileUtils.getImageBitmap(this, "wallpaper", "png");
         if (wallpaper == null) {
@@ -61,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
 
             // Set ImageView
             ImageView image = (ImageView) findViewById(R.id.wallpaper);
-            Bitmap wallpaper = FileUtils.getImageBitmap(this, "wallpaper", "png");
+            final Bitmap wallpaper = FileUtils.getImageBitmap(this, "wallpaper", "png");
             image.setImageBitmap(wallpaper);
 
             final Intent viewInBrowserIntent = new Intent(Intent.ACTION_VIEW);
@@ -85,25 +83,44 @@ public class MainActivity extends AppCompatActivity {
             // Settings
             Button settingsButton = (Button) findViewById(R.id.settingsButton);
             settingsButton.setVisibility(View.VISIBLE);
+
+            // Set Wallpaper Button
+            Button setWallpaperButton = (Button) findViewById(R.id.wallpaperSetButton);
+            setWallpaperButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Set wallpaper
+                    try {
+                        WallpaperManager.getInstance(MainActivity.this).setBitmap(wallpaper);
+                    } catch (IOException e) {
+                        Log.e(TAG, "Exception caught: ", e);
+                    }
+                }
+            });
         }
     }
 
     private void setNotification() {
-        Toast.makeText(this, "Setting fetch alarm", Toast.LENGTH_LONG).show();
         Calendar calendar = Calendar.getInstance();
-        int minutes = calendar.get(Calendar.MINUTE);
-        calendar.set(Calendar.MINUTE, minutes + refreshInterval);
 
         Intent intent = new Intent(this, NotificationReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this,
                 WALLPAPER_NOTIF_PENDING_INTENT_ID, intent, 0);
 
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(),
-                refreshInterval * 60 * 1000, pendingIntent);
+        if (Utils.getRefreshInterval(this).equals("daily")) {
+            alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(),
+                    AlarmManager.INTERVAL_DAY, pendingIntent);
+        } else {
+            alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(),
+                    AlarmManager.INTERVAL_DAY * 7, pendingIntent);
+        }
 
         // Saving alarm-set state
         Utils.setAlarmState(this, true);
+
+        // Finish Activity
+        finish();
     }
 
     private void saveScreenSize() {
