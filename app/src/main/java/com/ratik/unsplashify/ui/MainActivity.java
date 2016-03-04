@@ -108,18 +108,24 @@ public class MainActivity extends AppCompatActivity {
                 WALLPAPER_NOTIF_PENDING_INTENT_ID, intent, 0);
 
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        if (Utils.getRefreshInterval(this).equals("daily")) {
-            // Setting calendar to 7 AM
-            calendar.set(Calendar.HOUR_OF_DAY, 7);
-            calendar.set(Calendar.MINUTE, 0);
-            calendar.set(Calendar.SECOND, 0);
+//        if (Utils.getRefreshInterval(this).equals("daily")) {
+//            // Setting calendar to 7 AM
+//            calendar.set(Calendar.HOUR_OF_DAY, 7);
+//            calendar.set(Calendar.MINUTE, 0);
+//            calendar.set(Calendar.SECOND, 0);
+//
+//            alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(),
+//                    AlarmManager.INTERVAL_DAY, pendingIntent);
+//        } else {
+//            alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(),
+//                    AlarmManager.INTERVAL_DAY * 7, pendingIntent);
+//        }
 
-            alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(),
-                    AlarmManager.INTERVAL_DAY, pendingIntent);
-        } else {
-            alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(),
-                    AlarmManager.INTERVAL_DAY * 7, pendingIntent);
-        }
+        // For testing
+        long INTERVAL_ONE_MINUTE = 60 * 1000;
+        calendar.set(Calendar.SECOND, 0);
+        alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(),
+                INTERVAL_ONE_MINUTE, pendingIntent);
 
         // Saving alarm-set state
         Utils.setAlarmState(this, true);
