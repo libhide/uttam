@@ -141,7 +141,7 @@ public class GetPhotoService extends Service {
                 }
 
                 // For Testing
-                 url = new URL(photo.getUrlRegular());
+                // url = new URL(photo.getUrlRegular());
 
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setDoInput(true);
