@@ -28,6 +28,7 @@ public class RebootReceiver extends BroadcastReceiver {
         }
     }
 
+    // TODO: improve this logic
     private void setNotification() {
         Calendar calendar = Calendar.getInstance();
 
