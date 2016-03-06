@@ -1,4 +1,4 @@
-package com.ratik.unsplashify.ui;
+package com.ratik.uttam.ui;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -16,11 +16,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
-import com.ratik.unsplashify.R;
-import com.ratik.unsplashify.receivers.NotificationReceiver;
-import com.ratik.unsplashify.utils.FileUtils;
-import com.ratik.unsplashify.utils.PhotoUtils;
-import com.ratik.unsplashify.utils.Utils;
+import com.ratik.uttam.R;
+import com.ratik.uttam.receivers.NotificationReceiver;
+import com.ratik.uttam.utils.FileUtils;
+import com.ratik.uttam.utils.PhotoUtils;
+import com.ratik.uttam.utils.Utils;
 
 import java.io.IOException;
 import java.util.Calendar;

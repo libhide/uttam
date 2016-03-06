@@ -1,4 +1,4 @@
-package com.ratik.unsplashify.receivers;
+package com.ratik.uttam.receivers;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -6,9 +6,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.ratik.unsplashify.services.GetPhotoService;
-import com.ratik.unsplashify.ui.MainActivity;
-import com.ratik.unsplashify.utils.NetworkUtils;
+import com.ratik.uttam.services.GetPhotoService;
+import com.ratik.uttam.ui.MainActivity;
+import com.ratik.uttam.utils.NetworkUtils;
 
 import java.util.Calendar;
 

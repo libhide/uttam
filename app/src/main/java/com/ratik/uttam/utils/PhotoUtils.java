@@ -1,9 +1,9 @@
-package com.ratik.unsplashify.utils;
+package com.ratik.uttam.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.ratik.unsplashify.Constants;
+import com.ratik.uttam.Constants;
 
 /**
  * Created by Ratik on 02/03/16.

@@ -1,4 +1,4 @@
-package com.ratik.unsplashify;
+package com.ratik.uttam;
 
 /**
  * Created by Ratik on 26/02/16.

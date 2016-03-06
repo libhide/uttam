@@ -1,4 +1,4 @@
-package com.ratik.unsplashify;
+package com.ratik.uttam;
 
 import org.junit.Test;
 

@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
-        tools:src="@drawable/dummy" />
+        tools:src="@drawable/uttam_hero" />
 
     <Button
         android:id="@+id/viewButton"

@@ -1,4 +1,4 @@
-package com.ratik.unsplashify.model;
+package com.ratik.uttam.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;

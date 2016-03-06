@@ -1,4 +1,4 @@
-package com.ratik.unsplashify.services;
+package com.ratik.uttam.services;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -13,15 +13,15 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import com.ratik.unsplashify.Constants;
-import com.ratik.unsplashify.Keys;
-import com.ratik.unsplashify.R;
-import com.ratik.unsplashify.model.Photo;
-import com.ratik.unsplashify.ui.ShowActivity;
-import com.ratik.unsplashify.utils.BitmapUtils;
-import com.ratik.unsplashify.utils.FileUtils;
-import com.ratik.unsplashify.utils.PhotoUtils;
-import com.ratik.unsplashify.utils.Utils;
+import com.ratik.uttam.Constants;
+import com.ratik.uttam.Keys;
+import com.ratik.uttam.R;
+import com.ratik.uttam.model.Photo;
+import com.ratik.uttam.ui.ShowActivity;
+import com.ratik.uttam.utils.BitmapUtils;
+import com.ratik.uttam.utils.FileUtils;
+import com.ratik.uttam.utils.PhotoUtils;
+import com.ratik.uttam.utils.Utils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -192,7 +192,7 @@ public class GetPhotoService extends Service {
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context)
-                        .setSmallIcon(R.drawable.ic_launcher)
+                        .setSmallIcon(R.mipmap.ic_launcher)
                         .setLargeIcon(wallpaper)
                         .setAutoCancel(true)
                         .setContentTitle("New Wallpaper!")

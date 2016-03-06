@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">Unsplashify</string>
+    <string name="app_name">uttam</string>
+    <string name="get_started_text">Get Started</string>
 </resources>

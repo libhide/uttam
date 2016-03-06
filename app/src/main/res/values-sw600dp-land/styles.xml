@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="UttamButton">
+        <item name="android:paddingTop">15dp</item>
+        <item name="android:paddingBottom">15dp</item>
+        <item name="android:layout_marginLeft">300dp</item>
+        <item name="android:layout_marginRight">300dp</item>
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+        <item name="android:background">@android:color/white</item>
+    </style>
+</resources>

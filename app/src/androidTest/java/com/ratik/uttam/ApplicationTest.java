@@ -1,4 +1,4 @@
-package com.ratik.unsplashify;
+package com.ratik.uttam;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

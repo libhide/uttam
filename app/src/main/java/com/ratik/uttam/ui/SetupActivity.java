@@ -1,4 +1,4 @@
-package com.ratik.unsplashify.ui;
+package com.ratik.uttam.ui;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -10,8 +10,8 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 
-import com.ratik.unsplashify.R;
-import com.ratik.unsplashify.utils.Utils;
+import com.ratik.uttam.R;
+import com.ratik.uttam.utils.Utils;
 
 /**
  * Created by Ratik on 29/02/16.
