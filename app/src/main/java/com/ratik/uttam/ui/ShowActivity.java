@@ -10,7 +10,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.ratik.uttam.R;
 import com.ratik.uttam.utils.FileUtils;
@@ -40,6 +42,10 @@ public class ShowActivity extends AppCompatActivity {
         final Bitmap wallpaper = FileUtils.getImageBitmap(this, "wallpaper", "png");
         image.setImageBitmap(wallpaper);
 
+        // Setup Textviews
+        TextView photographerTextView = (TextView) findViewById(R.id.photographerTextView);
+        photographerTextView.setText(photographer);
+
         final Intent viewInBrowserIntent = new Intent(Intent.ACTION_VIEW);
         Button viewButton = (Button) findViewById(R.id.viewButton);
         viewButton.setOnClickListener(new View.OnClickListener() {
@@ -59,7 +65,7 @@ public class ShowActivity extends AppCompatActivity {
         });
 
         // Set Wallpaper Button
-        Button setWallpaperButton = (Button) findViewById(R.id.wallpaperSetButton);
+        ImageButton setWallpaperButton = (ImageButton) findViewById(R.id.wallpaperSetButton);
         setWallpaperButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
