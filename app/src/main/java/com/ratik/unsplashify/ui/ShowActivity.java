@@ -69,6 +69,8 @@ public class ShowActivity extends AppCompatActivity {
                 } catch (IOException e) {
                     Log.e(TAG, "Exception caught: ", e);
                 }
+                // Finish the activity
+                finish();
             }
         });
     }

@@ -68,7 +68,7 @@ public class GetPhotoService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d(TAG, "Started the service");
+        Log.d(TAG, "Started the service :)");
         getRandomPhoto();
         return START_NOT_STICKY;
     }
