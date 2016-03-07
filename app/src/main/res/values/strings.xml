@@ -5,4 +5,9 @@
     <string name="content_desc_settings_button">Settings button</string>
     <string name="content_desc_uttam_hero">App\'s hero image</string>
     <string name="photographer_label">Photo by</string>
+    <string name="settings_label">Settings</string>
+    <string name="key_automatic_wallpaper_set">setWallpaperAuto</string>
+    <string name="title_automatic_wallpaper_set">Set Wallpaper Automatically</string>
+    <string name="summary_automatic_wallpaper_set">New wallpaper will be set automatically</string>
+    <string name="setting_text">Setting wallpaper...</string>
 </resources>

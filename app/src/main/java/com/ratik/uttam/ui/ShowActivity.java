@@ -1,13 +1,11 @@
 package com.ratik.uttam.ui;
 
-import android.app.WallpaperManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -15,11 +13,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ratik.uttam.R;
+import com.ratik.uttam.asyncs.SetWallpaperTask;
 import com.ratik.uttam.utils.FileUtils;
 import com.ratik.uttam.utils.PhotoUtils;
+import com.ratik.uttam.utils.PrefUtils;
 import com.ratik.uttam.utils.Utils;
-
-import java.io.IOException;
 
 /**
  * Created by Ratik on 29/02/16.
@@ -27,6 +25,9 @@ import java.io.IOException;
 public class ShowActivity extends AppCompatActivity {
 
     private static final String TAG = ShowActivity.class.getSimpleName();
+
+    // Preference variables
+    private boolean setWallpaperAutomatically;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -69,15 +70,18 @@ public class ShowActivity extends AppCompatActivity {
         setWallpaperButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Set wallpaper
-                try {
-                    WallpaperManager.getInstance(ShowActivity.this).setBitmap(wallpaper);
-                } catch (IOException e) {
-                    Log.e(TAG, "Exception caught: ", e);
-                }
+                new SetWallpaperTask(ShowActivity.this).execute(wallpaper);
                 // Finish the activity
                 finish();
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Get user prefs
+        setWallpaperAutomatically = PrefUtils.shouldSetWallpaperAutomatically(this);
     }
 }

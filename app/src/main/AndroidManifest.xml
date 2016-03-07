@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.ratik.uttam.ui.HeroActivity"
+            android:name=".ui.HeroActivity"
             android:theme="@style/AppTheme.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,17 +25,23 @@
         <activity android:name="ui.SetupActivity" />
 
         <activity
-            android:name="com.ratik.uttam.ui.MainActivity"
+            android:name=".ui.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Fullscreen" />
 
         <activity
-            android:name="com.ratik.uttam.ui.ShowActivity"
+            android:name=".ui.ShowActivity"
             android:theme="@style/AppTheme.Fullscreen" />
 
-        <receiver android:name="com.ratik.uttam.receivers.NotificationReceiver" />
+        <activity
+            android:name=".ui.SettingsActivity"
+            android:parentActivityName=".ui.MainActivity"
+            android:theme="@style/AppTheme.Fullscreen"
+            android:label="@string/settings_label" />
+
+        <receiver android:name=".receivers.NotificationReceiver" />
         <receiver
-            android:name="com.ratik.uttam.receivers.RebootReceiver"
+            android:name=".receivers.RebootReceiver"
             android:enabled="true"
             android:exported="true"
             android:label="RebootFixer">
@@ -44,7 +50,7 @@
             </intent-filter>
         </receiver>
 
-        <service android:name="com.ratik.uttam.services.GetPhotoService" />
+        <service android:name=".services.GetPhotoService" />
 
     </application>
 

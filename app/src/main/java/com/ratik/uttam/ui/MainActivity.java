@@ -13,7 +13,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.widget.Button;
@@ -22,10 +21,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ratik.uttam.R;
+import com.ratik.uttam.asyncs.SetWallpaperTask;
 import com.ratik.uttam.receivers.NotificationReceiver;
 import com.ratik.uttam.utils.BitmapUtils;
 import com.ratik.uttam.utils.FileUtils;
 import com.ratik.uttam.utils.PhotoUtils;
+import com.ratik.uttam.utils.PrefUtils;
 import com.ratik.uttam.utils.Utils;
 
 import java.io.IOException;
@@ -43,6 +44,9 @@ public class MainActivity extends AppCompatActivity {
     private int screenWidth;
     private Bitmap wallpaper;
     private boolean firstRun;
+
+    // Preference variables
+    private boolean setWallpaperAutomatically;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,23 +120,35 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Settings
-        ImageButton settingsButton = (ImageButton) findViewById(R.id.settingsButton);
-        settingsButton.setVisibility(View.VISIBLE);
-
         // Set Wallpaper Button
         ImageButton setWallpaperButton = (ImageButton) findViewById(R.id.wallpaperSetButton);
         setWallpaperButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Set wallpaper
-                try {
-                    WallpaperManager.getInstance(MainActivity.this).setBitmap(wallpaper);
-                } catch (IOException e) {
-                    Log.e(TAG, "Exception caught: ", e);
-                }
+                new SetWallpaperTask(MainActivity.this).execute(wallpaper);
             }
         });
+
+        // Settings
+        ImageButton settingsButton = (ImageButton) findViewById(R.id.settingsButton);
+        settingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Handle activity transition
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+
+        // Get user prefs
+        setWallpaperAutomatically = PrefUtils.shouldSetWallpaperAutomatically(this);
     }
 
     private void setNotification() {

@@ -16,11 +16,13 @@ import android.util.Log;
 import com.ratik.uttam.Constants;
 import com.ratik.uttam.Keys;
 import com.ratik.uttam.R;
+import com.ratik.uttam.asyncs.SetWallpaperTask;
 import com.ratik.uttam.model.Photo;
 import com.ratik.uttam.ui.ShowActivity;
 import com.ratik.uttam.utils.BitmapUtils;
 import com.ratik.uttam.utils.FileUtils;
 import com.ratik.uttam.utils.PhotoUtils;
+import com.ratik.uttam.utils.PrefUtils;
 import com.ratik.uttam.utils.Utils;
 
 import org.json.JSONException;
@@ -175,6 +177,11 @@ public class GetPhotoService extends Service {
 
             // Send Notification
             notifyUser(wallpaper);
+
+            // If user wants automagical setting
+            if (PrefUtils.shouldSetWallpaperAutomatically(context)) {
+                new SetWallpaperTask(context).execute(wallpaper);
+            }
 
             // Stop the service
             Log.d(TAG, "Stopping the service");
