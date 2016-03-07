@@ -145,8 +145,12 @@ public class MainActivity extends AppCompatActivity {
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         if (Utils.getRefreshInterval(this).equals("daily")) {
             // Setting calendar to next day, 7 AM
-            int currentDay = calendar.get(Calendar.DATE);
-            calendar.set(Calendar.DATE, currentDay + 1);
+            if (itIsBeforeSeven(calendar)) {
+               // nothing
+            } else {
+                int currentDay = calendar.get(Calendar.DATE);
+                calendar.set(Calendar.DATE, currentDay + 1);
+            }
             calendar.set(Calendar.HOUR_OF_DAY, 7);
             calendar.set(Calendar.MINUTE, 0);
             calendar.set(Calendar.SECOND, 0);
@@ -162,6 +166,16 @@ public class MainActivity extends AppCompatActivity {
 
         // Saving alarm-set state
         Utils.setAlarmState(this, true);
+    }
+
+    // TODO: refactor name
+    private boolean itIsBeforeSeven(Calendar calendar) {
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        if (hour > 7) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     private void saveScreenSize() {
