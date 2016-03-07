@@ -138,9 +138,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        // Handle activity transition
-        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-
         // Get user prefs
         setWallpaperAutomatically = PrefUtils.shouldSetWallpaperAutomatically(this);
     }

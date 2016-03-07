@@ -51,7 +51,7 @@ public class HeroActivity extends AppCompatActivity {
                             break;
                     }
                     startActivity(new Intent(HeroActivity.this, MainActivity.class));
-                    // overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                     finish();
                 }
             });
