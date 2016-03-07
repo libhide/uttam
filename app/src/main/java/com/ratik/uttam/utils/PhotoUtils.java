@@ -48,5 +48,27 @@ public class PhotoUtils {
         return sp.getString(Constants.CONST_URL_REGULAR, "");
     }
 
+    public static void setDownloadUrl(Context context, String url) {
+        SharedPreferences sp = context.getSharedPreferences(filename, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString(Constants.CONST_DOWNLOAD, url);
+        editor.apply();
+    }
 
+    public static String getDownloadUrl(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(filename, Context.MODE_PRIVATE);
+        return sp.getString(Constants.CONST_DOWNLOAD, "");
+    }
+
+    public static void setHTMLUrl(Context context, String url) {
+        SharedPreferences sp = context.getSharedPreferences(filename, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString(Constants.CONST_HTML, url);
+        editor.apply();
+    }
+
+    public static String getHTMLUrl(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(filename, Context.MODE_PRIVATE);
+        return sp.getString(Constants.CONST_HTML, "");
+    }
 }

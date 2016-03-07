@@ -68,6 +68,8 @@ public class MainActivity extends AppCompatActivity {
             PhotoUtils.setFullUrl(this, "https://images.unsplash.com/photo-1449024540548-94f5d5a59230?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&s=dec4b59ca06926527007bd98670f2800");
             PhotoUtils.setRegularUrl(this, "https://images.unsplash.com/photo-1449024540548-94f5d5a59230?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&w=1080&s=dec4b59ca06926527007bd98670f2800");
             PhotoUtils.setPhotographerName(this, "Mike Wilson");
+            PhotoUtils.setHTMLUrl(this, "https://unsplash.com/photos/rM7B4DheQc0");
+            PhotoUtils.setDownloadUrl(this, "https://unsplash.com/photos/rM7B4DheQc0/download");
 
             // set it as the wallpaper
             try {
@@ -102,21 +104,13 @@ public class MainActivity extends AppCompatActivity {
         TextView photographerTextView = (TextView) findViewById(R.id.photographerTextView);
         photographerTextView.setText(photographer);
 
-        final Intent viewInBrowserIntent = new Intent(Intent.ACTION_VIEW);
         Button viewButton = (Button) findViewById(R.id.viewButton);
         viewButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (photoUrlFull.isEmpty() || photoUrlRegular.isEmpty()) {
-                    // TODO: handle error
-                } else {
-                    if (screenWidth > 720) {
-                        viewInBrowserIntent.setData(Uri.parse(photoUrlFull));
-                    } else {
-                        viewInBrowserIntent.setData(Uri.parse(photoUrlRegular));
-                    }
-                    startActivity(viewInBrowserIntent);
-                }
+                Intent viewInBrowserIntent = new Intent(Intent.ACTION_VIEW);
+                viewInBrowserIntent.setData(Uri.parse(PhotoUtils.getHTMLUrl(MainActivity.this)));
+                startActivity(viewInBrowserIntent);
             }
         });
 

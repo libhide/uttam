@@ -114,16 +114,16 @@ public class GetPhotoService extends Service {
         Photo p = new Photo();
         JSONObject object = new JSONObject(jsonData);
 
-        p.setWidth(object.getInt(Constants.CONST_WIDTH));
-        p.setHeight(object.getInt(Constants.CONST_HEIGHT));
-        p.setColor(object.getString(Constants.CONST_COLOR));
-
         JSONObject urls = object.getJSONObject(Constants.CONST_URLS);
         p.setUrlFull(urls.getString(Constants.CONST_URL_FULL));
         p.setUrlRegular(urls.getString(Constants.CONST_URL_REGULAR));
 
         JSONObject user = object.getJSONObject(Constants.CONST_USER);
         p.setPhotographer(user.getString(Constants.CONST_NAME));
+
+        JSONObject links = object.getJSONObject(Constants.CONST_LINKS);
+        p.setHtmlUrl(links.getString(Constants.CONST_HTML));
+        p.setDownloadUrl(links.getString(Constants.CONST_DOWNLOAD));
 
         return p;
     }
@@ -174,6 +174,8 @@ public class GetPhotoService extends Service {
             PhotoUtils.setFullUrl(context, photo.getUrlFull());
             PhotoUtils.setRegularUrl(context, photo.getUrlRegular());
             PhotoUtils.setPhotographerName(context, photo.getPhotographer());
+            PhotoUtils.setDownloadUrl(context, photo.getDownloadUrl());
+            PhotoUtils.setHTMLUrl(context, photo.getHtmlUrl());
 
             // Send Notification
             notifyUser(wallpaper);

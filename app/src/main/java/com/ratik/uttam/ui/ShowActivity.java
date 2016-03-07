@@ -17,7 +17,6 @@ import com.ratik.uttam.asyncs.SetWallpaperTask;
 import com.ratik.uttam.utils.FileUtils;
 import com.ratik.uttam.utils.PhotoUtils;
 import com.ratik.uttam.utils.PrefUtils;
-import com.ratik.uttam.utils.Utils;
 
 /**
  * Created by Ratik on 29/02/16.
@@ -47,21 +46,13 @@ public class ShowActivity extends AppCompatActivity {
         TextView photographerTextView = (TextView) findViewById(R.id.photographerTextView);
         photographerTextView.setText(photographer);
 
-        final Intent viewInBrowserIntent = new Intent(Intent.ACTION_VIEW);
         Button viewButton = (Button) findViewById(R.id.viewButton);
         viewButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (photoUrlFull.isEmpty() || photoUrlRegular.isEmpty()) {
-                    // TODO: handle error
-                } else {
-                    if (Utils.getScreenWidth(ShowActivity.this) > 720) {
-                        viewInBrowserIntent.setData(Uri.parse(photoUrlFull));
-                    } else {
-                        viewInBrowserIntent.setData(Uri.parse(photoUrlRegular));
-                    }
-                    startActivity(viewInBrowserIntent);
-                }
+                Intent viewInBrowserIntent = new Intent(Intent.ACTION_VIEW);
+                viewInBrowserIntent.setData(Uri.parse(PhotoUtils.getHTMLUrl(ShowActivity.this)));
+                startActivity(viewInBrowserIntent);
             }
         });
 
