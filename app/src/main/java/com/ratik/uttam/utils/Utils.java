@@ -61,4 +61,16 @@ public class Utils {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         return sp.getInt(Constants.SCREEN_WIDTH, 1080);
     }
+
+    public static void setLongPressedState(Context context, boolean value) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putBoolean(Constants.LONG_PRESS, value);
+        editor.apply();
+    }
+
+    public static boolean hasUserLongPressed(Context context) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        return sp.getBoolean(Constants.LONG_PRESS, false);
+    }
 }

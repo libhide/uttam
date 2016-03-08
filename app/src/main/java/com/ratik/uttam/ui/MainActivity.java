@@ -14,6 +14,8 @@ import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Display;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -22,7 +24,9 @@ import android.widget.TextView;
 
 import com.ratik.uttam.R;
 import com.ratik.uttam.asyncs.SetWallpaperTask;
+import com.ratik.uttam.listeners.LongPressListener;
 import com.ratik.uttam.receivers.NotificationReceiver;
+import com.ratik.uttam.utils.AnimationUtils;
 import com.ratik.uttam.utils.BitmapUtils;
 import com.ratik.uttam.utils.FileUtils;
 import com.ratik.uttam.utils.PhotoUtils;
@@ -45,13 +49,25 @@ public class MainActivity extends AppCompatActivity {
     private Bitmap wallpaper;
     private boolean firstRun;
 
+    private TextView tipTextView;
+    private View overlayView;
+
     // Preference variables
     private boolean setWallpaperAutomatically;
+
+    private GestureDetector gestureDetector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Global views init
+        tipTextView = (TextView) findViewById(R.id.tipper);
+        overlayView = findViewById(R.id.overlay);
+
+        gestureDetector = new GestureDetector(this,
+                new LongPressListener(overlayView, tipTextView));
 
         firstRun = Utils.isFirstRun(this);
 
@@ -91,8 +107,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // Get photo data
-        final String photoUrlFull = PhotoUtils.getFullUrl(this);
-        final String photoUrlRegular = PhotoUtils.getRegularUrl(this);
         String photographer = PhotoUtils.getPhotographerName(this);
 
         // Set ImageView
@@ -133,13 +147,35 @@ public class MainActivity extends AppCompatActivity {
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
+
+
+        overlayView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                // User has long pressed and knows about the tip
+                Utils.setLongPressedState(MainActivity.this, true);
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_UP:
+                        AnimationUtils.fadeInView(overlayView);
+                        return true;
+                    case MotionEvent.ACTION_DOWN:
+                        return gestureDetector.onTouchEvent(event);
+                }
+                return true;
+            }
+        });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+
         // Get user prefs
         setWallpaperAutomatically = PrefUtils.shouldSetWallpaperAutomatically(this);
+
+        if (Utils.hasUserLongPressed(this)) {
+            tipTextView.setVisibility(View.GONE);
+        }
     }
 
     private void setNotification() {
@@ -204,8 +240,8 @@ public class MainActivity extends AppCompatActivity {
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.mipmap.ic_launcher)
-                        .setLargeIcon(wallpaper)
+                        .setSmallIcon(R.drawable.ic_stat_uttam)
+                        .setLargeIcon(BitmapUtils.cropToSquare(wallpaper))
                         .setAutoCancel(true)
                         .setContentTitle("New Wallpaper!")
                         .setContentText("Photo by " + "Mike Wilson")

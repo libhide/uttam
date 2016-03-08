@@ -24,5 +24,7 @@ public class Constants {
     public static final String FIRST_RUN = "first_run";
     public static final String SCREEN_WIDTH = "screen_width";
     public static final String ALARM_SET = "alarm_set";
+    public static final String LONG_PRESS = "long_pressed";
+
     public static final String PREF_REFRESH_INTERVAL = "refresh_interval";
 }
