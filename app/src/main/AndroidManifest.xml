@@ -22,8 +22,6 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="ui.SetupActivity" />
-
         <activity
             android:name=".ui.MainActivity"
             android:screenOrientation="portrait"
@@ -38,6 +36,10 @@
             android:parentActivityName=".ui.MainActivity"
             android:theme="@style/AppTheme.Fullscreen"
             android:label="@string/settings_label" />
+
+        <activity
+            android:name=".ui.TourActivity"
+            android:theme="@style/AppTheme.Fullscreen" />
 
         <receiver android:name=".receivers.NotificationReceiver" />
         <receiver

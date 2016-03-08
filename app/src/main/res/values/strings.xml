@@ -10,5 +10,5 @@
     <string name="title_automatic_wallpaper_set">Set Wallpaper Automatically</string>
     <string name="summary_automatic_wallpaper_set">New wallpaper will be set automatically</string>
     <string name="setting_text">Setting wallpaper...</string>
-    <string name="tap_and_hold_tip">Tip: Tap and hold the screen to view the wallpaper in all its glory!</string>
+    <string name="tap_and_hold_tip">Protip: Tap and hold the screen to view the wallpaper in all its glory!</string>
 </resources>
