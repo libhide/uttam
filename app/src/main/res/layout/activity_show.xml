@@ -12,6 +12,12 @@
         android:scaleType="centerCrop"
         tools:src="@drawable/uttam_hero" />
 
+    <View
+        android:id="@+id/overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#28000000" />
+
     <Button
         android:id="@+id/viewButton"
         style="?android:attr/borderlessButtonStyle"
