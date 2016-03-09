@@ -201,7 +201,7 @@ public class GetPhotoService extends Service {
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context)
-                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setSmallIcon(R.drawable.ic_stat_uttam)
                         .setLargeIcon(BitmapUtils.cropToSquare(wallpaper))
                         .setAutoCancel(true)
                         .setContentTitle("New Wallpaper!")
