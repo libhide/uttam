@@ -159,9 +159,7 @@ public class GetPhotoService extends Service {
         @Override
         protected void onPostExecute(Void v) {
             super.onPostExecute(v);
-            if (wallpaper != null) {
-                wallpaper = BitmapUtils.cropBitmapFromCenterAndScreenSize(context, wallpaper);
-            } else {
+            if (wallpaper == null) {
                 Log.e(TAG, "Bitmap is null, not saving.");
             }
 

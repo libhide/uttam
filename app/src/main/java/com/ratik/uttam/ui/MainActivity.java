@@ -1,18 +1,24 @@
 package com.ratik.uttam.ui;
 
+import android.Manifest;
 import android.app.AlarmManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
@@ -20,16 +26,18 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.ratik.uttam.Constants;
 import com.ratik.uttam.R;
 import com.ratik.uttam.asyncs.SetWallpaperTask;
 import com.ratik.uttam.receivers.NotificationReceiver;
 import com.ratik.uttam.utils.BitmapUtils;
 import com.ratik.uttam.utils.FileUtils;
 import com.ratik.uttam.utils.PhotoUtils;
-import com.ratik.uttam.utils.PrefUtils;
 import com.ratik.uttam.utils.Utils;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
 
@@ -47,19 +55,12 @@ public class MainActivity extends AppCompatActivity {
     private Bitmap wallpaper;
     private boolean firstRun;
 
-    private View overlayView;
     private ImageView image;
-
-    // Preference variables
-    private boolean setWallpaperAutomatically;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        // Global views init
-        overlayView = findViewById(R.id.overlay);
 
         firstRun = Utils.isFirstRun(this);
 
@@ -99,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // Get photo data
-        String photographer = PhotoUtils.getPhotographerName(this);
+        final String photographer = PhotoUtils.getPhotographerName(this);
 
         // Set ImageView
         image = (ImageView) findViewById(R.id.wallpaper);
@@ -117,6 +118,26 @@ public class MainActivity extends AppCompatActivity {
                 Intent viewInBrowserIntent = new Intent(Intent.ACTION_VIEW);
                 viewInBrowserIntent.setData(Uri.parse(PhotoUtils.getHTMLUrl(MainActivity.this)));
                 startActivity(viewInBrowserIntent);
+            }
+        });
+
+        // Save Wallpaper Button
+        ImageButton saveWallpaperButton = (ImageButton) findViewById(R.id.wallpaperSaveButton);
+        saveWallpaperButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Permission stuff for M+
+                int permissionCheck = ContextCompat.checkSelfPermission(MainActivity.this,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
+                    // Copy from internal storage to the SD card
+                    saveFile();
+                }
+                else {
+                    ActivityCompat.requestPermissions(MainActivity.this,
+                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            Constants.CONST_WRITE_EXTERNAL_STORAGE);
+                }
             }
         });
 
@@ -141,14 +162,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         image.setOnTouchListener(imageScrollListener);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        // Get user prefs
-        setWallpaperAutomatically = PrefUtils.shouldSetWallpaperAutomatically(this);
     }
 
     private void setNotification() {
@@ -226,6 +239,35 @@ public class MainActivity extends AppCompatActivity {
         NotificationManager mNotifyMgr =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         mNotifyMgr.notify(FIRST_RUN_NOTIFICATION, mBuilder.build());
+    }
+
+    private void saveFile() {
+        File srcFile = FileUtils.getSavedFileFromInternalStorage(MainActivity.this);
+        File destFile = new File(FileUtils.getOutputMediaFileUri(MainActivity.this).getPath());
+        try {
+            boolean copied = FileUtils.makeFileCopy(srcFile, destFile);
+            if (copied) {
+                Toast.makeText(MainActivity.this, "Image saved!", Toast.LENGTH_SHORT).show();
+                Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                mediaScanIntent.setData(Uri.parse(destFile.getAbsolutePath()));
+                sendBroadcast(mediaScanIntent);
+            }
+        } catch (IOException e) {
+            Log.e(TAG, "Error while copying file: ", e);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case Constants.CONST_WRITE_EXTERNAL_STORAGE:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Copy from internal storage to the SD card
+                    saveFile();
+                } else {
+                    Toast.makeText(MainActivity.this, "Alright! We won't save the file.", Toast.LENGTH_SHORT).show();
+                }
+        }
     }
 
     private View.OnTouchListener imageScrollListener = new View.OnTouchListener() {

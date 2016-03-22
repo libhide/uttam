@@ -59,7 +59,7 @@ public class SetupFragment extends Fragment {
                         Utils.setRefreshInterval(getActivity(), "weekly");
                         break;
                 }
-                Toast.makeText(getActivity(), "Awesome! Go on and hit Done now!", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Awesome! Go on and hit Done now!", Toast.LENGTH_SHORT).show();
             }
         });
 

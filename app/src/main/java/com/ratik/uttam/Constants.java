@@ -27,4 +27,7 @@ public class Constants {
     public static final String LONG_PRESS = "long_pressed";
 
     public static final String PREF_REFRESH_INTERVAL = "refresh_interval";
+
+    // Permission constants
+    public static final int CONST_WRITE_EXTERNAL_STORAGE = 1;
 }
