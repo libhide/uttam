@@ -60,7 +60,6 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
     private Bitmap wallpaper;
     private boolean firstRun;
-    private boolean isImmersive = false;
 
     private ImageView image;
 

@@ -32,15 +32,6 @@
         android:weightSum="2">
 
         <ImageButton
-            android:id="@+id/wallpaperSaveButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_weight="1"
-            android:background="@drawable/ic_download" />
-
-        <ImageButton
             android:id="@+id/wallpaperSetButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

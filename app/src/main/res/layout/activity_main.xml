@@ -30,8 +30,8 @@
         android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="20dp"
-        android:background="@null"
         android:onClick="showPopup"
+        android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/action_settings" />
 
     <LinearLayout
@@ -53,14 +53,16 @@
             android:layout_marginEnd="15dp"
             android:layout_marginRight="15dp"
             android:layout_weight="1"
-            android:background="@drawable/ic_download" />
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_download" />
 
         <ImageButton
             android:id="@+id/wallpaperSetButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/ic_set" />
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_set" />
 
     </LinearLayout>
 

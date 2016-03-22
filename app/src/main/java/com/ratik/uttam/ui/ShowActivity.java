@@ -1,33 +1,20 @@
 package com.ratik.uttam.ui;
 
-import android.Manifest;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.ratik.uttam.Constants;
 import com.ratik.uttam.R;
 import com.ratik.uttam.asyncs.SetWallpaperTask;
 import com.ratik.uttam.utils.FileUtils;
 import com.ratik.uttam.utils.PhotoUtils;
 import com.ratik.uttam.utils.Utils;
-
-import java.io.File;
-import java.io.IOException;
 
 /**
  * Created by Ratik on 29/02/16.
@@ -52,7 +39,7 @@ public class ShowActivity extends AppCompatActivity {
         String photographer = PhotoUtils.getPhotographerName(this);
 
         image = (ImageView) findViewById(R.id.wallpaper);
-        final Bitmap wallpaper = FileUtils.getImageBitmap(this, "wallpaper", "png");
+        wallpaper = FileUtils.getImageBitmap(this, "wallpaper", "png");
         image.setImageBitmap(wallpaper);
 
         // Setup Textviews
@@ -70,56 +57,7 @@ public class ShowActivity extends AppCompatActivity {
             }
         });
 
-        // Save Wallpaper Button
-        ImageButton saveWallpaperButton = (ImageButton) findViewById(R.id.wallpaperSaveButton);
-        saveWallpaperButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Permission stuff for M+
-                int permissionCheck = ContextCompat.checkSelfPermission(ShowActivity.this,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE);
-                if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
-                    // Copy from internal storage to the SD card
-                    saveFile();
-                }
-                else {
-                    ActivityCompat.requestPermissions(ShowActivity.this,
-                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                            Constants.CONST_WRITE_EXTERNAL_STORAGE);
-                }
-            }
-        });
-
         image.setOnTouchListener(imageScrollListener);
-    }
-
-    private void saveFile() {
-        File srcFile = FileUtils.getSavedFileFromInternalStorage(ShowActivity.this);
-        File destFile = new File(FileUtils.getOutputMediaFileUri(ShowActivity.this).getPath());
-        try {
-            boolean copied = FileUtils.makeFileCopy(srcFile, destFile);
-            if (copied) {
-                Toast.makeText(ShowActivity.this, "Image saved!", Toast.LENGTH_SHORT).show();
-                Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                mediaScanIntent.setData(Uri.parse(destFile.getAbsolutePath()));
-                sendBroadcast(mediaScanIntent);
-            }
-        } catch (IOException e) {
-            Log.e(TAG, "Error while copying file: ", e);
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case Constants.CONST_WRITE_EXTERNAL_STORAGE:
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // Copy from internal storage to the SD card
-                    saveFile();
-                } else {
-                    Toast.makeText(ShowActivity.this, "Alright! We won't save the file.", Toast.LENGTH_SHORT).show();
-                }
-        }
     }
 
     private View.OnTouchListener imageScrollListener = new View.OnTouchListener() {

@@ -28,7 +28,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginEnd="15dp"
         android:layout_marginTop="40dp"
-        android:background="@null"
+        android:background="?attr/selectableItemBackgroundBorderless"
         android:onClick="showPopup"
         android:contentDescription="@string/action_settings" />
 
@@ -37,10 +37,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
         android:layout_marginBottom="20dp"
         android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
         android:orientation="horizontal"
         android:weightSum="2">
 
@@ -49,16 +47,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="15dp"
-            android:layout_marginRight="15dp"
             android:layout_weight="1"
-            android:background="@drawable/ic_download" />
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_download" />
 
         <ImageButton
             android:id="@+id/wallpaperSetButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/ic_set" />
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_set" />
 
     </LinearLayout>
 
@@ -66,10 +65,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginBottom="20dp"
-        android:layout_marginLeft="20dp"
         android:layout_marginStart="20dp"
         android:orientation="vertical">
 
