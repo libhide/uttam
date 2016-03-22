@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -16,8 +15,6 @@ import android.widget.TextView;
 
 import com.ratik.uttam.R;
 import com.ratik.uttam.asyncs.SetWallpaperTask;
-import com.ratik.uttam.listeners.LongPressListener;
-import com.ratik.uttam.utils.AnimationUtils;
 import com.ratik.uttam.utils.FileUtils;
 import com.ratik.uttam.utils.PhotoUtils;
 import com.ratik.uttam.utils.PrefUtils;
@@ -30,13 +27,15 @@ public class ShowActivity extends AppCompatActivity {
 
     private static final String TAG = ShowActivity.class.getSimpleName();
 
+    private Bitmap wallpaper;
+
     // Views
     private View overlayView;
+    private ImageView image;
 
     // Preference variables
     private boolean setWallpaperAutomatically;
 
-    private GestureDetector gestureDetector;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,15 +44,12 @@ public class ShowActivity extends AppCompatActivity {
 
         overlayView = findViewById(R.id.overlay);
 
-        gestureDetector = new GestureDetector(this,
-                new LongPressListener(overlayView));
-
         // Get photo data
         final String photoUrlFull = PhotoUtils.getFullUrl(this);
         final String photoUrlRegular = PhotoUtils.getRegularUrl(this);
         String photographer = PhotoUtils.getPhotographerName(this);
 
-        ImageView image = (ImageView) findViewById(R.id.wallpaper);
+        image = (ImageView) findViewById(R.id.wallpaper);
         final Bitmap wallpaper = FileUtils.getImageBitmap(this, "wallpaper", "png");
         image.setImageBitmap(wallpaper);
 
@@ -82,21 +78,7 @@ public class ShowActivity extends AppCompatActivity {
             }
         });
 
-        overlayView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                // User has long pressed and knows about the tip
-                Utils.setLongPressedState(ShowActivity.this, true);
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_UP:
-                        AnimationUtils.fadeInView(overlayView);
-                        return true;
-                    case MotionEvent.ACTION_DOWN:
-                        return gestureDetector.onTouchEvent(event);
-                }
-                return true;
-            }
-        });
+        image.setOnTouchListener(imageScrollListener);
     }
 
     @Override
@@ -106,4 +88,65 @@ public class ShowActivity extends AppCompatActivity {
         // Get user prefs
         setWallpaperAutomatically = PrefUtils.shouldSetWallpaperAutomatically(this);
     }
+
+    private View.OnTouchListener imageScrollListener = new View.OnTouchListener() {
+        float downX;
+        int totalX;
+        int scrollByX;
+
+        public boolean onTouch(View view, MotionEvent event) {
+            // set maximum scroll amount (based on center of image)
+            int maxX = (wallpaper.getWidth() / 2) - (Utils.getScreenWidth(ShowActivity.this) / 2);
+
+            // set scroll limits
+            final int maxLeft = (maxX * -1);
+            final int maxRight = maxX;
+
+            float currentX;
+
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    downX = event.getX();
+                    break;
+
+                case MotionEvent.ACTION_MOVE:
+                    currentX = event.getX();
+                    scrollByX = (int)(downX - currentX);
+
+                    // scrolling to left side of image (pic moving to the right)
+                    if (currentX > downX) {
+                        if (totalX == maxLeft) {
+                            scrollByX = 0;
+                        }
+                        if (totalX > maxLeft) {
+                            totalX = totalX + scrollByX;
+                        }
+                        if (totalX < maxLeft) {
+                            scrollByX = maxLeft - (totalX - scrollByX);
+                            totalX = maxLeft;
+                        }
+                    }
+
+                    // scrolling to right side of image (pic moving to the left)
+                    if (currentX < downX) {
+                        if (totalX == maxRight) {
+                            scrollByX = 0;
+                        }
+                        if (totalX < maxRight) {
+                            totalX = totalX + scrollByX;
+                        }
+                        if (totalX > maxRight) {
+                            scrollByX = maxRight - (totalX - scrollByX);
+                            totalX = maxRight;
+                        }
+                    }
+
+                    image.scrollBy(scrollByX, 0);
+                    downX = currentX;
+                    break;
+            }
+
+            return true;
+        }
+    };
 }

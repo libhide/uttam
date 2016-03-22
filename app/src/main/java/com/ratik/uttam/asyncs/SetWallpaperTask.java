@@ -9,7 +9,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.ratik.uttam.R;
-import com.ratik.uttam.utils.BitmapUtils;
 
 import java.io.IOException;
 
@@ -24,6 +23,8 @@ public class SetWallpaperTask extends AsyncTask<Bitmap, Void, Bitmap> {
 
     private Toast settingToast;
     private Toast doneToast;
+
+    private int screenHeight;
 
     @SuppressLint("ShowToast")
     public SetWallpaperTask(Context context) {
@@ -41,8 +42,7 @@ public class SetWallpaperTask extends AsyncTask<Bitmap, Void, Bitmap> {
 
     @Override
     protected Bitmap doInBackground(Bitmap... bitmaps) {
-        Bitmap wallpaper = bitmaps[0];
-        return BitmapUtils.cropBitmapFromCenterAndScreenSize(context, wallpaper);
+        return bitmaps[0];
     }
 
     @Override
