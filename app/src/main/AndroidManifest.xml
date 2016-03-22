@@ -26,7 +26,7 @@
         <activity
             android:name=".ui.MainActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Fullscreen" />
+            android:theme="@style/AppTheme" />
 
         <activity
             android:name=".ui.ShowActivity"
@@ -35,7 +35,7 @@
         <activity
             android:name=".ui.SettingsActivity"
             android:parentActivityName=".ui.MainActivity"
-            android:theme="@style/AppTheme.Fullscreen"
+            android:theme="@style/AppTheme"
             android:label="@string/settings_label" />
 
         <activity

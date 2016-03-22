@@ -14,7 +14,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -59,16 +58,6 @@ public class ShowActivity extends AppCompatActivity {
         // Setup Textviews
         TextView photographerTextView = (TextView) findViewById(R.id.photographerTextView);
         photographerTextView.setText(photographer);
-
-        Button viewButton = (Button) findViewById(R.id.viewButton);
-        viewButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent viewInBrowserIntent = new Intent(Intent.ACTION_VIEW);
-                viewInBrowserIntent.setData(Uri.parse(PhotoUtils.getHTMLUrl(ShowActivity.this)));
-                startActivity(viewInBrowserIntent);
-            }
-        });
 
         // Set Wallpaper Button
         ImageButton setWallpaperButton = (ImageButton) findViewById(R.id.wallpaperSetButton);

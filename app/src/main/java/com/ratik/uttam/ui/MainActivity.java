@@ -1,6 +1,7 @@
 package com.ratik.uttam.ui;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -10,8 +11,10 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -20,11 +23,13 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Display;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,7 +46,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
 
-public class MainActivity extends AppCompatActivity {
+
+public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -54,9 +60,11 @@ public class MainActivity extends AppCompatActivity {
 
     private Bitmap wallpaper;
     private boolean firstRun;
+    private boolean isImmersive = false;
 
     private ImageView image;
 
+    @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,16 +119,6 @@ public class MainActivity extends AppCompatActivity {
         TextView photographerTextView = (TextView) findViewById(R.id.photographerTextView);
         photographerTextView.setText(photographer);
 
-        Button viewButton = (Button) findViewById(R.id.viewButton);
-        viewButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent viewInBrowserIntent = new Intent(Intent.ACTION_VIEW);
-                viewInBrowserIntent.setData(Uri.parse(PhotoUtils.getHTMLUrl(MainActivity.this)));
-                startActivity(viewInBrowserIntent);
-            }
-        });
-
         // Save Wallpaper Button
         ImageButton saveWallpaperButton = (ImageButton) findViewById(R.id.wallpaperSaveButton);
         saveWallpaperButton.setOnClickListener(new View.OnClickListener() {
@@ -151,17 +149,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Settings
-        ImageButton settingsButton = (ImageButton) findViewById(R.id.settingsButton);
-        settingsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-            }
-        });
-
         image.setOnTouchListener(imageScrollListener);
+
+        // shazam
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
+            getWindow().getDecorView().setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+            getWindow().setStatusBarColor(Color.TRANSPARENT);
+        } else {
+            setTheme(R.style.AppTheme_Fullscreen);
+        }
     }
 
     private void setNotification() {
@@ -330,4 +327,24 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
     };
+
+    public void showPopup(View v) {
+        PopupMenu popup = new PopupMenu(this, v);
+        popup.setOnMenuItemClickListener(this);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.actions, popup.getMenu());
+        popup.show();
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                return true;
+            default:
+                return false;
+        }
+    }
 }
