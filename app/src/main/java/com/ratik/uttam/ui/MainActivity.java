@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         if (firstRun) {
             // save hero into the internal storage
             wallpaper = BitmapFactory.decodeResource(getResources(), R.drawable.uttam_hero);
-            // wallpaper = BitmapUtils.cropBitmapFromCenterAndScreenSize(this, wallpaper);
+            wallpaper = BitmapUtils.cropBitmapFromCenterAndScreenSize(this, wallpaper);
             FileUtils.saveImage(this, wallpaper, "wallpaper", "png");
 
             // TODO: refactor
@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
         image.setOnTouchListener(imageScrollListener);
 
-        // shazam
+        // Do cool transparent stuff for new devices
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
             getWindow().getDecorView().setSystemUiVisibility(
                     View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
