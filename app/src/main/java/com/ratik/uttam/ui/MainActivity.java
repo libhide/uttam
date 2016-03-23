@@ -61,6 +61,9 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     private Bitmap wallpaper;
     private boolean firstRun;
 
+    private String photographer;
+    private String downloadUrl;
+
     private ImageView image;
 
     @SuppressLint("NewApi")
@@ -107,7 +110,8 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         }
 
         // Get photo data
-        final String photographer = PhotoUtils.getPhotographerName(this);
+        photographer = PhotoUtils.getPhotographerName(this);
+        downloadUrl = PhotoUtils.getDownloadUrl(this);
 
         // Set ImageView
         image = (ImageView) findViewById(R.id.wallpaper);
@@ -259,7 +263,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             case Constants.CONST_WRITE_EXTERNAL_STORAGE:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // Copy from internal storage to the SD card
-                    saveFile();
+                    Toast.makeText(MainActivity.this, "Permission granted! Try doing what you were trying to do again?", Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(MainActivity.this, "Alright! We won't save the file.", Toast.LENGTH_SHORT).show();
                 }
@@ -342,8 +346,27 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 return true;
+            case R.id.action_share:
+                int permissionCheck = ContextCompat.checkSelfPermission(MainActivity.this,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
+                    shareWallpaper();
+                }
+                else {
+                    ActivityCompat.requestPermissions(MainActivity.this,
+                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            Constants.CONST_WRITE_EXTERNAL_STORAGE);
+                }
+                return true;
             default:
                 return false;
         }
+    }
+
+    private void shareWallpaper() {
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        String shareText = "Check out this photo by " + photographer + " I'm rocking as my wallpaper! " + downloadUrl + " #uttam";
+        shareIntent.putExtra(Intent.EXTRA_TEXT, shareText);
+        startActivity(shareIntent);
     }
 }
