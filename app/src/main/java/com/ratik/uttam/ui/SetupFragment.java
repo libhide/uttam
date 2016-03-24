@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.ratik.uttam.R;
 import com.ratik.uttam.utils.Utils;
@@ -21,12 +21,14 @@ import com.ratik.uttam.utils.Utils;
 public class SetupFragment extends Fragment {
 
     public static Button setupButton;
+    private TextView tipView;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_setup, container, false);
 
+        tipView = (TextView) root.findViewById(R.id.tipTextView);
         setupButton = (Button) root.findViewById(R.id.setupButton);
         setupButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,7 +61,9 @@ public class SetupFragment extends Fragment {
                         Utils.setRefreshInterval(getActivity(), "weekly");
                         break;
                 }
-                Toast.makeText(getActivity(), "Awesome! Go on and hit Done now!", Toast.LENGTH_SHORT).show();
+                tipView.setVisibility(View.VISIBLE);
+                setupButton.setText("All set!");
+                setupButton.setEnabled(false);
             }
         });
 

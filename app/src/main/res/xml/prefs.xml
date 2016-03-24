@@ -3,7 +3,7 @@
 
     <PreferenceCategory android:title="General">
         <SwitchPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="@string/key_automatic_wallpaper_set"
             android:summary="@string/summary_automatic_wallpaper_set"
             android:title="@string/title_automatic_wallpaper_set" />
@@ -16,7 +16,7 @@
             android:summary="@string/summary_custom_sounds"
             android:title="@string/title_custom_sounds" />
         <SwitchPreference
-            android:defaultValue="true"
+            android:defaultValue="false"
             android:key="@string/key_notif_led"
             android:summary="@string/summary_notif_led"
             android:title="@string/title_notif_led" />

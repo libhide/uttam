@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#2d2d2d">
@@ -9,21 +10,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-bold"
-        android:paddingTop="40dp"
         android:paddingLeft="40dp"
         android:paddingRight="40dp"
-        android:textSize="16sp"
+        android:paddingTop="40dp"
+        android:text="Set refresh interval"
         android:textColor="@android:color/white"
-        android:text="Set refresh interval" />
+        android:textSize="16sp" />
 
     <TextView
-        android:layout_below="@id/heading"
+        android:id="@+id/text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/heading"
         android:paddingLeft="40dp"
         android:paddingRight="40dp"
         android:paddingTop="10dp"
-        android:text="Egg whites, turkey sausage, wheat toast, water. Of course they don’t want us to eat our breakfast, so we are going to enjoy our breakfast."
+        android:text="The app needs to know when to push notifications to the device. Take a second to set the refresh interval for the wallpaper notification."
         android:textColor="@android:color/white"
         android:textSize="14sp" />
 
@@ -34,6 +36,19 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:text="Set Refresh Interval" />
+
+    <TextView
+        android:id="@+id/tipTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text"
+        android:layout_marginTop="50dp"
+        android:paddingLeft="40dp"
+        android:paddingRight="40dp"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
+        android:visibility="invisible"
+        android:text="Sweet! Hit done now!" />
 
 
 </RelativeLayout>
