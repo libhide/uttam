@@ -51,6 +51,7 @@ public class ShowActivity extends AppCompatActivity {
         image = (ImageView) findViewById(R.id.wallpaper);
         photographerTextView = (TextView) findViewById(R.id.photographerTextView);
         setWallpaperButton = (ImageButton) findViewById(R.id.wallpaperSetButton);
+        creditsView = (LinearLayout) findViewById(R.id.creditsView);
 
         // Set photo data
         image.setImageBitmap(wallpaper);
