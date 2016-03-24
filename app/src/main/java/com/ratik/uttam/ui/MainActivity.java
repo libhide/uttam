@@ -29,6 +29,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -65,11 +66,13 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
     private String photographer;
     private String downloadUrl;
+    private String userProfileUrl;
 
     private ImageView image;
     private TextView photographerTextView;
     private ImageButton saveWallpaperButton;
     private ImageButton setWallpaperButton;
+    private LinearLayout creditsView;
 
     @SuppressLint("NewApi")
     @Override
@@ -87,6 +90,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         photographerTextView = (TextView) findViewById(R.id.photographerTextView);
         saveWallpaperButton = (ImageButton) findViewById(R.id.wallpaperSaveButton);
         setWallpaperButton = (ImageButton) findViewById(R.id.wallpaperSetButton);
+        creditsView = (LinearLayout) findViewById(R.id.creditsView);
 
         if (firstRun) {
             // save hero into the internal storage
@@ -95,12 +99,10 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             FileUtils.saveImage(this, wallpaper, "wallpaper", "png");
 
             // TODO: refactor
-            PhotoUtils.setColor(this, "#cbcbcb");
             PhotoUtils.setFullUrl(this, "https://images.unsplash.com/photo-1449024540548-94f5d5a59230?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&s=dec4b59ca06926527007bd98670f2800");
-            PhotoUtils.setRegularUrl(this, "https://images.unsplash.com/photo-1449024540548-94f5d5a59230?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&w=1080&s=dec4b59ca06926527007bd98670f2800");
             PhotoUtils.setPhotographerName(this, "Mike Wilson");
-            PhotoUtils.setHTMLUrl(this, "https://unsplash.com/photos/rM7B4DheQc0");
             PhotoUtils.setDownloadUrl(this, "https://unsplash.com/photos/rM7B4DheQc0/download");
+            PhotoUtils.setUserProf(this, "https://unsplash.com/mkwlsn");
 
             // set it as the wallpaper
             try {
@@ -133,6 +135,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         }
         photographer = PhotoUtils.getPhotographerName(this);
         downloadUrl = PhotoUtils.getDownloadUrl(this);
+        userProfileUrl = PhotoUtils.getUserProf(this);
 
         // Set data
         image.setImageBitmap(wallpaper);
@@ -163,6 +166,14 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             public void onClick(View v) {
                 // Set wallpaper
                 new SetWallpaperTask(MainActivity.this).execute(wallpaper);
+            }
+        });
+
+        creditsView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(userProfileUrl));
+                startActivity(browserIntent);
             }
         });
 

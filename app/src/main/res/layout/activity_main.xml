@@ -21,7 +21,7 @@
 
     <ImageButton
         android:id="@+id/overflowButton"
-        android:src="@drawable/ic_overflow"
+        style="@style/SelectableItemBackground"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
@@ -30,20 +30,20 @@
         android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="20dp"
+        android:contentDescription="@string/action_settings"
         android:onClick="showPopup"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="@string/action_settings" />
+        android:src="@drawable/ic_overflow" />
 
     <ImageView
-        android:src="@drawable/uttam"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="20dp"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp" />
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/uttam" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -59,34 +59,42 @@
 
         <ImageButton
             android:id="@+id/wallpaperSaveButton"
+            style="@style/SelectableItemBackground"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="15dp"
             android:layout_marginRight="15dp"
             android:layout_weight="1"
-            android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_download" />
 
         <ImageButton
             android:id="@+id/wallpaperSetButton"
+            style="@style/SelectableItemBackground"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_set" />
 
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/creditsView"
+        style="@style/SelectableItemBackground"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginBottom="20dp"
-        android:layout_marginLeft="20dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="5dp"
         android:layout_marginStart="20dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingBottom="15dp"
+        android:paddingEnd="25dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="25dp"
+        android:paddingStart="10dp"
+        android:paddingTop="15dp">
 
         <TextView
             android:layout_width="match_parent"

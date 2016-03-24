@@ -3,6 +3,8 @@
     <color name="colorPrimary">#838383</color>
     <color name="colorPrimaryDark">#646464</color>
 
+    <color name="rippleColor">#aaffffff</color>
+
     <!-- Test -->
     <color name="colorAccent">#2A2D34</color>
 </resources>

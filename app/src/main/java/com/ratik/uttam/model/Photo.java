@@ -8,11 +8,10 @@ import android.os.Parcelable;
  */
 public class Photo implements Parcelable {
     private String urlFull;
-    private String urlRegular;
     private String photographer;
     private String htmlUrl;
     private String downloadUrl;
-    private String color;
+    private String userProf;
 
     public Photo() {
         // Default constructor
@@ -24,14 +23,6 @@ public class Photo implements Parcelable {
 
     public void setUrlFull(String urlFull) {
         this.urlFull = urlFull;
-    }
-
-    public String getUrlRegular() {
-        return urlRegular;
-    }
-
-    public void setUrlRegular(String urlRegular) {
-        this.urlRegular = urlRegular;
     }
 
     public String getPhotographer() {
@@ -58,12 +49,12 @@ public class Photo implements Parcelable {
         this.downloadUrl = downloadUrl;
     }
 
-    public String getColor() {
-        return color;
+    public String getUserProf() {
+        return userProf;
     }
 
-    public void setColor(String color) {
-        this.color = color;
+    public void setUserProf(String userProf) {
+        this.userProf = userProf;
     }
 
     @Override
@@ -74,20 +65,18 @@ public class Photo implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.urlFull);
-        dest.writeString(this.urlRegular);
         dest.writeString(this.photographer);
         dest.writeString(this.htmlUrl);
         dest.writeString(this.downloadUrl);
-        dest.writeString(this.color);
+        dest.writeString(this.userProf);
     }
 
     protected Photo(Parcel in) {
         this.urlFull = in.readString();
-        this.urlRegular = in.readString();
         this.photographer = in.readString();
         this.downloadUrl = in.readString();
         this.htmlUrl = in.readString();
-        this.color = in.readString();
+        this.userProf = in.readString();
     }
 
     public static final Parcelable.Creator<Photo> CREATOR = new Parcelable.Creator<Photo>() {

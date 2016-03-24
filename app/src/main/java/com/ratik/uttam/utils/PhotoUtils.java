@@ -12,18 +12,6 @@ public class PhotoUtils {
 
     public static final String filename = "photo";
 
-    public static void setColor(Context context, String color) {
-        SharedPreferences sp = context.getSharedPreferences(filename, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putString(Constants.CONST_COLOR, color);
-        editor.apply();
-    }
-
-    public static String getColor(Context context) {
-        SharedPreferences sp = context.getSharedPreferences(filename, Context.MODE_PRIVATE);
-        return sp.getString(Constants.CONST_COLOR, "#000000");
-    }
-
     public static void setPhotographerName(Context context, String name) {
         SharedPreferences sp = context.getSharedPreferences(filename, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
@@ -48,18 +36,6 @@ public class PhotoUtils {
         return sp.getString(Constants.CONST_URL_FULL, "");
     }
 
-    public static void setRegularUrl(Context context, String url) {
-        SharedPreferences sp = context.getSharedPreferences(filename, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putString(Constants.CONST_URL_REGULAR, url);
-        editor.apply();
-    }
-
-    public static String getRegularUrl(Context context) {
-        SharedPreferences sp = context.getSharedPreferences(filename, Context.MODE_PRIVATE);
-        return sp.getString(Constants.CONST_URL_REGULAR, "");
-    }
-
     public static void setDownloadUrl(Context context, String url) {
         SharedPreferences sp = context.getSharedPreferences(filename, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
@@ -72,15 +48,17 @@ public class PhotoUtils {
         return sp.getString(Constants.CONST_DOWNLOAD, "");
     }
 
-    public static void setHTMLUrl(Context context, String url) {
+    public static void setUserProf(Context context, String url) {
         SharedPreferences sp = context.getSharedPreferences(filename, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
-        editor.putString(Constants.CONST_HTML, url);
+        editor.putString(Constants.CONST_USER_PROF, url);
         editor.apply();
     }
 
-    public static String getHTMLUrl(Context context) {
+    public static String getUserProf(Context context) {
         SharedPreferences sp = context.getSharedPreferences(filename, Context.MODE_PRIVATE);
-        return sp.getString(Constants.CONST_HTML, "");
+        return sp.getString(Constants.CONST_USER_PROF, "http://unsplash.com");
     }
+
+
 }

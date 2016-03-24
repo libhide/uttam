@@ -12,10 +12,10 @@ public class Constants {
     public static final String CONST_COLOR = "color";
     public static final String CONST_URLS = "urls";
     public static final String CONST_URL_FULL = "full";
-    public static final String CONST_URL_REGULAR = "regular";
 
     public static final String CONST_USER = "user";
     public static final String CONST_NAME = "name";
+    public static final String CONST_USER_PROF = "user_prof";
 
     public static final String CONST_LINKS = "links";
     public static final String CONST_HTML = "html";
