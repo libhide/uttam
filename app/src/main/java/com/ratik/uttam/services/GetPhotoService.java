@@ -1,5 +1,6 @@
 package com.ratik.uttam.services;
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -7,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
@@ -202,6 +204,8 @@ public class GetPhotoService extends Service {
                         .setLargeIcon(BitmapUtils.cropToSquare(wallpaper))
                         .setAutoCancel(true)
                         .setContentTitle("New Wallpaper!")
+                        .setSound(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.uttam))
+                        .setDefaults(Notification.DEFAULT_LIGHTS)
                         .setContentText("Photo by " + photo.getPhotographer())
                         .setStyle(new NotificationCompat.BigPictureStyle()
                                 .bigPicture(wallpaper)
