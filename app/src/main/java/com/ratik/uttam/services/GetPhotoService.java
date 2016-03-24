@@ -198,23 +198,29 @@ public class GetPhotoService extends Service {
         PendingIntent showWallpaperIntent = PendingIntent.getActivity(context,
                 SHOW_WALLPAPER, intent, 0);
 
-        NotificationCompat.Builder mBuilder =
+        NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(context)
                         .setSmallIcon(R.drawable.ic_stat_uttam)
                         .setLargeIcon(BitmapUtils.cropToSquare(wallpaper))
                         .setAutoCancel(true)
                         .setContentTitle("New Wallpaper!")
-                        .setSound(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.uttam))
-                        .setDefaults(Notification.DEFAULT_LIGHTS)
                         .setContentText("Photo by " + photo.getPhotographer())
                         .setStyle(new NotificationCompat.BigPictureStyle()
                                 .bigPicture(wallpaper)
                                 .setBigContentTitle("New Wallpaper!"))
                         .setContentIntent(showWallpaperIntent);
 
+        if (PrefUtils.userWantsCustomSounds(this)) {
+            builder.setSound(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.uttam));
+        }
+
+        if (PrefUtils.userWantsNotificationLED(this)) {
+            builder.setDefaults(Notification.DEFAULT_LIGHTS);
+        }
+
         NotificationManager mNotifyMgr =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotifyMgr.notify(WALLPAPER_NOTIF_ID, mBuilder.build());
+        mNotifyMgr.notify(WALLPAPER_NOTIF_ID, builder.build());
     }
 
     private boolean clearFiles() {

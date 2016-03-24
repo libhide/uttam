@@ -11,4 +11,10 @@
     <string name="summary_automatic_wallpaper_set">New wallpaper will be set automatically</string>
     <string name="setting_text">Setting wallpaper...</string>
     <string name="tap_and_hold_tip">Protip: Tap and hold the screen to view the wallpaper in all its glory!</string>
+    <string name="key_custom_sounds">customSound</string>
+    <string name="summary_custom_sounds">Use Uttam\'s custom wallpaper notification sound</string>
+    <string name="title_custom_sounds">Custom Sounds</string>
+    <string name="key_notif_led">notifictionLED</string>
+    <string name="summary_notif_led">Use notification LED</string>
+    <string name="title_notif_led">Notification LED</string>
 </resources>

@@ -14,4 +14,14 @@ public class PrefUtils {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         return sp.getBoolean(context.getString(R.string.key_automatic_wallpaper_set), false);
     }
+
+    public static boolean userWantsCustomSounds(Context context) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        return sp.getBoolean(context.getString(R.string.key_custom_sounds), false);
+    }
+
+    public static boolean userWantsNotificationLED(Context context) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        return sp.getBoolean(context.getString(R.string.key_notif_led), false);
+    }
 }
