@@ -27,6 +27,10 @@ public class ShowActivity extends AppCompatActivity {
 
     // Views
     private ImageView image;
+    private TextView photographerTextView;
+    private ImageButton setWallpaperButton;
+
+    private String photographer;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -34,20 +38,20 @@ public class ShowActivity extends AppCompatActivity {
         setContentView(R.layout.activity_show);
 
         // Get photo data
-        final String photoUrlFull = PhotoUtils.getFullUrl(this);
-        final String photoUrlRegular = PhotoUtils.getRegularUrl(this);
-        String photographer = PhotoUtils.getPhotographerName(this);
-
-        image = (ImageView) findViewById(R.id.wallpaper);
         wallpaper = FileUtils.getImageBitmap(this, "wallpaper", "png");
-        image.setImageBitmap(wallpaper);
+        photographer = PhotoUtils.getPhotographerName(this);
 
-        // Setup Textviews
-        TextView photographerTextView = (TextView) findViewById(R.id.photographerTextView);
+        // Views init
+        image = (ImageView) findViewById(R.id.wallpaper);
+        photographerTextView = (TextView) findViewById(R.id.photographerTextView);
+        setWallpaperButton = (ImageButton) findViewById(R.id.wallpaperSetButton);
+
+        // Set photo data
+        image.setImageBitmap(wallpaper);
+        image.setOnTouchListener(imageScrollListener);
         photographerTextView.setText(photographer);
 
-        // Set Wallpaper Button
-        ImageButton setWallpaperButton = (ImageButton) findViewById(R.id.wallpaperSetButton);
+        // Click listeners
         setWallpaperButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -56,8 +60,6 @@ public class ShowActivity extends AppCompatActivity {
                 finish();
             }
         });
-
-        image.setOnTouchListener(imageScrollListener);
     }
 
     private View.OnTouchListener imageScrollListener = new View.OnTouchListener() {
@@ -120,4 +122,10 @@ public class ShowActivity extends AppCompatActivity {
             return true;
         }
     };
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        finish();
+    }
 }

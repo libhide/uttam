@@ -30,6 +30,7 @@
 
         <activity
             android:name=".ui.ShowActivity"
+            android:excludeFromRecents="true"
             android:theme="@style/AppTheme.Fullscreen" />
 
         <activity

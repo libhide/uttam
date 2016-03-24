@@ -46,6 +46,6 @@ public class SettingsActivity extends AppCompatActivity {
 
     private void goToMain() {
         finish();
-        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        // overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 }

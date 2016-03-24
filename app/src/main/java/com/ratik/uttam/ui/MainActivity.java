@@ -37,6 +37,7 @@ import com.ratik.uttam.Constants;
 import com.ratik.uttam.R;
 import com.ratik.uttam.asyncs.SetWallpaperTask;
 import com.ratik.uttam.receivers.NotificationReceiver;
+import com.ratik.uttam.services.GetPhotoService;
 import com.ratik.uttam.utils.BitmapUtils;
 import com.ratik.uttam.utils.FileUtils;
 import com.ratik.uttam.utils.PhotoUtils;
@@ -65,6 +66,9 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     private String downloadUrl;
 
     private ImageView image;
+    private TextView photographerTextView;
+    private ImageButton saveWallpaperButton;
+    private ImageButton setWallpaperButton;
 
     @SuppressLint("NewApi")
     @Override
@@ -76,6 +80,12 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
         // Save the screen width for later use
         saveScreenSize();
+
+        // Views init
+        image = (ImageView) findViewById(R.id.wallpaper);
+        photographerTextView = (TextView) findViewById(R.id.photographerTextView);
+        saveWallpaperButton = (ImageButton) findViewById(R.id.wallpaperSaveButton);
+        setWallpaperButton = (ImageButton) findViewById(R.id.wallpaperSetButton);
 
         if (firstRun) {
             // save hero into the internal storage
@@ -108,22 +118,26 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             // get saved image
             wallpaper = FileUtils.getImageBitmap(this, "wallpaper", "png");
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
 
         // Get photo data
+        if (wallpaper == null) {
+            // get saved image
+            wallpaper = FileUtils.getImageBitmap(this, "wallpaper", "png");
+        }
         photographer = PhotoUtils.getPhotographerName(this);
         downloadUrl = PhotoUtils.getDownloadUrl(this);
 
-        // Set ImageView
-        image = (ImageView) findViewById(R.id.wallpaper);
-        final Bitmap wallpaper = FileUtils.getImageBitmap(this, "wallpaper", "png");
+        // Set data
         image.setImageBitmap(wallpaper);
-
-        // Setup Textviews
-        TextView photographerTextView = (TextView) findViewById(R.id.photographerTextView);
+        image.setOnTouchListener(imageScrollListener);
         photographerTextView.setText(photographer);
 
-        // Save Wallpaper Button
-        ImageButton saveWallpaperButton = (ImageButton) findViewById(R.id.wallpaperSaveButton);
+        // Click listeners
         saveWallpaperButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -142,8 +156,6 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             }
         });
 
-        // Set Wallpaper Button
-        ImageButton setWallpaperButton = (ImageButton) findViewById(R.id.wallpaperSetButton);
         setWallpaperButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -152,10 +164,8 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             }
         });
 
-        image.setOnTouchListener(imageScrollListener);
-
         // Do cool transparent stuff for new devices
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().getDecorView().setSystemUiVisibility(
                     View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
             getWindow().setStatusBarColor(Color.TRANSPARENT);
@@ -248,9 +258,8 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             boolean copied = FileUtils.makeFileCopy(srcFile, destFile);
             if (copied) {
                 Toast.makeText(MainActivity.this, "Image saved!", Toast.LENGTH_SHORT).show();
-                Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                mediaScanIntent.setData(Uri.parse(destFile.getAbsolutePath()));
-                sendBroadcast(mediaScanIntent);
+                Intent scanFileIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(destFile));
+                sendBroadcast(scanFileIntent);
             }
         } catch (IOException e) {
             Log.e(TAG, "Error while copying file: ", e);
@@ -344,7 +353,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         switch (item.getItemId()) {
             case R.id.action_settings:
                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                // overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 return true;
             case R.id.action_share:
                 int permissionCheck = ContextCompat.checkSelfPermission(MainActivity.this,
@@ -358,6 +367,10 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                             Constants.CONST_WRITE_EXTERNAL_STORAGE);
                 }
                 return true;
+            case R.id.action_refresh:
+                startService(new Intent(getBaseContext(), GetPhotoService.class));
+                finish();
+                return true;
             default:
                 return false;
         }
@@ -366,6 +379,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     private void shareWallpaper() {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         String shareText = "Check out this photo by " + photographer + " I'm rocking as my wallpaper! " + downloadUrl + " #uttam";
+        shareIntent.setType("text/plain");
         shareIntent.putExtra(Intent.EXTRA_TEXT, shareText);
         startActivity(shareIntent);
     }

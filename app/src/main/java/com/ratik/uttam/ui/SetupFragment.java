@@ -45,7 +45,7 @@ public class SetupFragment extends Fragment {
 
         String[] intervals = getResources().getStringArray(R.array.intervals);
         ArrayAdapter<String> intervalsAdapter = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_list_item_single_choice, intervals);
+                android.R.layout.simple_list_item_2, intervals);
         builder.setAdapter(intervalsAdapter, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

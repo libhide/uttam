@@ -2,13 +2,19 @@ package com.ratik.uttam.utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.Display;
 import android.view.WindowManager;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 
 /**
  * Created by Ratik on 26/02/16.
  */
 public class BitmapUtils {
+
+    private static final String TAG = BitmapUtils.class.getSimpleName();
 
     public static Bitmap cropBitmapFromCenterAndScreenSize(Context context, Bitmap bitmap) {
         float screenWidth, screenHeight;
@@ -53,5 +59,35 @@ public class BitmapUtils {
         int cropH = (height - width) / 2;
         cropH = (cropH < 0) ? 0 : cropH;
         return Bitmap.createBitmap(bitmap, cropW, cropH, newWidth, newHeight);
+    }
+
+    public static Bitmap scaleBitmap(Bitmap bm) {
+        int maxWidth = 2048;
+        int maxHeight = 1080;
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+
+        if (width > height) {
+            // landscape
+            float ratio = (float) width / maxWidth;
+            width = maxWidth;
+            height = (int)(height / ratio);
+        } else if (height > width) {
+            // portrait
+            float ratio = (float) height / maxHeight;
+            height = maxHeight;
+            width = (int)(width / ratio);
+        } else {
+            // square
+            height = maxHeight;
+            width = maxWidth;
+        }
+
+        Bitmap bitmap = Bitmap.createScaledBitmap(bm, width, height, true);
+
+        // Further compression
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 75, out);
+        return BitmapFactory.decodeStream(new ByteArrayInputStream(out.toByteArray()));
     }
 }

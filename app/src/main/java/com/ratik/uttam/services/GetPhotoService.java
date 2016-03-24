@@ -72,12 +72,10 @@ public class GetPhotoService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(TAG, "Started the service :)");
         getRandomPhoto();
-        return START_NOT_STICKY;
+        return START_STICKY;
     }
 
     private void getRandomPhoto() {
-        // Toast.makeText(context, "Getting random photo", Toast.LENGTH_LONG).show();
-
         String randomUrl = Constants.BASE_URL + Keys.API_KEY;
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
@@ -150,6 +148,7 @@ public class GetPhotoService extends Service {
                 connection.connect();
                 InputStream input = connection.getInputStream();
                 wallpaper = BitmapFactory.decodeStream(input);
+                wallpaper = BitmapUtils.scaleBitmap(wallpaper);
             } catch (IOException e) {
                 Log.e(TAG, "Exception caught: ", e);
             }
