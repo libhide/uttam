@@ -28,7 +28,6 @@ public class RebootReceiver extends BroadcastReceiver {
         }
     }
 
-    // TODO: improve this logic
     private void setNotification() {
         Calendar calendar = Calendar.getInstance();
 
@@ -38,7 +37,13 @@ public class RebootReceiver extends BroadcastReceiver {
 
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         if (Utils.getRefreshInterval(context).equals("daily")) {
-            // Setting calendar to 7 AM
+            // Setting calendar to next day, 7 AM
+            if (itIsBeforeSeven(calendar)) {
+                // nothing
+            } else {
+                int currentDay = calendar.get(Calendar.DATE);
+                calendar.set(Calendar.DATE, currentDay + 1);
+            }
             calendar.set(Calendar.HOUR_OF_DAY, 7);
             calendar.set(Calendar.MINUTE, 0);
             calendar.set(Calendar.SECOND, 0);
@@ -46,11 +51,23 @@ public class RebootReceiver extends BroadcastReceiver {
             alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(),
                     AlarmManager.INTERVAL_DAY, pendingIntent);
         } else {
+            int currentDay = calendar.get(Calendar.DATE);
+            calendar.set(Calendar.DATE, currentDay + 1);
             alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(),
                     AlarmManager.INTERVAL_DAY * 7, pendingIntent);
         }
 
         // Saving alarm-set state
         Utils.setAlarmState(context, true);
+    }
+
+    // TODO: refactor name
+    private boolean itIsBeforeSeven(Calendar calendar) {
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        if (hour > 7) {
+            return false;
+        } else {
+            return true;
+        }
     }
 }

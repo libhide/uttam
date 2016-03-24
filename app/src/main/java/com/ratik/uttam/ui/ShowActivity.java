@@ -1,6 +1,8 @@
 package com.ratik.uttam.ui;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +10,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ratik.uttam.R;
@@ -29,8 +32,10 @@ public class ShowActivity extends AppCompatActivity {
     private ImageView image;
     private TextView photographerTextView;
     private ImageButton setWallpaperButton;
+    private LinearLayout creditsView;
 
     private String photographer;
+    private String userProfileUrl;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,6 +45,7 @@ public class ShowActivity extends AppCompatActivity {
         // Get photo data
         wallpaper = FileUtils.getImageBitmap(this, "wallpaper", "png");
         photographer = PhotoUtils.getPhotographerName(this);
+        userProfileUrl = PhotoUtils.getUserProf(this);
 
         // Views init
         image = (ImageView) findViewById(R.id.wallpaper);
@@ -58,6 +64,14 @@ public class ShowActivity extends AppCompatActivity {
                 new SetWallpaperTask(ShowActivity.this).execute(wallpaper);
                 // Finish the activity
                 finish();
+            }
+        });
+
+        creditsView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(userProfileUrl));
+                startActivity(browserIntent);
             }
         });
     }
