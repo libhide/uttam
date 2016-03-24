@@ -11,7 +11,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Build;
@@ -27,6 +26,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
@@ -94,6 +94,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             FileUtils.saveImage(this, wallpaper, "wallpaper", "png");
 
             // TODO: refactor
+            PhotoUtils.setColor(this, "#cbcbcb");
             PhotoUtils.setFullUrl(this, "https://images.unsplash.com/photo-1449024540548-94f5d5a59230?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&s=dec4b59ca06926527007bd98670f2800");
             PhotoUtils.setRegularUrl(this, "https://images.unsplash.com/photo-1449024540548-94f5d5a59230?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&w=1080&s=dec4b59ca06926527007bd98670f2800");
             PhotoUtils.setPhotographerName(this, "Mike Wilson");
@@ -135,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         // Set data
         image.setImageBitmap(wallpaper);
         image.setOnTouchListener(imageScrollListener);
-        photographerTextView.setText(photographer);
+        photographerTextView.setText(Utils.toTitleCase(photographer));
 
         // Click listeners
         saveWallpaperButton.setOnClickListener(new View.OnClickListener() {
@@ -164,11 +165,9 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             }
         });
 
-        // Do cool transparent stuff for new devices
+        // Do cool translucent stuff for L+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().getDecorView().setSystemUiVisibility(
-                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-            getWindow().setStatusBarColor(Color.TRANSPARENT);
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         } else {
             setTheme(R.style.AppTheme_Fullscreen);
         }

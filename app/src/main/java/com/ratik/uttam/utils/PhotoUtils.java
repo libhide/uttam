@@ -12,6 +12,18 @@ public class PhotoUtils {
 
     public static final String filename = "photo";
 
+    public static void setColor(Context context, String color) {
+        SharedPreferences sp = context.getSharedPreferences(filename, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString(Constants.CONST_COLOR, color);
+        editor.apply();
+    }
+
+    public static String getColor(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(filename, Context.MODE_PRIVATE);
+        return sp.getString(Constants.CONST_COLOR, "#000000");
+    }
+
     public static void setPhotographerName(Context context, String name) {
         SharedPreferences sp = context.getSharedPreferences(filename, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();

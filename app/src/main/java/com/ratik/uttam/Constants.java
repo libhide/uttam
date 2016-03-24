@@ -9,6 +9,7 @@ public class Constants {
     public static final String BASE_URL = "https://api.unsplash.com/photos/random/?client_id=";
 
     // JSON API constants
+    public static final String CONST_COLOR = "color";
     public static final String CONST_URLS = "urls";
     public static final String CONST_URL_FULL = "full";
     public static final String CONST_URL_REGULAR = "regular";

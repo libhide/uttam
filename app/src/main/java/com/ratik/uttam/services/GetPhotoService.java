@@ -114,6 +114,8 @@ public class GetPhotoService extends Service {
         Photo p = new Photo();
         JSONObject object = new JSONObject(jsonData);
 
+        p.setColor(object.getString(Constants.CONST_COLOR));
+
         JSONObject urls = object.getJSONObject(Constants.CONST_URLS);
         p.setUrlFull(urls.getString(Constants.CONST_URL_FULL));
         p.setUrlRegular(urls.getString(Constants.CONST_URL_REGULAR));
@@ -170,6 +172,7 @@ public class GetPhotoService extends Service {
             FileUtils.saveImage(context, wallpaper, "wallpaper", "png");
 
             // Save photo data into SharedPrefs
+            PhotoUtils.setColor(context, photo.getColor());
             PhotoUtils.setFullUrl(context, photo.getUrlFull());
             PhotoUtils.setRegularUrl(context, photo.getUrlRegular());
             PhotoUtils.setPhotographerName(context, photo.getPhotographer());

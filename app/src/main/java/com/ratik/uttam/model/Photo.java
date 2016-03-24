@@ -12,6 +12,7 @@ public class Photo implements Parcelable {
     private String photographer;
     private String htmlUrl;
     private String downloadUrl;
+    private String color;
 
     public Photo() {
         // Default constructor
@@ -57,6 +58,14 @@ public class Photo implements Parcelable {
         this.downloadUrl = downloadUrl;
     }
 
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -69,6 +78,7 @@ public class Photo implements Parcelable {
         dest.writeString(this.photographer);
         dest.writeString(this.htmlUrl);
         dest.writeString(this.downloadUrl);
+        dest.writeString(this.color);
     }
 
     protected Photo(Parcel in) {
@@ -77,6 +87,7 @@ public class Photo implements Parcelable {
         this.photographer = in.readString();
         this.downloadUrl = in.readString();
         this.htmlUrl = in.readString();
+        this.color = in.readString();
     }
 
     public static final Parcelable.Creator<Photo> CREATOR = new Parcelable.Creator<Photo>() {

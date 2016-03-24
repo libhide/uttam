@@ -49,7 +49,7 @@ public class ShowActivity extends AppCompatActivity {
         // Set photo data
         image.setImageBitmap(wallpaper);
         image.setOnTouchListener(imageScrollListener);
-        photographerTextView.setText(photographer);
+        photographerTextView.setText(Utils.toTitleCase(photographer));
 
         // Click listeners
         setWallpaperButton.setOnClickListener(new View.OnClickListener() {
