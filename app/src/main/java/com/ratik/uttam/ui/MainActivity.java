@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     private static final int SHOW_WALLPAPER = 1;
 
     private int screenWidth;
+    private int screenHeight;
 
     private Bitmap wallpaper;
     private boolean firstRun;
@@ -221,8 +222,10 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         Point size = new Point();
         display.getSize(size);
         screenWidth = size.x;
+        screenHeight = size.y;
 
         Utils.setScreenWidth(this, screenWidth);
+        Utils.setScreenHeight(this, screenHeight);
     }
 
     private void sendFirstRunNotification() {
@@ -256,7 +259,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         try {
             boolean copied = FileUtils.makeFileCopy(srcFile, destFile);
             if (copied) {
-                Toast.makeText(MainActivity.this, "Image saved!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Wallpaper saved", Toast.LENGTH_SHORT).show();
                 Intent scanFileIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(destFile));
                 sendBroadcast(scanFileIntent);
             }

@@ -15,7 +15,8 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".ui.HeroActivity"
-            android:theme="@style/AppTheme.Fullscreen">
+            android:theme="@style/AppTheme.Fullscreen"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -25,13 +26,14 @@
 
         <activity
             android:name=".ui.MainActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".ui.ShowActivity"
             android:excludeFromRecents="true"
-            android:theme="@style/AppTheme.Fullscreen" />
+            android:theme="@style/AppTheme.Fullscreen"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".ui.SettingsActivity"

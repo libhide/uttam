@@ -61,9 +61,10 @@ public class BitmapUtils {
         return Bitmap.createBitmap(bitmap, cropW, cropH, newWidth, newHeight);
     }
 
-    public static Bitmap scaleBitmap(Bitmap bm) {
-        int maxWidth = 2048;
-        int maxHeight = 1080;
+    public static Bitmap scaleBitmap(Context context, Bitmap bm) {
+        int maxWidth = Utils.getScreenWidth(context);
+        int maxHeight = Utils.getScreenHeight(context);
+
         int width = bm.getWidth();
         int height = bm.getHeight();
 

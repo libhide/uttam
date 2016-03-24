@@ -137,12 +137,7 @@ public class GetPhotoService extends Service {
         protected Void doInBackground(Void... params) {
             try {
                 // Wallpaper
-                URL url;
-                if (screenWidth <= 720) {
-                    url = new URL(photo.getUrlRegular());
-                } else {
-                    url = new URL(photo.getUrlFull());
-                }
+                URL url = new URL(photo.getUrlFull());
 
                 // For Testing
                 // url = new URL(photo.getUrlRegular());
@@ -152,7 +147,7 @@ public class GetPhotoService extends Service {
                 connection.connect();
                 InputStream input = connection.getInputStream();
                 wallpaper = BitmapFactory.decodeStream(input);
-                wallpaper = BitmapUtils.scaleBitmap(wallpaper);
+                wallpaper = BitmapUtils.scaleBitmap(context, wallpaper);
             } catch (IOException e) {
                 Log.e(TAG, "Exception caught: ", e);
             }

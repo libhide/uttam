@@ -56,7 +56,19 @@ public class Utils {
 
     public static int getScreenWidth(Context context) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        return sp.getInt(Constants.SCREEN_WIDTH, 1080);
+        return sp.getInt(Constants.SCREEN_WIDTH, 1920);
+    }
+
+    public static void setScreenHeight(Context context, int value) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putInt(Constants.SCREEN_HEIGHT, value);
+        editor.apply();
+    }
+
+    public static int getScreenHeight(Context context) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        return sp.getInt(Constants.SCREEN_HEIGHT, 1080);
     }
 
     public static String toTitleCase(String input) {
