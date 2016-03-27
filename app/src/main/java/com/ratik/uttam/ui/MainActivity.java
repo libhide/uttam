@@ -152,8 +152,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
                     // Copy from internal storage to the SD card
                     saveFile();
-                }
-                else {
+                } else {
                     ActivityCompat.requestPermissions(MainActivity.this,
                             new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                             Constants.CONST_WRITE_EXTERNAL_STORAGE);
@@ -194,13 +193,10 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         if (Utils.getRefreshInterval(this).equals("daily")) {
-            // Setting calendar to next day, 7 AM
-            if (itIsBeforeSeven(calendar)) {
-               // nothing
-            } else {
-                int currentDay = calendar.get(Calendar.DATE);
-                calendar.set(Calendar.DATE, currentDay + 1);
-            }
+            // We do this because on the first day, the user sees
+            // the uttam hero wallpaper
+            int currentDay = calendar.get(Calendar.DATE);
+            calendar.set(Calendar.DATE, currentDay + 1);
             calendar.set(Calendar.HOUR_OF_DAY, 7);
             calendar.set(Calendar.MINUTE, 0);
             calendar.set(Calendar.SECOND, 0);
@@ -216,16 +212,6 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
         // Saving alarm-set state
         Utils.setAlarmState(this, true);
-    }
-
-    // TODO: refactor name
-    private boolean itIsBeforeSeven(Calendar calendar) {
-        int hour = calendar.get(Calendar.HOUR_OF_DAY);
-        if (hour > 7) {
-            return false;
-        } else {
-            return true;
-        }
     }
 
     private void saveScreenSize() {
@@ -299,7 +285,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
         public boolean onTouch(View view, MotionEvent event) {
             // set maximum scroll amount (based on center of image)
-            int maxX = (wallpaper.getWidth() / 2) - (screenWidth / 2);
+            int maxX = (wallpaper.getWidth() / 2) - (Utils.getScreenWidth(MainActivity.this) / 2);
 
             // set scroll limits
             final int maxLeft = (maxX * -1);
@@ -373,8 +359,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                         Manifest.permission.WRITE_EXTERNAL_STORAGE);
                 if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
                     shareWallpaper();
-                }
-                else {
+                } else {
                     ActivityCompat.requestPermissions(MainActivity.this,
                             new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                             Constants.CONST_WRITE_EXTERNAL_STORAGE);

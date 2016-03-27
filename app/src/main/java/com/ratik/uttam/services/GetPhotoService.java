@@ -137,9 +137,6 @@ public class GetPhotoService extends Service {
                 // Wallpaper
                 URL url = new URL(photo.getUrlFull());
 
-                // For Testing
-                // url = new URL(photo.getUrlRegular());
-
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setDoInput(true);
                 connection.connect();

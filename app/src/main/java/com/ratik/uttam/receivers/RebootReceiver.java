@@ -37,13 +37,13 @@ public class RebootReceiver extends BroadcastReceiver {
 
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         if (Utils.getRefreshInterval(context).equals("daily")) {
-            // Setting calendar to next day, 7 AM
-            if (itIsBeforeSeven(calendar)) {
-                // nothing
-            } else {
-                int currentDay = calendar.get(Calendar.DATE);
-                calendar.set(Calendar.DATE, currentDay + 1);
-            }
+            // Setting alarm for 7AM
+            // If its past 7AM (on that day), alarm will go off anyway
+            // If not, it will go off at 7
+
+            // int currentDay = calendar.get(Calendar.DATE);
+            // calendar.set(Calendar.DATE, currentDay + 1);
+
             calendar.set(Calendar.HOUR_OF_DAY, 7);
             calendar.set(Calendar.MINUTE, 0);
             calendar.set(Calendar.SECOND, 0);
