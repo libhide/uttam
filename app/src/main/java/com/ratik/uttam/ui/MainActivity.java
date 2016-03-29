@@ -1,7 +1,6 @@
 package com.ratik.uttam.ui;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -49,8 +48,10 @@ import java.io.IOException;
 import java.util.Calendar;
 
 
-public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
+public class MainActivity extends AppCompatActivity
+        implements PopupMenu.OnMenuItemClickListener {
 
+    // Constants
     private static final String TAG = MainActivity.class.getSimpleName();
 
     public static final int WALLPAPER_NOTIF_PENDING_INTENT_ID = 1;
@@ -58,29 +59,28 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     private static final int FIRST_RUN_NOTIFICATION = 0;
     private static final int SHOW_WALLPAPER = 1;
 
-    private int screenWidth;
-    private int screenHeight;
-
+    // Wallpaper data
     private Bitmap wallpaper;
-    private boolean firstRun;
-
     private String photographer;
     private String downloadUrl;
     private String userProfileUrl;
 
+    int screenWidth;
+    int screenHeight;
+
+    // Views
     private ImageView image;
     private TextView photographerTextView;
     private ImageButton saveWallpaperButton;
     private ImageButton setWallpaperButton;
     private LinearLayout creditsView;
 
-    @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        firstRun = Utils.isFirstRun(this);
+        boolean firstRun = Utils.isFirstRun(this);
 
         // Save the screen width for later use
         saveScreenSize();
@@ -285,7 +285,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
         public boolean onTouch(View view, MotionEvent event) {
             // set maximum scroll amount (based on center of image)
-            int maxX = (wallpaper.getWidth() / 2) - (Utils.getScreenWidth(MainActivity.this) / 2);
+            int maxX = (wallpaper.getWidth() / 2) - (screenWidth / 2);
 
             // set scroll limits
             final int maxLeft = (maxX * -1);

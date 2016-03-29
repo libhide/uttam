@@ -24,4 +24,9 @@ public class PrefUtils {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         return sp.getBoolean(context.getString(R.string.key_notif_led), false);
     }
+
+    public static boolean userWantsToFetchOverData(Context context) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        return sp.getBoolean(context.getString(R.string.key_fetch_over_data), false);
+    }
 }

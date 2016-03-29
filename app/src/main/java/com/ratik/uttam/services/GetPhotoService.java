@@ -1,5 +1,6 @@
 package com.ratik.uttam.services;
 
+import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -20,9 +21,12 @@ import com.ratik.uttam.Keys;
 import com.ratik.uttam.R;
 import com.ratik.uttam.asyncs.SetWallpaperTask;
 import com.ratik.uttam.model.Photo;
+import com.ratik.uttam.receivers.NotificationReceiver;
+import com.ratik.uttam.ui.MainActivity;
 import com.ratik.uttam.ui.ShowActivity;
 import com.ratik.uttam.utils.BitmapUtils;
 import com.ratik.uttam.utils.FileUtils;
+import com.ratik.uttam.utils.NetworkUtils;
 import com.ratik.uttam.utils.PhotoUtils;
 import com.ratik.uttam.utils.PrefUtils;
 import com.ratik.uttam.utils.Utils;
@@ -35,6 +39,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Calendar;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -54,14 +59,9 @@ public class GetPhotoService extends Service {
 
     private Context context;
     private Photo photo;
-    private int screenWidth;
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-
-        context = this;
-        screenWidth = Utils.getScreenWidth(context);
+    public GetPhotoService() {
+        context = GetPhotoService.this;
     }
 
     @Nullable
@@ -72,12 +72,51 @@ public class GetPhotoService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d(TAG, "Started the service :)");
-        getRandomPhoto();
+        if (NetworkUtils.isNetworkAvailable(this)) {
+            // We have access to the internet
+            if (NetworkUtils.phoneIsOnWiFi(this)) {
+                // Phone is on WiFi
+                Log.i(TAG, "WiFi");
+                getRandomPhoto();
+            } else if (NetworkUtils.phoneIsOn3G(this) && PrefUtils.userWantsToFetchOverData(this)) {
+                // Phone is on mobile data and user does not
+                // mind fetching over it
+                Log.i(TAG, "3G + permission");
+            } else {
+                // Phone is on mobile data and user minds fetching over it
+                Log.i(TAG, "3G + no permission");
+                postponeFetch();
+            }
+        } else {
+            // No internet
+            postponeFetch();
+        }
         return START_STICKY;
     }
 
+    private void postponeFetch() {
+        Log.i(TAG, "Postponing fetch by one hour");
+        Calendar calendar = Calendar.getInstance();
+
+        Intent intent = new Intent(this, NotificationReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,
+                MainActivity.WALLPAPER_DEFERRED_NOTIF_PENDING_INTENT_ID, intent, 0);
+
+        // Postpone fetch by one hour
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        int currentHour = calendar.get(Calendar.HOUR_OF_DAY);
+        calendar.set(Calendar.HOUR_OF_DAY, currentHour + 1);
+        alarmManager.set(AlarmManager.RTC, calendar.getTimeInMillis(), pendingIntent);
+
+        // Saving alarm-set state
+        Utils.setAlarmState(this, true);
+
+        // Stop current instance of the service
+        stopSelf();
+    }
+
     private void getRandomPhoto() {
+        Log.d(TAG, "Getting random photo...");
         String randomUrl = Constants.BASE_URL + Keys.API_KEY;
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
@@ -176,7 +215,6 @@ public class GetPhotoService extends Service {
             }
 
             // Stop the service
-            Log.d(TAG, "Stopping the service");
             stopSelf();
         }
     }

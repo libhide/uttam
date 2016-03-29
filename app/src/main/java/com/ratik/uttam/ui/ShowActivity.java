@@ -26,6 +26,8 @@ public class ShowActivity extends AppCompatActivity {
 
     private static final String TAG = ShowActivity.class.getSimpleName();
 
+    private int screenWidth;
+
     private Bitmap wallpaper;
 
     // Views
@@ -41,6 +43,8 @@ public class ShowActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show);
+
+        screenWidth = Utils.getScreenWidth(this);
 
         // Get photo data
         wallpaper = FileUtils.getImageBitmap(this, "wallpaper", "png");
@@ -84,7 +88,7 @@ public class ShowActivity extends AppCompatActivity {
 
         public boolean onTouch(View view, MotionEvent event) {
             // set maximum scroll amount (based on center of image)
-            int maxX = (wallpaper.getWidth() / 2) - (Utils.getScreenWidth(ShowActivity.this) / 2);
+            int maxX = (wallpaper.getWidth() / 2) - (screenWidth / 2);
 
             // set scroll limits
             final int maxLeft = (maxX * -1);

@@ -17,4 +17,7 @@
     <string name="key_notif_led">notifictionLED</string>
     <string name="summary_notif_led">Use notification LED</string>
     <string name="title_notif_led">Notification LED</string>
+    <string name="key_fetch_over_data">fetchOnData</string>
+    <string name="summary_fetch_over_data">Download new wallpaper over mobile data</string>
+    <string name="title_fetch_over_data">Fetch over mobile data</string>
 </resources>

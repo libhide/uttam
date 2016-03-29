@@ -19,4 +19,18 @@ public class NetworkUtils {
         }
         return isAvailable;
     }
+
+    public static boolean phoneIsOn3G(Context context) {
+        final ConnectivityManager connMgr = (ConnectivityManager)
+                context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        final android.net.NetworkInfo mobileData = connMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+        return mobileData.isConnected();
+    }
+
+    public static boolean phoneIsOnWiFi(Context context) {
+        final ConnectivityManager connMgr = (ConnectivityManager)
+                context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        final android.net.NetworkInfo wifi = connMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        return wifi.isConnected();
+    }
 }
