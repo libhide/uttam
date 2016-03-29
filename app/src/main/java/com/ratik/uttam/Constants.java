@@ -27,7 +27,7 @@ public class Constants {
     public static final String SCREEN_HEIGHT = "screen_width";
     public static final String ALARM_SET = "alarm_set";
 
-    public static final String PREF_REFRESH_INTERVAL = "refresh_interval";
+    public static final String PREF_REFRESH_INTERVAL = "setRefreshInterval";
 
     // Permission constants
     public static final int CONST_WRITE_EXTERNAL_STORAGE = 1;

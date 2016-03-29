@@ -13,7 +13,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.ratik.uttam.R;
-import com.ratik.uttam.utils.Utils;
+import com.ratik.uttam.utils.PrefUtils;
 
 /**
  * Created by Ratik on 08/03/16.
@@ -54,11 +54,11 @@ public class SetupFragment extends Fragment {
                 switch (which) {
                     case 0:
                         // DAILY
-                        Utils.setRefreshInterval(getActivity(), "daily");
+                        PrefUtils.setRefreshInterval(getActivity(), "daily");
                         break;
                     case 1:
                         // WEEKLY
-                        Utils.setRefreshInterval(getActivity(), "weekly");
+                        PrefUtils.setRefreshInterval(getActivity(), "weekly");
                         break;
                 }
                 tipView.setVisibility(View.VISIBLE);

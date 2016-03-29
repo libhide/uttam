@@ -1,7 +1,6 @@
 package com.ratik.uttam.ui;
 
 import android.Manifest;
-import android.app.AlarmManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.WallpaperManager;
@@ -36,8 +35,8 @@ import android.widget.Toast;
 import com.ratik.uttam.Constants;
 import com.ratik.uttam.R;
 import com.ratik.uttam.asyncs.SetWallpaperTask;
-import com.ratik.uttam.receivers.NotificationReceiver;
 import com.ratik.uttam.services.GetPhotoService;
+import com.ratik.uttam.utils.AlarmHelper;
 import com.ratik.uttam.utils.BitmapUtils;
 import com.ratik.uttam.utils.FileUtils;
 import com.ratik.uttam.utils.PhotoUtils;
@@ -45,7 +44,6 @@ import com.ratik.uttam.utils.Utils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Calendar;
 
 
 public class MainActivity extends AppCompatActivity
@@ -54,8 +52,6 @@ public class MainActivity extends AppCompatActivity
     // Constants
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    public static final int WALLPAPER_NOTIF_PENDING_INTENT_ID = 1;
-    public static final int WALLPAPER_DEFERRED_NOTIF_PENDING_INTENT_ID = 2;
     private static final int FIRST_RUN_NOTIFICATION = 0;
     private static final int SHOW_WALLPAPER = 1;
 
@@ -110,8 +106,9 @@ public class MainActivity extends AppCompatActivity
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
             // set alarm
-            setNotification();
+            AlarmHelper.setAlarm(this);
 
             // cast first notif
             sendFirstRunNotification();
@@ -182,36 +179,6 @@ public class MainActivity extends AppCompatActivity
         } else {
             setTheme(R.style.AppTheme_Fullscreen);
         }
-    }
-
-    private void setNotification() {
-        Calendar calendar = Calendar.getInstance();
-
-        Intent intent = new Intent(this, NotificationReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,
-                WALLPAPER_NOTIF_PENDING_INTENT_ID, intent, 0);
-
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        if (Utils.getRefreshInterval(this).equals("daily")) {
-            // We do this because on the first day, the user sees
-            // the uttam hero wallpaper
-            int currentDay = calendar.get(Calendar.DATE);
-            calendar.set(Calendar.DATE, currentDay + 1);
-            calendar.set(Calendar.HOUR_OF_DAY, 7);
-            calendar.set(Calendar.MINUTE, 0);
-            calendar.set(Calendar.SECOND, 0);
-
-            alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(),
-                    AlarmManager.INTERVAL_DAY, pendingIntent);
-        } else {
-            int currentDay = calendar.get(Calendar.DATE);
-            calendar.set(Calendar.DATE, currentDay + 1);
-            alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(),
-                    AlarmManager.INTERVAL_DAY * 7, pendingIntent);
-        }
-
-        // Saving alarm-set state
-        Utils.setAlarmState(this, true);
     }
 
     private void saveScreenSize() {

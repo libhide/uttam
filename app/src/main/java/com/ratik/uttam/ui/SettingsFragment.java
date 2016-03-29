@@ -14,13 +14,21 @@ import com.ratik.uttam.R;
 public class SettingsFragment extends PreferenceFragment
         implements Preference.OnPreferenceChangeListener {
 
+    private static final String TAG = SettingsFragment.class.getSimpleName();
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.prefs);
+    }
 
-        // For all (most) preferences, attach an OnPreferenceChangeListener so the UI summary can be
-        // updated when the preference changes.
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // For all (most) preferences, attach an OnPreferenceChangeListener
+        // so the UI summary can be updated when the preference changes.
+        bindPreferenceSummaryToValue(findPreference(getString(R.string.key_refresh_interval)));
     }
 
     /**

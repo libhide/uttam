@@ -1,6 +1,5 @@
 package com.ratik.uttam.services;
 
-import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -21,15 +20,13 @@ import com.ratik.uttam.Keys;
 import com.ratik.uttam.R;
 import com.ratik.uttam.asyncs.SetWallpaperTask;
 import com.ratik.uttam.model.Photo;
-import com.ratik.uttam.receivers.NotificationReceiver;
-import com.ratik.uttam.ui.MainActivity;
 import com.ratik.uttam.ui.ShowActivity;
+import com.ratik.uttam.utils.AlarmHelper;
 import com.ratik.uttam.utils.BitmapUtils;
 import com.ratik.uttam.utils.FileUtils;
 import com.ratik.uttam.utils.NetworkUtils;
 import com.ratik.uttam.utils.PhotoUtils;
 import com.ratik.uttam.utils.PrefUtils;
-import com.ratik.uttam.utils.Utils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,7 +36,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Calendar;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -96,20 +92,8 @@ public class GetPhotoService extends Service {
 
     private void postponeFetch() {
         Log.i(TAG, "Postponing fetch by one hour");
-        Calendar calendar = Calendar.getInstance();
 
-        Intent intent = new Intent(this, NotificationReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,
-                MainActivity.WALLPAPER_DEFERRED_NOTIF_PENDING_INTENT_ID, intent, 0);
-
-        // Postpone fetch by one hour
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        int currentHour = calendar.get(Calendar.HOUR_OF_DAY);
-        calendar.set(Calendar.HOUR_OF_DAY, currentHour + 1);
-        alarmManager.set(AlarmManager.RTC, calendar.getTimeInMillis(), pendingIntent);
-
-        // Saving alarm-set state
-        Utils.setAlarmState(this, true);
+        AlarmHelper.postponeAlarm(this);
 
         // Stop current instance of the service
         stopSelf();

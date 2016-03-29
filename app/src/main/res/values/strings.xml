@@ -20,4 +20,7 @@
     <string name="key_fetch_over_data">fetchOnData</string>
     <string name="summary_fetch_over_data">Download new wallpaper over mobile data</string>
     <string name="title_fetch_over_data">Fetch over mobile data</string>
+    <string name="key_refresh_interval">setRefreshInterval</string>
+    <string name="title_refresh_interval">Wallpaper fetch interval</string>
+    <string name="summary_refresh_interval">Set the refresh interval for new wallpapers</string>
 </resources>
