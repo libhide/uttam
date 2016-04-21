@@ -26,8 +26,9 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
         android:layout_marginEnd="15dp"
-        android:layout_marginTop="40dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
+        android:layout_marginTop="35dp"
+        android:background="?attr/selectableItemBackground"
+        android:theme="@android:style/ThemeOverlay.Material.Dark"
         android:contentDescription="@string/action_settings"
         android:onClick="showPopup"
         android:src="@drawable/ic_overflow" />
@@ -55,17 +56,21 @@
             android:id="@+id/wallpaperSaveButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="15dp"
+            android:padding="5dp"
+            android:layout_marginEnd="5dp"
             android:layout_weight="1"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:background="?attr/selectableItemBackground"
+            android:theme="@android:style/ThemeOverlay.Material.Dark"
             android:src="@drawable/ic_download" />
 
         <ImageButton
             android:id="@+id/wallpaperSetButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="5dp"
             android:layout_weight="1"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:background="?attr/selectableItemBackground"
+            android:theme="@android:style/ThemeOverlay.Material.Dark"
             android:src="@drawable/ic_set" />
 
     </LinearLayout>

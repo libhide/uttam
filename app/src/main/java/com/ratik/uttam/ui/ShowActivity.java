@@ -88,7 +88,7 @@ public class ShowActivity extends AppCompatActivity {
 
         public boolean onTouch(View view, MotionEvent event) {
             // set maximum scroll amount (based on center of image)
-            int maxX = (wallpaper.getWidth() / 2) - (screenWidth / 2);
+            int maxX = ((wallpaper.getWidth() / 2)) - (screenWidth / 2 - 200);
 
             // set scroll limits
             final int maxLeft = (maxX * -1);

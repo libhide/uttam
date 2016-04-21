@@ -37,7 +37,10 @@ public class AlarmHelper {
                     AlarmManager.INTERVAL_DAY, pendingIntent);
         } else {
             int currentDay = calendar.get(Calendar.DATE);
-            calendar.set(Calendar.DATE, currentDay + 1);
+            calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+            calendar.set(Calendar.HOUR_OF_DAY, 7);
+            calendar.set(Calendar.MINUTE, 0);
+            calendar.set(Calendar.SECOND, 0);
             alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(),
                     AlarmManager.INTERVAL_DAY * 7, pendingIntent);
         }
@@ -55,12 +58,10 @@ public class AlarmHelper {
 
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         if (PrefUtils.getRefreshInterval(context).equals("daily")) {
-            // Setting alarm for 7AM
-            // If its past 7AM (on that day), alarm will go off anyway
-            // If not, it will go off at 7
-
-            // int currentDay = calendar.get(Calendar.DATE);
-            // calendar.set(Calendar.DATE, currentDay + 1);
+            if (calendar.get(Calendar.HOUR_OF_DAY) > 7) {
+                int currentDay = calendar.get(Calendar.DATE);
+                calendar.set(Calendar.DATE, currentDay + 1);
+            }
 
             calendar.set(Calendar.HOUR_OF_DAY, 7);
             calendar.set(Calendar.MINUTE, 0);
@@ -69,8 +70,10 @@ public class AlarmHelper {
             alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(),
                     AlarmManager.INTERVAL_DAY, pendingIntent);
         } else {
-            int currentDay = calendar.get(Calendar.DATE);
-            calendar.set(Calendar.DATE, currentDay + 1);
+            calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+            calendar.set(Calendar.HOUR_OF_DAY, 7);
+            calendar.set(Calendar.MINUTE, 0);
+            calendar.set(Calendar.SECOND, 0);
             alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(),
                     AlarmManager.INTERVAL_DAY * 7, pendingIntent);
         }

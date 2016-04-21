@@ -70,6 +70,7 @@ public class MainActivity extends AppCompatActivity
     private ImageButton saveWallpaperButton;
     private ImageButton setWallpaperButton;
     private LinearLayout creditsView;
+    private PopupMenu popup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -252,7 +253,7 @@ public class MainActivity extends AppCompatActivity
 
         public boolean onTouch(View view, MotionEvent event) {
             // set maximum scroll amount (based on center of image)
-            int maxX = (wallpaper.getWidth() / 2) - (screenWidth / 2);
+            int maxX = ((wallpaper.getWidth() / 2)) - (screenWidth / 2);
 
             // set scroll limits
             final int maxLeft = (maxX * -1);
@@ -307,7 +308,7 @@ public class MainActivity extends AppCompatActivity
     };
 
     public void showPopup(View v) {
-        PopupMenu popup = new PopupMenu(this, v);
+        popup = new PopupMenu(this, v);
         popup.setOnMenuItemClickListener(this);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.actions, popup.getMenu());
