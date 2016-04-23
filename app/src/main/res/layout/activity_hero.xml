@@ -10,6 +10,7 @@
         android:src="@drawable/uttam_hero" />
 
     <ImageView
+        android:id="@+id/uttam"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
