@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity
     private TextView photographerTextView;
     private ImageButton saveWallpaperButton;
     private ImageButton setWallpaperButton;
-    private LinearLayout creditsView;
+    private LinearLayout creditsContainer;
     private PopupMenu popup;
 
     @Override
@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity
         photographerTextView = (TextView) findViewById(R.id.photographerTextView);
         saveWallpaperButton = (ImageButton) findViewById(R.id.wallpaperSaveButton);
         setWallpaperButton = (ImageButton) findViewById(R.id.wallpaperSetButton);
-        creditsView = (LinearLayout) findViewById(R.id.creditsView);
+        creditsContainer = (LinearLayout) findViewById(R.id.creditsContainer);
 
         if (firstRun) {
             // save hero into the internal storage
@@ -168,7 +168,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        creditsView.setOnClickListener(new View.OnClickListener() {
+        creditsContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(userProfileUrl));

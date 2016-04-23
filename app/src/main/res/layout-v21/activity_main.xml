@@ -43,6 +43,7 @@
         android:src="@drawable/uttam" />
 
     <LinearLayout
+        android:id="@+id/actionsContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -76,7 +77,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/creditsView"
+        android:id="@+id/creditsContainer"
         style="@style/SelectableItemBackground"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

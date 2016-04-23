@@ -45,8 +45,8 @@ public class HeroActivity extends AppCompatActivity {
             }
 
             // Animations
-            float startVal = uttamLogo.getY() - 150;
-            float endVal = uttamLogo.getY() + 150;
+            float startVal = uttamLogo.getY() - 200;
+            float endVal = uttamLogo.getY() + 220;
             uttamLogo.setY(startVal);
 
             ObjectAnimator uttamPositionAnimator = ObjectAnimator.ofFloat(uttamLogo, View.Y, startVal, endVal);
@@ -80,7 +80,7 @@ public class HeroActivity extends AppCompatActivity {
                     startActivity(new Intent(HeroActivity.this, MainActivity.class));
                     overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 }
-            }, 1200);
+            }, 1300);
         }
     }
 
