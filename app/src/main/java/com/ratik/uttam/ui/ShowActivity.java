@@ -1,6 +1,7 @@
 package com.ratik.uttam.ui;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -141,6 +142,19 @@ public class ShowActivity extends AppCompatActivity {
             return true;
         }
     };
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        int orientation = newConfig.orientation;
+        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+            image.scrollTo(0, 0);
+            image.setOnTouchListener(imageScrollListener);
+        } else {
+            image.scrollTo(0, 0);
+            image.setOnTouchListener(null);
+        }
+    }
 
     @Override
     protected void onPause() {

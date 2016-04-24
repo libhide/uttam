@@ -7,6 +7,7 @@ import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
@@ -271,7 +272,7 @@ public class MainActivity extends AppCompatActivity
 
                 case MotionEvent.ACTION_MOVE:
                     currentX = event.getX();
-                    scrollByX = (int)(downX - currentX);
+                    scrollByX = (int) (downX - currentX);
 
                     // scrolling to left side of image (pic moving to the right)
                     if (currentX > downX) {
@@ -305,10 +306,22 @@ public class MainActivity extends AppCompatActivity
                     downX = currentX;
                     break;
             }
-
             return true;
         }
     };
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        int orientation = newConfig.orientation;
+        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+            image.scrollTo(0, 0);
+            image.setOnTouchListener(imageScrollListener);
+        } else {
+            image.scrollTo(0, 0);
+            image.setOnTouchListener(null);
+        }
+    }
 
     public void showPopup(View v) {
         popup = new PopupMenu(this, v);
@@ -323,7 +336,6 @@ public class MainActivity extends AppCompatActivity
         switch (item.getItemId()) {
             case R.id.action_settings:
                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));
-                // overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 return true;
             case R.id.action_share:
                 int permissionCheck = ContextCompat.checkSelfPermission(MainActivity.this,
