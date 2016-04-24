@@ -11,7 +11,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.transition.Fade;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.AccelerateInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 
@@ -45,28 +44,31 @@ public class HeroActivity extends AppCompatActivity {
             }
 
             // Animations
-            float startVal = uttamLogo.getY() - 200;
-            float endVal = uttamLogo.getY() + 220;
-            uttamLogo.setY(startVal);
 
-            ObjectAnimator uttamPositionAnimator = ObjectAnimator.ofFloat(uttamLogo, View.Y, startVal, endVal);
-            uttamPositionAnimator.setDuration(800);
+            // Logo
+            uttamLogo.setAlpha(0f);
+            ObjectAnimator uttamAlphaAnimator = ObjectAnimator.ofFloat(uttamLogo, View.ALPHA, 0f, 1f);
+            uttamAlphaAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+            uttamAlphaAnimator.setDuration(1500);
 
-            ObjectAnimator uttamAlphaAnimator = ObjectAnimator.ofFloat(uttamLogo, View.ALPHA, 0, 1);
-            uttamAlphaAnimator.setDuration(1200);
+            // Button
+            float startValue = getStartedButton.getTranslationY() + 80;
+            float endValue = startValue - 80;
 
-            AnimatorSet logoSet = new AnimatorSet();
-            logoSet.setDuration(1200);
-            logoSet.setInterpolator(new AccelerateDecelerateInterpolator());
-            logoSet.playTogether(uttamAlphaAnimator, uttamPositionAnimator);
+            getStartedButton.setY(startValue);
+            getStartedButton.setAlpha(0f);
 
-            getStartedButton.setAlpha(0);
-            ObjectAnimator buttonFadeAnimator = ObjectAnimator.ofFloat(getStartedButton, View.ALPHA, 0, 1);
-            buttonFadeAnimator.setDuration(800);
-            buttonFadeAnimator.setInterpolator(new AccelerateInterpolator());
+            ObjectAnimator buttonPositionAnimator = ObjectAnimator.ofFloat(getStartedButton, View.TRANSLATION_Y, startValue, endValue);
+            ObjectAnimator buttonFadeAnimator = ObjectAnimator.ofFloat(getStartedButton, View.ALPHA, 0f, 1f);
+
+            AnimatorSet buttonSet = new AnimatorSet();
+            buttonSet.playTogether(buttonPositionAnimator, buttonFadeAnimator);
+            buttonSet.setDuration(1000);
+            buttonSet.setStartDelay(500);
+            buttonSet.setInterpolator(new AccelerateDecelerateInterpolator());
 
             AnimatorSet set = new AnimatorSet();
-            set.playTogether(logoSet, buttonFadeAnimator);
+            set.playTogether(buttonSet, uttamAlphaAnimator);
             set.start();
         } else {
             setContentView(R.layout.activity_splash);
@@ -78,7 +80,7 @@ public class HeroActivity extends AppCompatActivity {
                 public void run() {
                     // Start Main
                     startActivity(new Intent(HeroActivity.this, MainActivity.class));
-                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 }
             }, 1300);
         }
