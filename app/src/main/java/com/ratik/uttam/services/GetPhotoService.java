@@ -27,6 +27,7 @@ import com.ratik.uttam.utils.FileUtils;
 import com.ratik.uttam.utils.NetworkUtils;
 import com.ratik.uttam.utils.PhotoUtils;
 import com.ratik.uttam.utils.PrefUtils;
+import com.ratik.uttam.utils.Utils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -78,6 +79,7 @@ public class GetPhotoService extends Service {
                 // Phone is on mobile data and user does not
                 // mind fetching over it
                 Log.i(TAG, "3G + permission");
+                getRandomPhoto();
             } else {
                 // Phone is on mobile data and user minds fetching over it
                 Log.i(TAG, "3G + no permission");
@@ -92,6 +94,7 @@ public class GetPhotoService extends Service {
 
     private void postponeFetch() {
         Log.i(TAG, "Postponing fetch by one hour");
+        Utils.setAlarmDefState(this, true);
 
         AlarmHelper.postponeAlarm(this);
 
@@ -100,6 +103,9 @@ public class GetPhotoService extends Service {
     }
 
     private void getRandomPhoto() {
+        if (Utils.isAlarmDeferred(this)) {
+            Utils.setAlarmDefState(this, false);
+        }
         Log.d(TAG, "Getting random photo...");
         String randomUrl = Constants.BASE_URL + Keys.API_KEY;
         OkHttpClient client = new OkHttpClient();

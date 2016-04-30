@@ -82,7 +82,7 @@ public class HeroActivity extends AppCompatActivity {
                     startActivity(new Intent(HeroActivity.this, MainActivity.class));
                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 }
-            }, 1300);
+            }, 800);
         }
     }
 

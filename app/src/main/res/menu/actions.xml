@@ -12,9 +12,9 @@
         android:title="Share wallpaper"
         app:showAsAction="never" />
 
-    <item
-        android:id="@+id/action_refresh"
-        android:title="Refresh (dev only)"
-        app:showAsAction="never" />
+    <!--<item-->
+        <!--android:id="@+id/action_refresh"-->
+        <!--android:title="Refresh (dev only)"-->
+        <!--app:showAsAction="never" />-->
 
 </menu>

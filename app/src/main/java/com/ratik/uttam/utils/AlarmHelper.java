@@ -36,7 +36,14 @@ public class AlarmHelper {
             alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(),
                     AlarmManager.INTERVAL_DAY, pendingIntent);
         } else {
-            int currentDay = calendar.get(Calendar.DATE);
+            int currentDay = calendar.get(Calendar.DAY_OF_WEEK);
+            // If the first day of the app is a Monday,
+            // set the alarm for next Monday
+            if (currentDay == Calendar.MONDAY) {
+                int currentDate = calendar.get(Calendar.DATE);
+                currentDate += 7;
+                calendar.set(Calendar.DATE, currentDate);
+            }
             calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
             calendar.set(Calendar.HOUR_OF_DAY, 7);
             calendar.set(Calendar.MINUTE, 0);
@@ -58,7 +65,12 @@ public class AlarmHelper {
 
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         if (PrefUtils.getRefreshInterval(context).equals("daily")) {
-            if (calendar.get(Calendar.HOUR_OF_DAY) > 7) {
+            if (calendar.get(Calendar.HOUR_OF_DAY) >= 7) {
+                // If there is a delayed alarm, set it back
+                if (Utils.isAlarmDeferred(context)) {
+                    postponeAlarm(context);
+                }
+
                 int currentDay = calendar.get(Calendar.DATE);
                 calendar.set(Calendar.DATE, currentDay + 1);
             }

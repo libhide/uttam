@@ -35,6 +35,18 @@ public class Utils {
         return sp.getBoolean(Constants.ALARM_SET, false);
     }
 
+    public static void setAlarmDefState(Context context, boolean value) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putBoolean(Constants.ALARM_DEFERRED, value);
+        editor.apply();
+    }
+
+    public static boolean isAlarmDeferred(Context context) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        return sp.getBoolean(Constants.ALARM_DEFERRED, false);
+    }
+
     public static void setScreenWidth(Context context, int value) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = sp.edit();
