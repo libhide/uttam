@@ -107,7 +107,7 @@ public class GetPhotoService extends Service {
             Utils.setAlarmDefState(this, false);
         }
         Log.d(TAG, "Getting random photo...");
-        String randomUrl = Constants.BASE_URL + Keys.API_KEY;
+        String randomUrl = Constants.BASE_URL + Keys.API_KEY + Constants.CATEGORIES;
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(randomUrl)

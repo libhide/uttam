@@ -7,6 +7,7 @@ public class Constants {
 
     // Network constants
     public static final String BASE_URL = "https://api.unsplash.com/photos/random/?client_id=";
+    public static final String CATEGORIES = "&category=2,3";
 
     // JSON API constants
     public static final String CONST_COLOR = "color";
