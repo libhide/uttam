@@ -23,4 +23,5 @@
     <string name="key_refresh_interval">setRefreshInterval</string>
     <string name="title_refresh_interval">Wallpaper fetch interval</string>
     <string name="summary_refresh_interval">Set the refresh interval for new wallpapers</string>
+    <string name="key_compress_wallpaper">compressWallpaper</string>
 </resources>

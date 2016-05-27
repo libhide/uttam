@@ -88,7 +88,11 @@ public class BitmapUtils {
 
         // Further compression
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 75, out);
+        if (PrefUtils.shouldCompressWallpaper(context)) {
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 75, out);
+        } else {
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+        }
         return BitmapFactory.decodeStream(new ByteArrayInputStream(out.toByteArray()));
     }
 }
