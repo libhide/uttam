@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mainParentView"
     android:layout_width="match_parent"
@@ -19,29 +20,6 @@
         android:layout_height="match_parent"
         android:background="#28000000" />
 
-    <ImageButton
-        android:id="@+id/overflowButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginEnd="15dp"
-        android:layout_marginTop="35dp"
-        android:background="?attr/selectableItemBackground"
-        android:theme="@android:style/ThemeOverlay.Material.Dark"
-        android:contentDescription="@string/action_settings"
-        android:onClick="showPopup"
-        android:src="@drawable/ic_overflow" />
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="40dp"
-        android:src="@drawable/uttam" />
-
     <LinearLayout
         android:id="@+id/actionsContainer"
         android:layout_width="wrap_content"
@@ -57,22 +35,22 @@
             android:id="@+id/wallpaperSaveButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="5dp"
             android:layout_marginEnd="5dp"
             android:layout_weight="1"
             android:background="?attr/selectableItemBackground"
-            android:theme="@android:style/ThemeOverlay.Material.Dark"
-            android:src="@drawable/ic_download" />
+            android:padding="5dp"
+            android:src="@drawable/ic_download"
+            android:theme="@android:style/ThemeOverlay.Material.Dark" />
 
         <ImageButton
             android:id="@+id/wallpaperSetButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="5dp"
             android:layout_weight="1"
             android:background="?attr/selectableItemBackground"
-            android:theme="@android:style/ThemeOverlay.Material.Dark"
-            android:src="@drawable/ic_set" />
+            android:padding="5dp"
+            android:src="@drawable/ic_set"
+            android:theme="@android:style/ThemeOverlay.Material.Dark" />
 
     </LinearLayout>
 
@@ -105,5 +83,14 @@
             tools:text="Mike Wilson" />
 
     </LinearLayout>
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="?attr/actionBarSize"
+        android:paddingTop="24dp"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
 </RelativeLayout>
