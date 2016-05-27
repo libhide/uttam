@@ -38,6 +38,7 @@ import android.widget.Toast;
 import com.ratik.uttam.Constants;
 import com.ratik.uttam.R;
 import com.ratik.uttam.asyncs.SetWallpaperTask;
+import com.ratik.uttam.services.GetPhotoService;
 import com.ratik.uttam.utils.AlarmHelper;
 import com.ratik.uttam.utils.BitmapUtils;
 import com.ratik.uttam.utils.FileUtils;
@@ -347,10 +348,10 @@ public class MainActivity extends AppCompatActivity
                             Constants.CONST_WRITE_EXTERNAL_STORAGE);
                 }
                 return true;
-//            case R.id.action_refresh:
-//                startService(new Intent(getBaseContext(), GetPhotoService.class));
-//                finish();
-//                return true;
+            case R.id.action_refresh:
+                startService(new Intent(getBaseContext(), GetPhotoService.class));
+                finish();
+                return true;
             default:
                 return false;
         }

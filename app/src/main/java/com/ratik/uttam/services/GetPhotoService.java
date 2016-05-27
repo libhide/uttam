@@ -37,6 +37,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Random;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -107,7 +108,11 @@ public class GetPhotoService extends Service {
             Utils.setAlarmDefState(this, false);
         }
         Log.d(TAG, "Getting random photo...");
-        String randomUrl = Constants.BASE_URL + Keys.API_KEY + Constants.CATEGORIES;
+
+        // Fetch URL
+        String randomUrl = Constants.BASE_URL + Keys.API_KEY + "&category=" + getRandomCategory();
+        Log.d(TAG, randomUrl);
+
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(randomUrl)
@@ -244,5 +249,16 @@ public class GetPhotoService extends Service {
         File dir = context.getFilesDir();
         File file = new File(dir, "wallpaper.png");
         return file.delete();
+    }
+
+    private String getRandomCategory() {
+        /*
+         2 == Buildings
+         4 == Nature
+         */
+        int[] categories = {2, 4};
+        Random random = new Random();
+        int index = random.nextInt(categories.length);
+        return "" + categories[index];
     }
 }
