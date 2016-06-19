@@ -38,7 +38,6 @@ public class ShowActivity extends AppCompatActivity {
     private TextView photographerTextView;
     private ImageButton setWallpaperButton;
     private LinearLayout creditsView;
-    private AdView adView;
 
     private String photographer;
     private String userProfileUrl;
@@ -60,7 +59,6 @@ public class ShowActivity extends AppCompatActivity {
         photographerTextView = (TextView) findViewById(R.id.photographerTextView);
         setWallpaperButton = (ImageButton) findViewById(R.id.wallpaperSetButton);
         creditsView = (LinearLayout) findViewById(R.id.creditsContainer);
-        adView = (AdView) findViewById(R.id.adView);
 
         // Set photo data
         image.setImageBitmap(wallpaper);
@@ -86,7 +84,7 @@ public class ShowActivity extends AppCompatActivity {
         });
 
         // Init Banner Ad
-        adView = (AdView) findViewById(R.id.adView);
+        AdView adView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         adView.loadAd(adRequest);
     }
