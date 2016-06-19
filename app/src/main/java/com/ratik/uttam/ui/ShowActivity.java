@@ -14,6 +14,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.ratik.uttam.R;
 import com.ratik.uttam.asyncs.SetWallpaperTask;
 import com.ratik.uttam.utils.FileUtils;
@@ -36,6 +38,7 @@ public class ShowActivity extends AppCompatActivity {
     private TextView photographerTextView;
     private ImageButton setWallpaperButton;
     private LinearLayout creditsView;
+    private AdView adView;
 
     private String photographer;
     private String userProfileUrl;
@@ -57,6 +60,7 @@ public class ShowActivity extends AppCompatActivity {
         photographerTextView = (TextView) findViewById(R.id.photographerTextView);
         setWallpaperButton = (ImageButton) findViewById(R.id.wallpaperSetButton);
         creditsView = (LinearLayout) findViewById(R.id.creditsContainer);
+        adView = (AdView) findViewById(R.id.adView);
 
         // Set photo data
         image.setImageBitmap(wallpaper);
@@ -80,6 +84,11 @@ public class ShowActivity extends AppCompatActivity {
                 startActivity(browserIntent);
             }
         });
+
+        // Init Banner Ad
+        adView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        adView.loadAd(adRequest);
     }
 
     private View.OnTouchListener imageScrollListener = new View.OnTouchListener() {
