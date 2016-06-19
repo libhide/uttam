@@ -24,5 +24,5 @@
     <string name="title_refresh_interval">Wallpaper fetch interval</string>
     <string name="summary_refresh_interval">Set the refresh interval for new wallpapers</string>
     <string name="key_compress_wallpaper">compressWallpaper</string>
-    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544~3347511713</string>
+    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
 </resources>

@@ -9,6 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.ratik.uttam.R;
 import com.ratik.uttam.receivers.NotificationReceiver;
 import com.ratik.uttam.utils.AlarmHelper;
@@ -33,6 +35,11 @@ public class SettingsActivity extends AppCompatActivity {
 
         getFragmentManager().beginTransaction().add(
                 R.id.settings_content, new SettingsFragment()).commit();
+
+        // Init Banner Ad
+        AdView adView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        adView.loadAd(adRequest);
 
     }
 

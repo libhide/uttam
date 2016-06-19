@@ -5,7 +5,7 @@ android {
     buildToolsVersion "23.0.2"
 
     defaultConfig {
-        applicationId "com.ratik.unsplashify"
+        applicationId "com.ratik.uttam"
         minSdkVersion 16
         targetSdkVersion 23
         versionCode 1
