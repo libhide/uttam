@@ -32,10 +32,12 @@ import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.ratik.uttam.Constants;
 import com.ratik.uttam.R;
 import com.ratik.uttam.asyncs.SetWallpaperTask;
@@ -72,7 +74,8 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton saveWallpaperButton;
     private ImageButton setWallpaperButton;
     private LinearLayout creditsContainer;
-    private PopupMenu popup;
+
+    private InterstitialAd interstitialAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -230,6 +233,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void saveFile() {
+        if (Utils.getSaveWallpaperCount(this) > 2) {
+            // Show interstitial ad
+            showInterstitialAdTheSaveWallpaper();
+        } else {
+            // Increment counter
+            Utils.setSaveWallpaperCounter(this, Utils.getSaveWallpaperCount(this) + 1);
+            // Save wallpaper
+            doFileSaving();
+        }
+    }
+
+    private void doFileSaving() {
         File srcFile = FileUtils.getSavedFileFromInternalStorage(MainActivity.this);
         File destFile = new File(FileUtils.getOutputMediaFileUri(MainActivity.this).getPath());
         try {
@@ -242,6 +257,36 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             Log.e(TAG, "Error while copying file: ", e);
         }
+    }
+
+    // Interstitial Ad Code
+    private void showInterstitialAdTheSaveWallpaper() {
+        interstitialAd = new InterstitialAd(this);
+        interstitialAd.setAdUnitId(getString(R.string.interstitial_ad_unit_id));
+        interstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                // Reset save counter to 0
+                Utils.setSaveWallpaperCounter(MainActivity.this, 0);
+                // Save wallpaper
+                doFileSaving();
+            }
+
+            @Override
+            public void onAdLoaded() {
+                interstitialAd.show();
+            }
+        });
+
+        requestNewInterstitial();
+    }
+
+    private void requestNewInterstitial() {
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice("F10B72A932B17CB36CBBE69C25167324")
+                .build();
+
+        interstitialAd.loadAd(adRequest);
     }
 
     @Override
@@ -308,7 +353,6 @@ public class MainActivity extends AppCompatActivity {
                             totalX = maxRight;
                         }
                     }
-
                     image.scrollBy(scrollByX, 0);
                     downX = currentX;
                     break;
