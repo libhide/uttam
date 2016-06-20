@@ -11,6 +11,18 @@ import com.ratik.uttam.Constants;
  */
 public class Utils {
 
+    public static void setSaveWallpaperCounter(Context context, int value) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putInt(Constants.SAVE_COUNTER, value);
+        editor.apply();
+    }
+
+    public static int getSaveWallpaperCount(Context context) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        return sp.getInt(Constants.SAVE_COUNTER, 0);
+    }
+
     public static void setFirstRun(Context context, boolean value) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = sp.edit();
