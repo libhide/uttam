@@ -39,8 +39,13 @@ public class ShowActivity extends AppCompatActivity {
     private ImageButton setWallpaperButton;
     private LinearLayout creditsView;
 
+    private AdView adView;
+
     private String photographer;
     private String userProfileUrl;
+
+    // IAP
+    private boolean userHasRemovedAds;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -83,10 +88,8 @@ public class ShowActivity extends AppCompatActivity {
             }
         });
 
-        // Init Banner Ad
-        AdView adView = (AdView) findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        adView.loadAd(adRequest);
+        // Init AdView
+        adView = (AdView) findViewById(R.id.adView);
     }
 
     private View.OnTouchListener imageScrollListener = new View.OnTouchListener() {
@@ -167,5 +170,15 @@ public class ShowActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         finish();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        userHasRemovedAds = Utils.haveAdsBeenRemoved(this);
+        if (!userHasRemovedAds) {
+            AdRequest adRequest = new AdRequest.Builder().build();
+            adView.loadAd(adRequest);
+        }
     }
 }

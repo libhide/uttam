@@ -11,6 +11,18 @@ import com.ratik.uttam.Constants;
  */
 public class Utils {
 
+    public static boolean haveAdsBeenRemoved(Context context) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        return sp.getBoolean(Constants.REMOVE_ADS, false);
+    }
+
+    public static void setRemoveAdsState(Context context, boolean value) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putBoolean(Constants.REMOVE_ADS, value);
+        editor.apply();
+    }
+
     public static void setSaveWallpaperCounter(Context context, int value) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = sp.edit();

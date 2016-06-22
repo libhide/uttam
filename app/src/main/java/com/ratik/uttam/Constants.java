@@ -34,4 +34,8 @@ public class Constants {
 
     // Permission constants
     public static final int CONST_WRITE_EXTERNAL_STORAGE = 1;
+
+    // IAP constants
+    public static final String SKU_REMOVE_ADS = "remove_adverts";
+    public static final String REMOVE_ADS = "remove_ads";
 }
