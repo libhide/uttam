@@ -41,6 +41,8 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.ratik.uttam.Constants;
 import com.ratik.uttam.R;
 import com.ratik.uttam.asyncs.SetWallpaperTask;
+import com.ratik.uttam.iap.utils.IabHelper;
+import com.ratik.uttam.iap.utils.IabResult;
 import com.ratik.uttam.services.GetPhotoService;
 import com.ratik.uttam.utils.AlarmHelper;
 import com.ratik.uttam.utils.BitmapUtils;
@@ -77,10 +79,16 @@ public class MainActivity extends AppCompatActivity {
 
     private InterstitialAd interstitialAd;
 
+    // IAP
+    private IabHelper iabHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // For IAP config
+        String base64EncodedPublicKey = getString(R.string.playstore_public_key);
 
         // Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -133,6 +141,19 @@ public class MainActivity extends AppCompatActivity {
             // get saved image
             wallpaper = FileUtils.getImageBitmap(this, "wallpaper", "png");
         }
+
+        // IAP
+        iabHelper = new IabHelper(this, base64EncodedPublicKey);
+        iabHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
+            public void onIabSetupFinished(IabResult result) {
+                if (!result.isSuccess()) {
+                    // Oh noes, there was a problem.
+                    Log.d(TAG, "Problem setting up In-app Billing: " + result);
+                }
+                // Hooray, IAB is fully set up!
+                Log.d(TAG, "Success! OMG MONAYYYYY!");
+            }
+        });
     }
 
     @Override
@@ -194,6 +215,19 @@ public class MainActivity extends AppCompatActivity {
         } else {
             setTheme(R.style.AppTheme_Fullscreen);
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (iabHelper != null) {
+            try {
+                iabHelper.dispose();
+            } catch (IabHelper.IabAsyncInProgressException e) {
+                Log.d(TAG, "There was an error disposing the IabHelper");
+            }
+        }
+        iabHelper = null;
     }
 
     private void saveScreenSize() {
