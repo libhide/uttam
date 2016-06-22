@@ -41,8 +41,6 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.ratik.uttam.Constants;
 import com.ratik.uttam.R;
 import com.ratik.uttam.asyncs.SetWallpaperTask;
-import com.ratik.uttam.iap.utils.IabHelper;
-import com.ratik.uttam.iap.utils.IabResult;
 import com.ratik.uttam.services.GetPhotoService;
 import com.ratik.uttam.utils.AlarmHelper;
 import com.ratik.uttam.utils.BitmapUtils;
@@ -80,15 +78,12 @@ public class MainActivity extends AppCompatActivity {
     private InterstitialAd interstitialAd;
 
     // IAP
-    private IabHelper iabHelper;
+    private boolean userHasRemovedAds;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        // For IAP config
-        String base64EncodedPublicKey = getString(R.string.playstore_public_key);
 
         // Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -141,19 +136,6 @@ public class MainActivity extends AppCompatActivity {
             // get saved image
             wallpaper = FileUtils.getImageBitmap(this, "wallpaper", "png");
         }
-
-        // IAP
-        iabHelper = new IabHelper(this, base64EncodedPublicKey);
-        iabHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
-            public void onIabSetupFinished(IabResult result) {
-                if (!result.isSuccess()) {
-                    // Oh noes, there was a problem.
-                    Log.d(TAG, "Problem setting up In-app Billing: " + result);
-                }
-                // Hooray, IAB is fully set up!
-                Log.d(TAG, "Success! OMG MONAYYYYY!");
-            }
-        });
     }
 
     @Override
@@ -182,8 +164,11 @@ public class MainActivity extends AppCompatActivity {
                 int permissionCheck = ContextCompat.checkSelfPermission(MainActivity.this,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE);
                 if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
-                    // Copy from internal storage to the SD card
-                    saveFile();
+                    if (userHasRemovedAds) {
+                        doFileSaving();
+                    } else {
+                        doAdsThingAndThenSave();
+                    }
                 } else {
                     ActivityCompat.requestPermissions(MainActivity.this,
                             new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
@@ -215,19 +200,9 @@ public class MainActivity extends AppCompatActivity {
         } else {
             setTheme(R.style.AppTheme_Fullscreen);
         }
-    }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (iabHelper != null) {
-            try {
-                iabHelper.dispose();
-            } catch (IabHelper.IabAsyncInProgressException e) {
-                Log.d(TAG, "There was an error disposing the IabHelper");
-            }
-        }
-        iabHelper = null;
+        // Get remove ads state
+        userHasRemovedAds = Utils.haveAdsBeenRemoved(this);
     }
 
     private void saveScreenSize() {
@@ -266,7 +241,7 @@ public class MainActivity extends AppCompatActivity {
         mNotifyMgr.notify(FIRST_RUN_NOTIFICATION, mBuilder.build());
     }
 
-    private void saveFile() {
+    private void doAdsThingAndThenSave() {
         if (Utils.getSaveWallpaperCount(this) > 2) {
             // Show interstitial ad
             showInterstitialAdTheSaveWallpaper();

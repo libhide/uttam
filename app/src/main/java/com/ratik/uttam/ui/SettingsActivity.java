@@ -14,16 +14,23 @@ import com.google.android.gms.ads.AdView;
 import com.ratik.uttam.R;
 import com.ratik.uttam.receivers.NotificationReceiver;
 import com.ratik.uttam.utils.AlarmHelper;
+import com.ratik.uttam.utils.Utils;
 
 /**
  * Created by Ratik on 07/03/16.
  */
 public class SettingsActivity extends AppCompatActivity {
 
+    // IAP
+    private boolean userHasRemovedAds;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+
+        // Get removed Ads state
+        userHasRemovedAds = Utils.haveAdsBeenRemoved(this);
 
         // Add Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -37,10 +44,18 @@ public class SettingsActivity extends AppCompatActivity {
                 R.id.settings_content, new SettingsFragment()).commit();
 
         // Init Banner Ad
-        AdView adView = (AdView) findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        adView.loadAd(adRequest);
+        if (!userHasRemovedAds) {
+            AdView adView = (AdView) findViewById(R.id.adView);
+            AdRequest adRequest = new AdRequest.Builder().build();
+            adView.loadAd(adRequest);
+        }
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        userHasRemovedAds = Utils.haveAdsBeenRemoved(this);
     }
 
     @Override

@@ -5,8 +5,14 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
+import com.ratik.uttam.Constants;
 import com.ratik.uttam.R;
+import com.ratik.uttam.iap.utils.IabHelper;
+import com.ratik.uttam.iap.utils.IabResult;
+import com.ratik.uttam.iap.utils.Purchase;
+import com.ratik.uttam.utils.Utils;
 
 /**
  * Created by Ratik on 08/03/16.
@@ -16,10 +22,51 @@ public class SettingsFragment extends PreferenceFragment
 
     private static final String TAG = SettingsFragment.class.getSimpleName();
 
+    // IAP
+    private IabHelper iabHelper;
+    private Preference removeAdsPreference;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.prefs);
+
+        // Remove Ads IAP
+        String base64EncodedPublicKey = getString(R.string.playstore_public_key);
+        iabHelper = new IabHelper(getActivity(), base64EncodedPublicKey);
+
+        removeAdsPreference = findPreference(getString(R.string.key_remove_ads));
+
+        if (Utils.haveAdsBeenRemoved(getActivity())) {
+            // User has remove ads
+            removeAdsPreference.setEnabled(false);
+        } else {
+            removeAdsPreference.setEnabled(true);
+        }
+
+        removeAdsPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                try {
+                    iabHelper.launchPurchaseFlow(getActivity(), Constants.SKU_REMOVE_ADS, 1, new IabHelper.OnIabPurchaseFinishedListener() {
+                        @Override
+                        public void onIabPurchaseFinished(IabResult result, Purchase info) {
+                            if (result.isFailure()) {
+                                Log.d(TAG, "Error purchasing: " + result);
+                            }
+                            else if (info.getSku().equals(Constants.SKU_REMOVE_ADS)) {
+                                // Add remove ads SharedPreference
+                                Utils.setRemoveAdsState(getActivity(), true);
+                            }
+                        }
+                    }, "");
+                } catch (IabHelper.IabAsyncInProgressException e) {
+                    Log.e(TAG, "There was an error purchasing the remove ads IAP. Message: " +
+                            e.getMessage());
+                }
+                return false;
+            }
+        });
     }
 
     @Override
@@ -65,5 +112,18 @@ public class SettingsFragment extends PreferenceFragment
             preference.setSummary(stringValue);
         }
         return true;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (iabHelper != null) {
+            try {
+                iabHelper.dispose();
+            } catch (IabHelper.IabAsyncInProgressException e) {
+                Log.d(TAG, "There was an error disposing the IabHelper");
+            }
+        }
+        iabHelper = null;
     }
 }
