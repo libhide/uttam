@@ -20,6 +20,7 @@ import com.ratik.uttam.Keys;
 import com.ratik.uttam.R;
 import com.ratik.uttam.asyncs.SetWallpaperTask;
 import com.ratik.uttam.model.Photo;
+import com.ratik.uttam.ui.MainActivity;
 import com.ratik.uttam.ui.ShowActivity;
 import com.ratik.uttam.utils.AlarmHelper;
 import com.ratik.uttam.utils.BitmapUtils;
@@ -214,7 +215,12 @@ public class GetPhotoService extends Service {
 
     private void notifyUser(Bitmap wallpaper) {
         // Content Intent
-        Intent intent = new Intent(context, ShowActivity.class);
+        Intent intent;
+        if (PrefUtils.shouldSetWallpaperAutomatically(this)) {
+            intent = new Intent(context, MainActivity.class);
+        } else {
+            intent = new Intent(context, ShowActivity.class);
+        }
 
         // Content PendingIntent
         PendingIntent showWallpaperIntent = PendingIntent.getActivity(context,
