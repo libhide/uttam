@@ -13,11 +13,13 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.ratik.uttam.R;
 import com.ratik.uttam.asyncs.SetWallpaperTask;
+import com.ratik.uttam.utils.AdUtils;
 import com.ratik.uttam.utils.FileUtils;
 import com.ratik.uttam.utils.PhotoUtils;
 import com.ratik.uttam.utils.Utils;
@@ -175,7 +177,10 @@ public class ShowActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        userHasRemovedAds = Utils.haveAdsBeenRemoved(this);
+        userHasRemovedAds = AdUtils.hasUserRemovedAds(this);
+        if (userHasRemovedAds) {
+            Toast.makeText(ShowActivity.this, "User has removed ads", Toast.LENGTH_SHORT).show();
+        }
         if (!userHasRemovedAds) {
             AdRequest adRequest = new AdRequest.Builder().build();
             adView.loadAd(adRequest);
