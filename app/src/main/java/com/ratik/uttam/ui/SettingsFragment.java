@@ -6,13 +6,14 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.ratik.uttam.Constants;
 import com.ratik.uttam.R;
 import com.ratik.uttam.iap.utils.IabHelper;
 import com.ratik.uttam.iap.utils.IabResult;
 import com.ratik.uttam.iap.utils.Purchase;
-import com.ratik.uttam.utils.Utils;
+import com.ratik.uttam.utils.AdUtils;
 
 /**
  * Created by Ratik on 08/03/16.
@@ -34,25 +35,8 @@ public class SettingsFragment extends PreferenceFragment
         // Remove Ads IAP
         String base64EncodedPublicKey = getString(R.string.playstore_public_key);
         iabHelper = new IabHelper(getActivity(), base64EncodedPublicKey);
-        iabHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
-            public void onIabSetupFinished(IabResult result) {
-                if (!result.isSuccess()) {
-                    // Oh noes, there was a problem.
-                    Log.d(TAG, "Problem setting up In-app Billing: " + result);
-                }
-                // Hooray, IAB is fully set up!
-            }
-        });
 
         removeAdsPreference = findPreference(getString(R.string.key_remove_ads));
-
-        if (Utils.haveAdsBeenRemoved(getActivity())) {
-            // User has remove ads
-            removeAdsPreference.setEnabled(false);
-        } else {
-            removeAdsPreference.setEnabled(true);
-        }
-
         removeAdsPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
@@ -64,8 +48,9 @@ public class SettingsFragment extends PreferenceFragment
                                 Log.d(TAG, "Error purchasing: " + result);
                             }
                             else if (info.getSku().equals(Constants.SKU_REMOVE_ADS)) {
-                                // Add remove ads SharedPreference
-                                Utils.setRemoveAdsState(getActivity(), true);
+                                // Success
+                                Toast.makeText(getActivity(), "Purchased!", Toast.LENGTH_SHORT)
+                                        .show();
                             }
                         }
                     }, "");
@@ -85,6 +70,15 @@ public class SettingsFragment extends PreferenceFragment
         // For all (most) preferences, attach an OnPreferenceChangeListener
         // so the UI summary can be updated when the preference changes.
         bindPreferenceSummaryToValue(findPreference(getString(R.string.key_refresh_interval)));
+
+        // IAP stuff
+        if (AdUtils.hasUserRemovedAds(getActivity())) {
+            // User has remove ads
+            removeAdsPreference.setEnabled(false);
+            removeAdsPreference.setTitle("PURCHASED");
+        } else {
+            removeAdsPreference.setEnabled(true);
+        }
     }
 
     /**

@@ -41,7 +41,9 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.ratik.uttam.Constants;
 import com.ratik.uttam.R;
 import com.ratik.uttam.asyncs.SetWallpaperTask;
+import com.ratik.uttam.iap.utils.IabHelper;
 import com.ratik.uttam.services.GetPhotoService;
+import com.ratik.uttam.utils.AdUtils;
 import com.ratik.uttam.utils.AlarmHelper;
 import com.ratik.uttam.utils.BitmapUtils;
 import com.ratik.uttam.utils.FileUtils;
@@ -84,6 +86,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Setup IAB
+        String base64EncodedPublicKey = getString(R.string.playstore_public_key);
+        final IabHelper iabHelper = new IabHelper(this, base64EncodedPublicKey);
+        AdUtils.setupIAB(iabHelper);
 
         // Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -135,6 +142,12 @@ public class MainActivity extends AppCompatActivity {
         } else {
             // get saved image
             wallpaper = FileUtils.getImageBitmap(this, "wallpaper", "png");
+        }
+
+        // Get remove ads state
+        userHasRemovedAds = AdUtils.hasUserRemovedAds(this);
+        if (userHasRemovedAds) {
+            Toast.makeText(MainActivity.this, "User has removed ads!", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -202,7 +215,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // Get remove ads state
-        userHasRemovedAds = Utils.haveAdsBeenRemoved(this);
+        userHasRemovedAds = AdUtils.hasUserRemovedAds(this);
     }
 
     private void saveScreenSize() {
