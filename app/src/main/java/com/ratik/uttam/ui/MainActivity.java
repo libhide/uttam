@@ -42,8 +42,10 @@ import com.ratik.uttam.Constants;
 import com.ratik.uttam.R;
 import com.ratik.uttam.asyncs.SetWallpaperTask;
 import com.ratik.uttam.iap.utils.IabHelper;
+import com.ratik.uttam.iap.utils.IabResult;
+import com.ratik.uttam.iap.utils.Inventory;
+import com.ratik.uttam.iap.utils.Purchase;
 import com.ratik.uttam.services.GetPhotoService;
-import com.ratik.uttam.utils.AdUtils;
 import com.ratik.uttam.utils.AlarmHelper;
 import com.ratik.uttam.utils.BitmapUtils;
 import com.ratik.uttam.utils.FileUtils;
@@ -80,17 +82,55 @@ public class MainActivity extends AppCompatActivity {
     private InterstitialAd interstitialAd;
 
     // IAP
-    private boolean userHasRemovedAds;
+    private IabHelper iabHelper;
+    public static boolean userHasRemovedAds;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Setup IAB
+        // IAP
         String base64EncodedPublicKey = getString(R.string.playstore_public_key);
-        final IabHelper iabHelper = new IabHelper(this, base64EncodedPublicKey);
-        AdUtils.setupIAB(iabHelper);
+        Log.d(TAG, "Creating IAB helper.");
+        iabHelper = new IabHelper(this, base64EncodedPublicKey);
+
+        // Start setup. This is asynchronous and the specified listener
+        // will be called once setup completes.
+        Log.d(TAG, "Starting setup.");
+        iabHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
+            public void onIabSetupFinished(IabResult result) {
+                Log.d(TAG, "Setup finished.");
+
+                if (!result.isSuccess()) {
+                    // Oh noes, there was a problem.
+                    Log.e(TAG, "Problem setting up in-app billing: " + result);
+                    return;
+                }
+
+                // Have we been disposed of in the meantime? If so, quit.
+                if (iabHelper == null) return;
+
+                // Important: Dynamically register for broadcast messages about updated purchases.
+                // We register the receiver here instead of as a <receiver> in the Manifest
+                // because we always call getPurchases() at startup, so therefore we can ignore
+                // any broadcasts sent while the app isn't running.
+                // Note: registering this listener in an Activity is a bad idea, but is done here
+                // because this is a SAMPLE. Regardless, the receiver must be registered after
+                // IabHelper is setup, but before first call to getPurchases().
+//                mBroadcastReceiver = new IabBroadcastReceiver(MainActivity.this);
+//                IntentFilter broadcastFilter = new IntentFilter(IabBroadcastReceiver.ACTION);
+//                registerReceiver(mBroadcastReceiver, broadcastFilter);
+
+                // IAB is fully set up. Now, let's get an inventory of stuff we own.
+                Log.d(TAG, "Setup successful. Querying inventory.");
+                try {
+                    iabHelper.queryInventoryAsync(mGotInventoryListener);
+                } catch (IabHelper.IabAsyncInProgressException e) {
+                    Log.e(TAG, "Error querying inventory. Another async operation in progress.");
+                }
+            }
+        });
 
         // Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -143,13 +183,40 @@ public class MainActivity extends AppCompatActivity {
             // get saved image
             wallpaper = FileUtils.getImageBitmap(this, "wallpaper", "png");
         }
-
-        // Get remove ads state
-        userHasRemovedAds = AdUtils.hasUserRemovedAds(this);
-        if (userHasRemovedAds) {
-            Toast.makeText(MainActivity.this, "User has removed ads!", Toast.LENGTH_SHORT).show();
-        }
     }
+
+    // Listener that's called when we finish querying the items and subscriptions we own
+    IabHelper.QueryInventoryFinishedListener mGotInventoryListener = new IabHelper.QueryInventoryFinishedListener() {
+        public void onQueryInventoryFinished(IabResult result, Inventory inventory) {
+            Log.d(TAG, "Query inventory finished.");
+
+            // Have we been disposed of in the meantime? If so, quit.
+            if (iabHelper == null) return;
+
+            // Is it a failure?
+            if (result.isFailure()) {
+                Log.e(TAG, "Failed to query inventory: " + result);
+                return;
+            }
+
+            Log.d(TAG, "Query inventory was successful.");
+
+            /*
+             * Check for items we own. Notice that for each purchase, we check
+             * the developer payload to see if it's correct! See
+             * verifyDeveloperPayload().
+             */
+
+            // Do we have the premium upgrade?
+            Purchase premiumPurchase = inventory.getPurchase(Constants.SKU_REMOVE_ADS);
+            userHasRemovedAds = premiumPurchase != null;
+            Log.d(TAG, "Initial inventory query finished.");
+
+            // Toast for testing
+            Toast.makeText(MainActivity.this, "User is " + (userHasRemovedAds ?
+                    "PREMIUM" : "NOT PREMIUM"), Toast.LENGTH_SHORT).show();
+        }
+    };
 
     @Override
     protected void onResume() {
@@ -213,9 +280,6 @@ public class MainActivity extends AppCompatActivity {
         } else {
             setTheme(R.style.AppTheme_Fullscreen);
         }
-
-        // Get remove ads state
-        userHasRemovedAds = AdUtils.hasUserRemovedAds(this);
     }
 
     private void saveScreenSize() {
