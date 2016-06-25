@@ -12,8 +12,7 @@
         android:id="@+id/settings_content"
         android:layout_below="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="45dp"/>
+        android:layout_height="match_parent" />
 
     <com.google.android.gms.ads.AdView
         android:id="@+id/adView"

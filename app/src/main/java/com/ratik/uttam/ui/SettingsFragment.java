@@ -13,7 +13,6 @@ import com.ratik.uttam.R;
 import com.ratik.uttam.iap.utils.IabHelper;
 import com.ratik.uttam.iap.utils.IabResult;
 import com.ratik.uttam.iap.utils.Purchase;
-import com.ratik.uttam.utils.AdUtils;
 
 /**
  * Created by Ratik on 08/03/16.
@@ -32,36 +31,49 @@ public class SettingsFragment extends PreferenceFragment
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.prefs);
 
-        // Remove Ads IAP
-        String base64EncodedPublicKey = getString(R.string.playstore_public_key);
-        iabHelper = new IabHelper(getActivity(), base64EncodedPublicKey);
-
         removeAdsPreference = findPreference(getString(R.string.key_remove_ads));
-        removeAdsPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                try {
-                    iabHelper.launchPurchaseFlow(getActivity(), Constants.SKU_REMOVE_ADS, 1, new IabHelper.OnIabPurchaseFinishedListener() {
-                        @Override
-                        public void onIabPurchaseFinished(IabResult result, Purchase info) {
-                            if (result.isFailure()) {
-                                Log.d(TAG, "Error purchasing: " + result);
-                            }
-                            else if (info.getSku().equals(Constants.SKU_REMOVE_ADS)) {
-                                // Success
-                                Toast.makeText(getActivity(), "Purchased!", Toast.LENGTH_SHORT)
-                                        .show();
-                            }
-                        }
-                    }, "");
-                } catch (IabHelper.IabAsyncInProgressException e) {
-                    Log.e(TAG, "There was an error purchasing the remove ads IAP. Message: " +
-                            e.getMessage());
+
+        // IAP stuff
+        String base64EncodedPublicKey = getString(R.string.playstore_public_key);
+        if (MainActivity.userHasRemovedAds) {
+            // User has remove ads
+            removeAdsPreference.setTitle("PURCHASED");
+            removeAdsPreference.setEnabled(false);
+        } else {
+            // User has NOT remove ads
+            removeAdsPreference.setEnabled(true);
+
+            iabHelper = new IabHelper(getActivity(), base64EncodedPublicKey);
+            removeAdsPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    try {
+                        iabHelper.launchPurchaseFlow(getActivity(), Constants.SKU_REMOVE_ADS, 1,
+                                purchaseFinishedListener, "");
+                    } catch (IabHelper.IabAsyncInProgressException e) {
+                        e.printStackTrace();
+                    }
+                    return true;
                 }
-                return false;
-            }
-        });
+            });
+        }
     }
+
+    // PurchaseFinishedListener
+    IabHelper.OnIabPurchaseFinishedListener purchaseFinishedListener = new IabHelper.OnIabPurchaseFinishedListener() {
+        @Override
+        public void onIabPurchaseFinished(IabResult result, Purchase info) {
+            if (result.isFailure()) {
+                Log.d(TAG, "Error purchasing: " + result);
+            } else if (info.getSku().equals(Constants.SKU_REMOVE_ADS)) {
+                // Success
+                Toast.makeText(getActivity(), "Purchased!", Toast.LENGTH_SHORT)
+                        .show();
+                // Finish SettingActivity
+                getActivity().finish();
+            }
+        }
+    };
 
     @Override
     public void onResume() {
@@ -70,15 +82,6 @@ public class SettingsFragment extends PreferenceFragment
         // For all (most) preferences, attach an OnPreferenceChangeListener
         // so the UI summary can be updated when the preference changes.
         bindPreferenceSummaryToValue(findPreference(getString(R.string.key_refresh_interval)));
-
-        // IAP stuff
-        if (AdUtils.hasUserRemovedAds(getActivity())) {
-            // User has remove ads
-            removeAdsPreference.setEnabled(false);
-            removeAdsPreference.setTitle("PURCHASED");
-        } else {
-            removeAdsPreference.setEnabled(true);
-        }
     }
 
     /**

@@ -8,29 +8,32 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.ratik.uttam.R;
 import com.ratik.uttam.receivers.NotificationReceiver;
 import com.ratik.uttam.utils.AlarmHelper;
-import com.ratik.uttam.utils.Utils;
 
 /**
  * Created by Ratik on 07/03/16.
  */
 public class SettingsActivity extends AppCompatActivity {
 
-    // IAP
-    private boolean userHasRemovedAds;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        // Get removed Ads state
-        userHasRemovedAds = Utils.haveAdsBeenRemoved(this);
+        FrameLayout settingsContentLayout = (FrameLayout)
+                findViewById(R.id.settings_content);
+
+        // Toast for testing
+        Toast.makeText(SettingsActivity.this, "User is " + (MainActivity.userHasRemovedAds ?
+                "PREMIUM" : "NOT PREMIUM"), Toast.LENGTH_SHORT).show();
 
         // Add Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -44,18 +47,27 @@ public class SettingsActivity extends AppCompatActivity {
                 R.id.settings_content, new SettingsFragment()).commit();
 
         // Init Banner Ad
-        if (!userHasRemovedAds) {
+        if (!MainActivity.userHasRemovedAds) {
+            // Apply margin to settings content container
+            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT
+            );
+            params.setMargins(0, 0, 0, 50);
+            settingsContentLayout.setLayoutParams(params);
+            // Show Ad
             AdView adView = (AdView) findViewById(R.id.adView);
             AdRequest adRequest = new AdRequest.Builder().build();
             adView.loadAd(adRequest);
+        } else {
+            // Remove margin from the settings content container
+            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT
+            );
+            params.setMargins(0, 0, 0, 0);
+            settingsContentLayout.setLayoutParams(params);
         }
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        userHasRemovedAds = Utils.haveAdsBeenRemoved(this);
     }
 
     @Override
