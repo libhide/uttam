@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -43,30 +42,20 @@ public class SettingsActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        getFragmentManager().beginTransaction().add(
+        getFragmentManager().beginTransaction().replace(
                 R.id.settings_content, new SettingsFragment()).commit();
 
         // Init Banner Ad
         if (!MainActivity.userHasRemovedAds) {
-            // Apply margin to settings content container
-            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT
-            );
-            params.setMargins(0, 0, 0, 50);
-            settingsContentLayout.setLayoutParams(params);
+            // Apply padding to the settings content container
+            settingsContentLayout.setPadding(0, 0, 0, 140);
             // Show Ad
             AdView adView = (AdView) findViewById(R.id.adView);
             AdRequest adRequest = new AdRequest.Builder().build();
             adView.loadAd(adRequest);
         } else {
             // Remove margin from the settings content container
-            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT
-            );
-            params.setMargins(0, 0, 0, 0);
-            settingsContentLayout.setLayoutParams(params);
+            settingsContentLayout.setPadding(0, 0, 0, 0);
         }
     }
 
