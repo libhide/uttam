@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "792134550808",
+    "firebase_url": "https://uttam-b06be.firebaseio.com",
+    "project_id": "uttam-b06be",
+    "storage_bucket": "uttam-b06be.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:792134550808:android:c00cb55a73b2fea5",
+        "android_client_info": {
+          "package_name": "com.ratik.uttam.prod"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "792134550808-1kc450n2hcldb1iei7npbh4vj5uhpvfb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBMpHgAqqqplnL1tOpEH4LwLfA2dAlTfyQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
