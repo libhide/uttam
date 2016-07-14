@@ -14,15 +14,16 @@ android {
     buildTypes {
         release {
             minifyEnabled false
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
     productFlavors {
-        dev {
-            applicationIdSuffix ".dev"
-        }
         prod {
             applicationIdSuffix ".prod"
+        }
+        dev {
+            applicationIdSuffix ".dev"
         }
     }
 }
