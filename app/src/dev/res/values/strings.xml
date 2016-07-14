@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">Uttam</string>
+    <string name="get_started_text">Get Started</string>
+    <string name="view_in_browser_label">View in Browser</string>
+    <string name="content_desc_settings_button">Settings button</string>
+    <string name="content_desc_uttam_hero">App\'s hero image</string>
+    <string name="photographer_label">Photo by</string>
+    <string name="settings_label">Settings</string>
+    <string name="key_automatic_wallpaper_set">setWallpaperAuto</string>
+    <string name="title_automatic_wallpaper_set">Set Wallpaper Automatically</string>
+    <string name="summary_automatic_wallpaper_set">New wallpaper will be set automatically</string>
+    <string name="setting_text">Setting wallpaper...</string>
+    <string name="tap_and_hold_tip">Protip: Tap and hold the screen to view the wallpaper in all its glory!</string>
+    <string name="key_custom_sounds">customSound</string>
+    <string name="summary_custom_sounds">Use Uttam\'s custom wallpaper notification sound</string>
+    <string name="title_custom_sounds">Custom Sounds</string>
+    <string name="key_notif_led">notifictionLED</string>
+    <string name="summary_notif_led">Use notification LED</string>
+    <string name="title_notif_led">Notification LED</string>
+    <string name="key_fetch_over_data">fetchOnData</string>
+    <string name="summary_fetch_over_data">Download new wallpaper over mobile data</string>
+    <string name="title_fetch_over_data">Fetch over mobile data</string>
+    <string name="key_refresh_interval">setRefreshInterval</string>
+    <string name="title_refresh_interval">Wallpaper fetch interval</string>
+    <string name="summary_refresh_interval">Set the refresh interval for new wallpapers</string>
+    <string name="key_compress_wallpaper">compressWallpaper</string>
+</resources>
