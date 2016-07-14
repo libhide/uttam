@@ -78,7 +78,8 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton setWallpaperButton;
     private LinearLayout creditsContainer;
 
-    private InterstitialAd interstitialAd;
+    private InterstitialAd savingAd;
+    private InterstitialAd settingAd;
 
     // IAP
     private IabHelper iabHelper;
@@ -88,6 +89,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Setting up interstitials
+        setupAds();
 
         // IAP
         String base64EncodedPublicKey = getString(R.string.playstore_public_key);
@@ -246,7 +250,9 @@ public class MainActivity extends AppCompatActivity {
                     if (userHasRemovedAds) {
                         doFileSaving();
                     } else {
-                        doAdsThingAndThenSave();
+                        if (savingAd.isLoaded()) {
+                            savingAd.show();
+                        }
                     }
                 } else {
                     ActivityCompat.requestPermissions(MainActivity.this,
@@ -259,8 +265,9 @@ public class MainActivity extends AppCompatActivity {
         setWallpaperButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Set wallpaper
-                new SetWallpaperTask(MainActivity.this).execute(wallpaper);
+                if (settingAd.isLoaded()) {
+                    settingAd.show();
+                }
             }
         });
 
@@ -317,18 +324,6 @@ public class MainActivity extends AppCompatActivity {
         mNotifyMgr.notify(FIRST_RUN_NOTIFICATION, mBuilder.build());
     }
 
-    private void doAdsThingAndThenSave() {
-        if (Utils.getSaveWallpaperCount(this) > 2) {
-            // Show interstitial ad
-            showInterstitialAdTheSaveWallpaper();
-        } else {
-            // Increment counter
-            Utils.setSaveWallpaperCounter(this, Utils.getSaveWallpaperCount(this) + 1);
-            // Save wallpaper
-            doFileSaving();
-        }
-    }
-
     private void doFileSaving() {
         File srcFile = FileUtils.getSavedFileFromInternalStorage(MainActivity.this);
         File destFile = new File(FileUtils.getOutputMediaFileUri(MainActivity.this).getPath());
@@ -343,35 +338,41 @@ public class MainActivity extends AppCompatActivity {
             Log.e(TAG, "Error while copying file: ", e);
         }
     }
-
-    // Interstitial Ad Code
-    private void showInterstitialAdTheSaveWallpaper() {
-        interstitialAd = new InterstitialAd(this);
-        interstitialAd.setAdUnitId(getString(R.string.interstitial_ad_unit_id));
-        interstitialAd.setAdListener(new AdListener() {
+    private void setupAds() {
+        savingAd = new InterstitialAd(this);
+        savingAd.setAdUnitId(getString(R.string.interstitial_ad_unit_id));
+        savingAd.setAdListener(new AdListener() {
             @Override
             public void onAdClosed() {
-                // Reset save counter to 0
-                Utils.setSaveWallpaperCounter(MainActivity.this, 0);
+                // Request new ad
+                requestNewInterstitial(savingAd);
                 // Save wallpaper
                 doFileSaving();
             }
+        });
 
+        settingAd = new InterstitialAd(this);
+        settingAd.setAdUnitId(getString(R.string.interstitial_ad_unit_id));
+        settingAd.setAdListener(new AdListener() {
             @Override
-            public void onAdLoaded() {
-                interstitialAd.show();
+            public void onAdClosed() {
+                // Request new ad
+                requestNewInterstitial(settingAd);
+                // Start wallpaper set task
+                new SetWallpaperTask(MainActivity.this).execute(wallpaper);
             }
         });
 
-        requestNewInterstitial();
+        requestNewInterstitial(savingAd);
+        requestNewInterstitial(settingAd);
     }
 
-    private void requestNewInterstitial() {
+    private void requestNewInterstitial(InterstitialAd ad) {
         AdRequest adRequest = new AdRequest.Builder()
                 .addTestDevice("F10B72A932B17CB36CBBE69C25167324")
                 .build();
 
-        interstitialAd.loadAd(adRequest);
+        ad.loadAd(adRequest);
     }
 
     @Override
