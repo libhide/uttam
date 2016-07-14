@@ -41,7 +41,9 @@
             android:summary="@string/summary_notif_led"
             android:title="@string/title_notif_led" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="IAP">
+    <PreferenceCategory
+        android:key="@string/key_iap_category"
+        android:title="IAP">
         <Preference
             android:key="@string/key_remove_ads"
             android:summary="In-app purchase to remove ads from the app"
