@@ -3,6 +3,7 @@ package com.ratik.uttam.ui;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
+import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -24,6 +25,7 @@ public class SettingsFragment extends PreferenceFragment
 
     // IAP
     private IabHelper iabHelper;
+    private PreferenceCategory iapCategory;
     private Preference removeAdsPreference;
 
     @Override
@@ -31,14 +33,15 @@ public class SettingsFragment extends PreferenceFragment
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.prefs);
 
+        iapCategory = (PreferenceCategory) findPreference(getActivity()
+                .getString(R.string.key_iap_category));
         removeAdsPreference = findPreference(getString(R.string.key_remove_ads));
 
         // IAP stuff
         String base64EncodedPublicKey = getString(R.string.playstore_public_key);
         if (MainActivity.userHasRemovedAds) {
             // User has remove ads
-            removeAdsPreference.setTitle("PURCHASED");
-            removeAdsPreference.setEnabled(false);
+            iapCategory.removePreference(removeAdsPreference);
         } else {
             // User has NOT remove ads
             removeAdsPreference.setEnabled(true);
@@ -67,8 +70,7 @@ public class SettingsFragment extends PreferenceFragment
                 Log.d(TAG, "Error purchasing: " + result);
             } else if (info.getSku().equals(Constants.SKU_REMOVE_ADS)) {
                 // Success
-                Toast.makeText(getActivity(), "Purchased!", Toast.LENGTH_SHORT)
-                        .show();
+                Toast.makeText(getActivity(), "Purchased!", Toast.LENGTH_SHORT).show();
                 // Finish SettingActivity
                 getActivity().finish();
             }
