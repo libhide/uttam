@@ -79,7 +79,6 @@ public class MainActivity extends AppCompatActivity {
     private LinearLayout creditsContainer;
 
     private InterstitialAd savingAd;
-    private InterstitialAd settingAd;
 
     // IAP
     private IabHelper iabHelper;
@@ -265,9 +264,7 @@ public class MainActivity extends AppCompatActivity {
         setWallpaperButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (settingAd.isLoaded()) {
-                    settingAd.show();
-                }
+                new SetWallpaperTask(MainActivity.this).execute(wallpaper);
             }
         });
 
@@ -351,20 +348,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        settingAd = new InterstitialAd(this);
-        settingAd.setAdUnitId(getString(R.string.interstitial_ad_unit_id));
-        settingAd.setAdListener(new AdListener() {
-            @Override
-            public void onAdClosed() {
-                // Request new ad
-                requestNewInterstitial(settingAd);
-                // Start wallpaper set task
-                new SetWallpaperTask(MainActivity.this).execute(wallpaper);
-            }
-        });
-
         requestNewInterstitial(savingAd);
-        requestNewInterstitial(settingAd);
     }
 
     private void requestNewInterstitial(InterstitialAd ad) {
