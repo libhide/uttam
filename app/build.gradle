@@ -8,29 +8,29 @@ android {
         applicationId "com.ratik.uttam"
         minSdkVersion 16
         targetSdkVersion 24
-        versionCode 1
+        versionCode 4
         versionName "1.0"
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
     productFlavors {
-        prod {
-            applicationIdSuffix ".prod"
-        }
         dev {
-            applicationIdSuffix ".dev"
+            applicationId "com.ratik.uttam.dev"
+        }
+        prod {
+            applicationId "com.ratik.uttam.prod"
         }
     }
 }
 
 dependencies {
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:24.0.0'
+    compile 'com.android.support:appcompat-v7:24.1.1'
     compile 'com.squareup.okhttp3:okhttp:3.2.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.vlonjatg.android:app-tour:1.0'
