@@ -43,7 +43,7 @@ public class SetupFragment extends Fragment {
 
     private void showSetupDialog() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Select Refresh Interval");
+        builder.setTitle(R.string.refresh_interval_dialog_title);
 
         String[] intervals = getResources().getStringArray(R.array.intervals);
         ArrayAdapter<String> intervalsAdapter = new ArrayAdapter<String>(getActivity(),
@@ -62,7 +62,7 @@ public class SetupFragment extends Fragment {
                         break;
                 }
                 tipView.setVisibility(View.VISIBLE);
-                setupButton.setText("All set!");
+                setupButton.setText(R.string.all_set_text);
                 setupButton.setEnabled(false);
             }
         });

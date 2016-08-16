@@ -11,7 +11,7 @@
         android:id="@+id/goButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Set Refresh Interval"
+        android:text="@string/refresh_interval_dialog_title"
         android:layout_centerInParent="true"/>
 
 </RelativeLayout>

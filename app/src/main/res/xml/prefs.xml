@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:title="General">
+    <PreferenceCategory android:title="@string/category_general">
         <SwitchPreference
             android:defaultValue="true"
             android:key="@string/key_automatic_wallpaper_set"
@@ -25,11 +25,11 @@
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="@string/key_compress_wallpaper"
-            android:summary="Check this if you're using the app on phone with a screen resolution under 720p"
-            android:title="Compress wallpaper" />
+            android:summary="@string/summary_compress_wallpaper"
+            android:title="@string/title_compress_wallpaper" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="Notification">
+    <PreferenceCategory android:title="@string/category_notifications">
         <SwitchPreference
             android:defaultValue="true"
             android:key="@string/key_custom_sounds"
@@ -40,14 +40,6 @@
             android:key="@string/key_notif_led"
             android:summary="@string/summary_notif_led"
             android:title="@string/title_notif_led" />
-    </PreferenceCategory>
-    <PreferenceCategory
-        android:key="@string/key_iap_category"
-        android:title="IAP">
-        <Preference
-            android:key="@string/key_remove_ads"
-            android:summary="In-app purchase to remove ads from the app"
-            android:title="Remove Ads" />
     </PreferenceCategory>
 
 </PreferenceScreen>

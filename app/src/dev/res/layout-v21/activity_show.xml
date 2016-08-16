@@ -9,7 +9,7 @@
         android:id="@+id/wallpaper"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:contentDescription="@string/content_desc_uttam_hero"
+        android:contentDescription="@string/content_desc_hero_img"
         android:scaleType="centerCrop"
         tools:src="@drawable/uttam_hero" />
 

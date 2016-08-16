@@ -8,6 +8,8 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.ratik.uttam.R;
+
 import java.io.IOException;
 
 /**
@@ -34,7 +36,7 @@ public class SetWallpaperTask extends AsyncTask<Bitmap, Void, Bitmap> {
         super.onPostExecute(wallpaper);
         try {
             WallpaperManager.getInstance(context).setBitmap(wallpaper);
-            Toast.makeText(context, "Wallpaper set", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, R.string.wallpaper_set_text, Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
             Log.e(TAG, e.getMessage());
         }

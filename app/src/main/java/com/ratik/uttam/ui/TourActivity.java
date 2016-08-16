@@ -18,20 +18,19 @@ public class TourActivity extends AppTour {
 
     @Override
     public void init(@Nullable Bundle savedInstanceState) {
-
         int slideColor = Color.parseColor("#3d3d3d");
 
-        String first = "Uttam is a wallpaper app that gently updates your wallpaper with perfect images everyday.";
-        String second = "Uttam pushes rich notifications for you to interact with.";
-        String third = "You have full control over the setting of the wallpaper. The choice is yours!";
+        String first = getString(R.string.tour_slide_1_text);
+        String second = getString(R.string.tour_slide_2_text);
+        String third = getString(R.string.tour_slide_3_text);
 
-        Fragment firstSlide = MaterialSlide.newInstance(R.drawable.tour_graphic_1, "Welcome to Uttam!",
+        Fragment firstSlide = MaterialSlide.newInstance(R.drawable.tour_graphic_1, getString(R.string.tour_slide_1_heading),
                 first, Color.WHITE, Color.WHITE);
 
-        Fragment secondSlide = MaterialSlide.newInstance(R.drawable.tour_graphic_2, "Wallpaper notifications",
+        Fragment secondSlide = MaterialSlide.newInstance(R.drawable.tour_graphic_2, getString(R.string.tour_slide_2_heading),
                 second, Color.WHITE, Color.WHITE);
 
-        Fragment thirdSlide = MaterialSlide.newInstance(R.drawable.tour_graphic_3, "Full control",
+        Fragment thirdSlide = MaterialSlide.newInstance(R.drawable.tour_graphic_3, getString(R.string.tour_slide_3_heading),
                 third, Color.WHITE, Color.WHITE);
 
         addSlide(firstSlide, slideColor);
@@ -54,7 +53,7 @@ public class TourActivity extends AppTour {
     @Override
     public void onDonePressed() {
         if (SetupFragment.setupButton.isEnabled()) {
-            Toast.makeText(this, "Set a refresh interval first", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.set_refresh_interval_first_prompt, Toast.LENGTH_SHORT).show();
         } else {
             startActivity(new Intent(TourActivity.this, MainActivity.class));
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
