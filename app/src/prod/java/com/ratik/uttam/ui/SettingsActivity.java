@@ -31,8 +31,7 @@ public class SettingsActivity extends AppCompatActivity {
                 findViewById(R.id.settings_content);
 
         // Toast for testing
-        Toast.makeText(SettingsActivity.this, "User is " + (MainActivity.userHasRemovedAds ?
-                "PREMIUM" : "NOT PREMIUM"), Toast.LENGTH_SHORT).show();
+        // Toast.makeText(SettingsActivity.this, "User is " + (MainActivity.userHasRemovedAds ? "PREMIUM" : "NOT PREMIUM"), Toast.LENGTH_SHORT).show();
 
         // Add Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

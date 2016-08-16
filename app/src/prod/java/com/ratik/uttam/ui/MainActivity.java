@@ -113,17 +113,6 @@ public class MainActivity extends AppCompatActivity {
                 // Have we been disposed of in the meantime? If so, quit.
                 if (iabHelper == null) return;
 
-                // Important: Dynamically register for broadcast messages about updated purchases.
-                // We register the receiver here instead of as a <receiver> in the Manifest
-                // because we always call getPurchases() at startup, so therefore we can ignore
-                // any broadcasts sent while the app isn't running.
-                // Note: registering this listener in an Activity is a bad idea, but is done here
-                // because this is a SAMPLE. Regardless, the receiver must be registered after
-                // IabHelper is setup, but before first call to getPurchases().
-//                mBroadcastReceiver = new IabBroadcastReceiver(MainActivity.this);
-//                IntentFilter broadcastFilter = new IntentFilter(IabBroadcastReceiver.ACTION);
-//                registerReceiver(mBroadcastReceiver, broadcastFilter);
-
                 // IAB is fully set up. Now, let's get an inventory of stuff we own.
                 Log.d(TAG, "Setup successful. Querying inventory.");
                 try {
@@ -215,8 +204,7 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, "Initial inventory query finished.");
 
             // Toast for testing
-            Toast.makeText(MainActivity.this, "User is " + (userHasRemovedAds ?
-                    "PREMIUM" : "NOT PREMIUM"), Toast.LENGTH_SHORT).show();
+            // Toast.makeText(MainActivity.this, "User is " + (userHasRemovedAds ? "PREMIUM" : "NOT PREMIUM"), Toast.LENGTH_SHORT).show();
         }
     };
 
@@ -251,6 +239,8 @@ public class MainActivity extends AppCompatActivity {
                     } else {
                         if (savingAd.isLoaded()) {
                             savingAd.show();
+                            Toast.makeText(MainActivity.this, "Close the ad to continue saving...",
+                                    Toast.LENGTH_SHORT).show();
                         }
                     }
                 } else {
@@ -478,5 +468,18 @@ public class MainActivity extends AppCompatActivity {
         shareIntent.setType("text/plain");
         shareIntent.putExtra(Intent.EXTRA_TEXT, shareText);
         startActivity(shareIntent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (iabHelper != null) {
+            try {
+                iabHelper.dispose();
+            } catch (IabHelper.IabAsyncInProgressException e) {
+                Log.d(TAG, "There was an error disposing the IabHelper");
+            }
+        }
+        iabHelper = null;
     }
 }

@@ -63,7 +63,6 @@ public class ShowActivity extends AppCompatActivity {
         String base64EncodedPublicKey = getString(R.string.playstore_public_key);
         Log.d(TAG, "Creating IAB helper.");
         iabHelper = new IabHelper(this, base64EncodedPublicKey);
-
         // Start setup. This is asynchronous and the specified listener
         // will be called once setup completes.
         Log.d(TAG, "Starting setup.");
@@ -79,17 +78,6 @@ public class ShowActivity extends AppCompatActivity {
 
                 // Have we been disposed of in the meantime? If so, quit.
                 if (iabHelper == null) return;
-
-                // Important: Dynamically register for broadcast messages about updated purchases.
-                // We register the receiver here instead of as a <receiver> in the Manifest
-                // because we always call getPurchases() at startup, so therefore we can ignore
-                // any broadcasts sent while the app isn't running.
-                // Note: registering this listener in an Activity is a bad idea, but is done here
-                // because this is a SAMPLE. Regardless, the receiver must be registered after
-                // IabHelper is setup, but before first call to getPurchases().
-//                mBroadcastReceiver = new IabBroadcastReceiver(MainActivity.this);
-//                IntentFilter broadcastFilter = new IntentFilter(IabBroadcastReceiver.ACTION);
-//                registerReceiver(mBroadcastReceiver, broadcastFilter);
 
                 // IAB is fully set up. Now, let's get an inventory of stuff we own.
                 Log.d(TAG, "Setup successful. Querying inventory.");
@@ -169,8 +157,7 @@ public class ShowActivity extends AppCompatActivity {
             Log.d(TAG, "Initial inventory query finished.");
 
             // Toast for testing
-            Toast.makeText(ShowActivity.this, "User is " + (userHasRemovedAds ?
-                    "PREMIUM" : "NOT PREMIUM"), Toast.LENGTH_SHORT).show();
+            // Toast.makeText(ShowActivity.this, "User is " + (userHasRemovedAds ? "PREMIUM" : "NOT PREMIUM"), Toast.LENGTH_SHORT).show();
 
             // Update UI
             if (!userHasRemovedAds) {
@@ -258,5 +245,18 @@ public class ShowActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (iabHelper != null) {
+            try {
+                iabHelper.dispose();
+            } catch (IabHelper.IabAsyncInProgressException e) {
+                Log.d(TAG, "There was an error disposing the IabHelper");
+            }
+        }
+        iabHelper = null;
     }
 }

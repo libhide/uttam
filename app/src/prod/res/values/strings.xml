@@ -1,32 +1,7 @@
 <resources>
-    <string name="app_name">Uttam</string>
-    <string name="get_started_text">Get Started</string>
-    <string name="view_in_browser_label">View in Browser</string>
-    <string name="content_desc_settings_button">Settings button</string>
-    <string name="content_desc_uttam_hero">App\'s hero image</string>
-    <string name="photographer_label">Photo by</string>
-    <string name="settings_label">Settings</string>
-    <string name="key_automatic_wallpaper_set">setWallpaperAuto</string>
-    <string name="title_automatic_wallpaper_set">Set Wallpaper Automatically</string>
-    <string name="summary_automatic_wallpaper_set">New wallpaper will be set automatically</string>
-    <string name="setting_text">Setting wallpaper...</string>
-    <string name="tap_and_hold_tip">Protip: Tap and hold the screen to view the wallpaper in all its glory!</string>
-    <string name="key_custom_sounds">customSound</string>
-    <string name="summary_custom_sounds">Use Uttam\'s custom wallpaper notification sound</string>
-    <string name="title_custom_sounds">Custom Sounds</string>
-    <string name="key_notif_led">notifictionLED</string>
-    <string name="summary_notif_led">Use notification LED</string>
-    <string name="title_notif_led">Notification LED</string>
-    <string name="key_fetch_over_data">fetchOnData</string>
-    <string name="summary_fetch_over_data">Download new wallpaper over mobile data</string>
-    <string name="title_fetch_over_data">Fetch over mobile data</string>
-    <string name="key_refresh_interval">setRefreshInterval</string>
-    <string name="title_refresh_interval">Wallpaper fetch interval</string>
-    <string name="summary_refresh_interval">Set the refresh interval for new wallpapers</string>
-    <string name="key_compress_wallpaper">compressWallpaper</string>
     <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
     <string name="interstitial_ad_unit_id">ca-app-pub-3940256099942544/1033173712</string>
-    <string name="playstore_public_key">MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAo4XgzVLnoDCKbbWPo8vWD9aCFgtIuiIuF6q3bArw9/bCjN2VvbMf+FM3ye2CA443BGmfnZNQuvTn4xcv6DQwnX5GH+bB9LShyCNq1JMtm0C6RPt+8jupAYfO8kodTzwVC2C9wb1W8/nyDNKzq783FTT01htrqiXaWgvXWtI45t6/KMXUKlNFqeu4uC1CZErJLmNu7i5WoHSStbLfFC2jykkawyVlj4mmAwRIiB4EqoBXG+95n7/QjXzIaIpKxeIq57f+L4J1Wrrw/B9ImSq3DBGYKpwmGTxjuju4/X0hgH34Msa9ONqwqEDAObWaFqis0VgclCjgpGrx3BCEY70WbQIDAQAB</string>
+    <string name="playstore_public_key">MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAoueA0HGGz3Y0XE6WmVT7jt4e7cDhMWoH99mpAiu4uJjHOMR3dlpJOeK4GwayFKiemVHdQSu7hxNzVBYZdX09VWCrPGeFJfme6lMXP9QmWJKyyivPuzUW4w/0eEl908hJEJIgyJkR89LSfNVEmwrVo3mM4ZI6hXks/libNpaKiny1y2LLWlEM3Ue9nVqhj68G/iWIrF1Zk6h7K3lvF4mj7MEnTsFbVZzuGtFFOuibQXd9d1Jib3HCrApRhYXnhsi3yszCv4BErsBG2F55mJmpp7fGD37RIlTIx/PR+xOISjzliwM010REDmVpNFVRzep27Q2La3GAv4eCFf7tqeCSwQIDAQAB</string>
     <string name="key_remove_ads">removeAds</string>
     <string name="key_iap_category">iap</string>
 </resources>

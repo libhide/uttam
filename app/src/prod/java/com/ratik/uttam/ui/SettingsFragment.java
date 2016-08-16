@@ -8,6 +8,7 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
+import android.content.Intent;
 
 import com.ratik.uttam.Constants;
 import com.ratik.uttam.R;
@@ -25,7 +26,6 @@ public class SettingsFragment extends PreferenceFragment
 
     // IAP
     private IabHelper iabHelper;
-    private PreferenceCategory iapCategory;
     private Preference removeAdsPreference;
 
     @Override
@@ -33,20 +33,36 @@ public class SettingsFragment extends PreferenceFragment
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.prefs);
 
-        iapCategory = (PreferenceCategory) findPreference(getActivity()
-                .getString(R.string.key_iap_category));
         removeAdsPreference = findPreference(getString(R.string.key_remove_ads));
 
         // IAP stuff
         String base64EncodedPublicKey = getString(R.string.playstore_public_key);
         if (MainActivity.userHasRemovedAds) {
             // User has remove ads
-            iapCategory.removePreference(removeAdsPreference);
+            removeAdsPreference.setEnabled(false);
         } else {
             // User has NOT remove ads
             removeAdsPreference.setEnabled(true);
 
             iabHelper = new IabHelper(getActivity(), base64EncodedPublicKey);
+            iabHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
+                public void onIabSetupFinished(IabResult result) {
+                    Log.d(TAG, "Setup finished.");
+
+                    if (!result.isSuccess()) {
+                        // Oh noes, there was a problem.
+                        Log.e(TAG, "Problem setting up in-app billing: " + result);
+                        return;
+                    }
+
+                    // Have we been disposed of in the meantime? If so, quit.
+                    if (iabHelper == null) return;
+
+                    // IAB is fully set up. Now, let's get an inventory of stuff we own.
+                    Log.d(TAG, "Setup successful.");
+                }
+            });
+
             removeAdsPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
@@ -68,6 +84,8 @@ public class SettingsFragment extends PreferenceFragment
         public void onIabPurchaseFinished(IabResult result, Purchase info) {
             if (result.isFailure()) {
                 Log.d(TAG, "Error purchasing: " + result);
+                Toast.makeText(getActivity(), "Error purchasing at the moment. Try again later.",
+                        Toast.LENGTH_SHORT).show();
             } else if (info.getSku().equals(Constants.SKU_REMOVE_ADS)) {
                 // Success
                 Toast.makeText(getActivity(), "Purchased!", Toast.LENGTH_SHORT).show();
@@ -80,7 +98,6 @@ public class SettingsFragment extends PreferenceFragment
     @Override
     public void onResume() {
         super.onResume();
-
         // For all (most) preferences, attach an OnPreferenceChangeListener
         // so the UI summary can be updated when the preference changes.
         bindPreferenceSummaryToValue(findPreference(getString(R.string.key_refresh_interval)));
@@ -133,5 +150,17 @@ public class SettingsFragment extends PreferenceFragment
             }
         }
         iabHelper = null;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.i(TAG, "onActivityResult(" + requestCode + "," + resultCode + "," + data);
+
+        // Pass on the activity result to the helper for handling
+        if (!iabHelper.handleActivityResult(requestCode, resultCode, data)) {
+            super.onActivityResult(requestCode, resultCode, data);
+        } else {
+            Log.i(TAG, "onActivityResult handled by IABUtil.");
+        }
     }
 }
