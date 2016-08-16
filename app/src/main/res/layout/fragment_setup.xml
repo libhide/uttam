@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#2d2d2d">
@@ -13,7 +12,7 @@
         android:paddingLeft="40dp"
         android:paddingRight="40dp"
         android:paddingTop="40dp"
-        android:text="Set refresh interval"
+        android:text="@string/refresh_interval_dialog_title"
         android:textColor="@android:color/white"
         android:textSize="16sp" />
 
@@ -25,7 +24,7 @@
         android:paddingLeft="40dp"
         android:paddingRight="40dp"
         android:paddingTop="10dp"
-        android:text="The app needs to know when to push notifications to the device. Take a second to set the refresh interval for the wallpaper notification."
+        android:text="@string/tour_slide_4_text"
         android:textColor="@android:color/white"
         android:textSize="14sp" />
 
@@ -35,7 +34,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="Set Refresh Interval" />
+        android:text="@string/refresh_interval_dialog_title" />
 
     <TextView
         android:id="@+id/tipTextView"
@@ -45,10 +44,11 @@
         android:layout_marginTop="50dp"
         android:paddingLeft="40dp"
         android:paddingRight="40dp"
+        android:text="@string/tour_slide_4_go_text"
         android:textColor="@android:color/white"
-        android:textSize="14sp"
-        android:visibility="invisible"
-        android:text="Sweet! Hit done now!" />
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:visibility="invisible" />
 
 
 </RelativeLayout>

@@ -7,6 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
+        android:contentDescription="@string/content_desc_hero_img"
         android:src="@drawable/uttam_hero" />
 
     <ImageView
@@ -15,6 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="80dp"
+        android:contentDescription="@string/content_desc_app_logo"
         android:src="@drawable/ty_logo" />
 
     <Button

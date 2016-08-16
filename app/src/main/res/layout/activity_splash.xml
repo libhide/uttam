@@ -9,6 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:layout_gravity="center"
-        android:src="@drawable/splash_logo" />
+        android:src="@drawable/splash_logo"
+        android:contentDescription="@string/content_desc_uttam_logo_small"/>
 
 </LinearLayout>

@@ -203,7 +203,7 @@ public class GetPhotoService extends Service {
             // Send Notification
             notifyUser(wallpaper);
 
-            // If user wants automagical setting
+            // If user wants auto-magical setting
             if (PrefUtils.shouldSetWallpaperAutomatically(context)) {
                 new SetWallpaperTask(context).execute(wallpaper);
             }
@@ -231,11 +231,11 @@ public class GetPhotoService extends Service {
                         .setSmallIcon(R.drawable.ic_stat_uttam)
                         .setLargeIcon(BitmapUtils.cropToSquare(wallpaper))
                         .setAutoCancel(true)
-                        .setContentTitle("New Wallpaper!")
-                        .setContentText("Photo by " + photo.getPhotographer())
+                        .setContentTitle(getString(R.string.wallpaper_notif_title))
+                        .setContentText(getString(R.string.wallpaper_notif_photo_by) + photo.getPhotographer())
                         .setStyle(new NotificationCompat.BigPictureStyle()
                                 .bigPicture(wallpaper)
-                                .setBigContentTitle("New Wallpaper!"))
+                                .setBigContentTitle(getString(R.string.wallpaper_notif_title)))
                         .setContentIntent(showWallpaperIntent);
 
         if (PrefUtils.userWantsCustomSounds(this)) {
