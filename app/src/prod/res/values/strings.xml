@@ -13,6 +13,6 @@
 
     <!-- Preferences -->
     <string name="key_remove_ads">removeAds</string>
-    <string name="summary_remove_ads">In-app purchase to remove ads. The app requires a restart once the purchase is made</string>
+    <string name="summary_remove_ads">In-app purchase to remove ads. The app requires a restart once the purchase is made.</string>
     <string name="title_remove_ads">Remove Ads</string>
 </resources>
