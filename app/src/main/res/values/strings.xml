@@ -36,21 +36,21 @@
     <string name="category_notifications">Notifications</string>
     <string name="key_automatic_wallpaper_set">setWallpaperAuto</string>
     <string name="title_automatic_wallpaper_set">Set Wallpaper Automatically</string>
-    <string name="summary_automatic_wallpaper_set">New wallpaper will be set automatically in the background</string>
+    <string name="summary_automatic_wallpaper_set">New wallpaper will be set automatically in the background.</string>
     <string name="key_custom_sounds">customSound</string>
-    <string name="summary_custom_sounds">Use custom notification sound</string>
+    <string name="summary_custom_sounds">Use custom notification sound.</string>
     <string name="title_custom_sounds">Custom Sounds</string>
     <string name="key_notif_led">notifictionLED</string>
-    <string name="summary_notif_led">Use notification LED</string>
+    <string name="summary_notif_led">Use notification LED.</string>
     <string name="title_notif_led">Notification LED</string>
     <string name="key_fetch_over_data">fetchOnData</string>
-    <string name="summary_fetch_over_data">Download wallpaper over mobile data</string>
+    <string name="summary_fetch_over_data">Download wallpaper over mobile data.</string>
     <string name="title_fetch_over_data">Fetch over mobile data</string>
     <string name="key_refresh_interval">setRefreshInterval</string>
     <string name="title_refresh_interval">Wallpaper fetch interval</string>
-    <string name="summary_refresh_interval">Set the refresh interval for new wallpapers</string>
+    <string name="summary_refresh_interval">Set the refresh interval for new wallpapers.</string>
     <string name="key_compress_wallpaper">compressWallpaper</string>
-    <string name="summary_compress_wallpaper">Recommended for older devices (under 720p screen resolutions)</string>
+    <string name="summary_compress_wallpaper">Recommended for older devices (under 720p screen resolutions).</string>
     <string name="title_compress_wallpaper">Compress wallpaper</string>
 
     <!-- Toast message strings -->
