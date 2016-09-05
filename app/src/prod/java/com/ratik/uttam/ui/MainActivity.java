@@ -327,7 +327,7 @@ public class MainActivity extends AppCompatActivity {
     }
     private void setupAds() {
         savingAd = new InterstitialAd(this);
-        savingAd.setAdUnitId(getString(R.string.interstitial_ad_unit_id));
+        savingAd.setAdUnitId(getString(R.string.interstitial_ad_save));
         savingAd.setAdListener(new AdListener() {
             @Override
             public void onAdClosed() {
