@@ -20,8 +20,8 @@ import com.ratik.uttam.utils.PrefUtils;
  */
 public class SetupFragment extends Fragment {
 
-    public static Button setupButton;
-    private TextView tipView;
+    public Button setupButton;
+    public TextView tipView;
 
     @Nullable
     @Override
@@ -68,5 +68,9 @@ public class SetupFragment extends Fragment {
         });
 
         builder.create().show();
+    }
+
+    public boolean isSetupButtonEnabled() {
+        return setupButton.isEnabled();
     }
 }

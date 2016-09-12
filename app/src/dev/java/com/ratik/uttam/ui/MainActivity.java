@@ -72,6 +72,9 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton setWallpaperButton;
     private LinearLayout creditsContainer;
 
+    // Helpers
+    private boolean shouldScroll;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -143,9 +146,15 @@ public class MainActivity extends AppCompatActivity {
         downloadUrl = PhotoUtils.getDownloadUrl(this);
         userProfileUrl = PhotoUtils.getUserProf(this);
 
+        // Is scroll required?
+        shouldScroll = wallpaper.getWidth() > screenWidth;
+
         // Set data
         image.setImageBitmap(wallpaper);
-        image.setOnTouchListener(imageScrollListener);
+        if (getResources().getConfiguration().orientation
+                != Configuration.ORIENTATION_LANDSCAPE && shouldScroll) {
+            image.setOnTouchListener(imageScrollListener);
+        }
         photographerTextView.setText(Utils.toTitleCase(photographer));
 
         // Click listeners
@@ -314,19 +323,6 @@ public class MainActivity extends AppCompatActivity {
     };
 
     @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        int orientation = newConfig.orientation;
-        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-            image.scrollTo(0, 0);
-            image.setOnTouchListener(imageScrollListener);
-        } else {
-            image.scrollTo(0, 0);
-            image.setOnTouchListener(null);
-        }
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.actions, menu);
         return super.onCreateOptionsMenu(menu);
@@ -355,6 +351,19 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             default:
                 return false;
+        }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        int orientation = newConfig.orientation;
+        if (orientation == Configuration.ORIENTATION_PORTRAIT && shouldScroll) {
+            image.scrollTo(0, 0);
+            image.setOnTouchListener(imageScrollListener);
+        } else {
+            image.scrollTo(0, 0);
+            image.setOnTouchListener(null);
         }
     }
 
