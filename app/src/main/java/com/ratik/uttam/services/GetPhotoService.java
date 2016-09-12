@@ -205,7 +205,7 @@ public class GetPhotoService extends Service {
 
             // If user wants auto-magical setting
             if (PrefUtils.shouldSetWallpaperAutomatically(context)) {
-                new SetWallpaperTask(context).execute(wallpaper);
+                new SetWallpaperTask(context, false).execute(wallpaper);
             }
 
             // Stop the service
