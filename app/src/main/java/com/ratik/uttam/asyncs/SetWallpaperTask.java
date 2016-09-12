@@ -20,11 +20,19 @@ public class SetWallpaperTask extends AsyncTask<Bitmap, Void, Bitmap> {
     private static final String TAG = SetWallpaperTask.class.getSimpleName();
 
     private Context context;
+    private boolean shouldShowToast;
 
     @SuppressLint("ShowToast")
     public SetWallpaperTask(Context context) {
         this.context = context;
     }
+
+    @SuppressLint("ShowToast")
+    public SetWallpaperTask(Context context, boolean shouldShowToast) {
+        this.context = context;
+        this.shouldShowToast = shouldShowToast;
+    }
+
 
     @Override
     protected Bitmap doInBackground(Bitmap... bitmaps) {
@@ -36,7 +44,9 @@ public class SetWallpaperTask extends AsyncTask<Bitmap, Void, Bitmap> {
         super.onPostExecute(wallpaper);
         try {
             WallpaperManager.getInstance(context).setBitmap(wallpaper);
-            Toast.makeText(context, R.string.wallpaper_set_text, Toast.LENGTH_SHORT).show();
+            if (shouldShowToast) {
+                Toast.makeText(context, R.string.wallpaper_set_text, Toast.LENGTH_SHORT).show();
+            }
         } catch (IOException e) {
             Log.e(TAG, e.getMessage());
         }
