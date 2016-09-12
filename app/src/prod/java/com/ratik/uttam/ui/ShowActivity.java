@@ -54,6 +54,9 @@ public class ShowActivity extends AppCompatActivity {
     private IabHelper iabHelper;
     private boolean userHasRemovedAds;
 
+    // Helpers
+    private  boolean shouldScroll;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,9 +104,15 @@ public class ShowActivity extends AppCompatActivity {
         setWallpaperButton = (ImageButton) findViewById(R.id.wallpaperSetButton);
         creditsView = (LinearLayout) findViewById(R.id.creditsContainer);
 
+        // Is scroll required?
+        shouldScroll = wallpaper.getWidth() > screenWidth;
+
         // Set photo data
         image.setImageBitmap(wallpaper);
-        image.setOnTouchListener(imageScrollListener);
+        if (getResources().getConfiguration().orientation
+                != Configuration.ORIENTATION_LANDSCAPE && shouldScroll) {
+            image.setOnTouchListener(imageScrollListener);
+        }
         photographerTextView.setText(Utils.toTitleCase(photographer));
 
         // Click listeners
@@ -231,7 +240,7 @@ public class ShowActivity extends AppCompatActivity {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         int orientation = newConfig.orientation;
-        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+        if (orientation == Configuration.ORIENTATION_PORTRAIT && shouldScroll) {
             image.scrollTo(0, 0);
             image.setOnTouchListener(imageScrollListener);
         } else {

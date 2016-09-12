@@ -16,6 +16,8 @@ import com.vlonjatg.android.apptourlibrary.MaterialSlide;
  */
 public class TourActivity extends AppTour {
 
+    private SetupFragment setupFragment;
+
     @Override
     public void init(@Nullable Bundle savedInstanceState) {
         int slideColor = Color.parseColor("#3d3d3d");
@@ -36,7 +38,8 @@ public class TourActivity extends AppTour {
         addSlide(firstSlide, slideColor);
         addSlide(secondSlide, slideColor);
         addSlide(thirdSlide, slideColor);
-        addSlide(new SetupFragment(), slideColor);
+        setupFragment = new SetupFragment();
+        addSlide(setupFragment, slideColor);
 
         // Customize tour
         setSkipButtonTextColor(Color.WHITE);
@@ -52,7 +55,7 @@ public class TourActivity extends AppTour {
 
     @Override
     public void onDonePressed() {
-        if (SetupFragment.setupButton.isEnabled()) {
+        if (setupFragment.isSetupButtonEnabled()) {
             Toast.makeText(this, R.string.set_refresh_interval_first_prompt, Toast.LENGTH_SHORT).show();
         } else {
             startActivity(new Intent(TourActivity.this, MainActivity.class));

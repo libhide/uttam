@@ -50,5 +50,4 @@
         android:textStyle="bold"
         android:visibility="invisible" />
 
-
 </RelativeLayout>
