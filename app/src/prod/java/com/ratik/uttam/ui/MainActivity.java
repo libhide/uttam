@@ -464,7 +464,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void shareWallpaper() {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
-        String shareText = "Check out this photo by " + photographer + " I'm rocking as my wallpaper! " + downloadUrl + " #uttam";
+        String shareText = "Great wallpaper from " + photographer + " on @getuttamapp today! " + downloadUrl;
         shareIntent.setType("text/plain");
         shareIntent.putExtra(Intent.EXTRA_TEXT, shareText);
         startActivity(shareIntent);
