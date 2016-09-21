@@ -262,7 +262,7 @@ public class MainActivity extends AppCompatActivity {
         setWallpaperButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new SetWallpaperTask(MainActivity.this).execute(wallpaper);
+                new SetWallpaperTask(MainActivity.this, true).execute(wallpaper);
             }
         });
 
