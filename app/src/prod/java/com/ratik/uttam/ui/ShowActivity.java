@@ -119,7 +119,7 @@ public class ShowActivity extends AppCompatActivity {
         setWallpaperButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new SetWallpaperTask(ShowActivity.this).execute(wallpaper);
+                new SetWallpaperTask(ShowActivity.this, true).execute(wallpaper);
                 // Finish the activity
                 finish();
             }
