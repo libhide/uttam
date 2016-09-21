@@ -23,11 +23,6 @@ public class SetWallpaperTask extends AsyncTask<Bitmap, Void, Bitmap> {
     private boolean shouldShowToast;
 
     @SuppressLint("ShowToast")
-    public SetWallpaperTask(Context context) {
-        this.context = context;
-    }
-
-    @SuppressLint("ShowToast")
     public SetWallpaperTask(Context context, boolean shouldShowToast) {
         this.context = context;
         this.shouldShowToast = shouldShowToast;

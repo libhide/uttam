@@ -178,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Set wallpaper
-                new SetWallpaperTask(MainActivity.this).execute(wallpaper);
+                new SetWallpaperTask(MainActivity.this, true).execute(wallpaper);
             }
         });
 
