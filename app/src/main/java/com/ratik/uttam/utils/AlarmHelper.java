@@ -23,7 +23,8 @@ public class AlarmHelper {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
                 WALLPAPER_NOTIF_PENDING_INTENT_ID, intent, 0);
 
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        AlarmManager alarmManager = (AlarmManager)
+                context.getSystemService(Context.ALARM_SERVICE);
         if (PrefUtils.getRefreshInterval(context).equals("daily")) {
             // We do this because on the first day, the user sees
             // the uttam hero wallpaper
@@ -63,7 +64,8 @@ public class AlarmHelper {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
                 WALLPAPER_NOTIF_PENDING_INTENT_ID, intent, 0);
 
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        AlarmManager alarmManager = (AlarmManager)
+                context.getSystemService(Context.ALARM_SERVICE);
         if (PrefUtils.getRefreshInterval(context).equals("daily")) {
             if (calendar.get(Calendar.HOUR_OF_DAY) >= 7) {
                 // If there is a delayed alarm, set it back
@@ -102,7 +104,8 @@ public class AlarmHelper {
                 WALLPAPER_DEFERRED_NOTIF_PENDING_INTENT_ID, intent, 0);
 
         // Postpone fetch by one hour
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        AlarmManager alarmManager = (AlarmManager)
+                context.getSystemService(Context.ALARM_SERVICE);
         int currentHour = calendar.get(Calendar.HOUR_OF_DAY);
         calendar.set(Calendar.HOUR_OF_DAY, currentHour + 1);
         alarmManager.set(AlarmManager.RTC, calendar.getTimeInMillis(), pendingIntent);
@@ -110,5 +113,4 @@ public class AlarmHelper {
         // Saving alarm-set state
         Utils.setAlarmState(context, true);
     }
-
 }
