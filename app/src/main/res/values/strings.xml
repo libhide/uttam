@@ -56,5 +56,12 @@
     <!-- Toast message strings -->
     <string name="setting_text">Setting wallpaper…</string>
     <string name="wallpaper_set_text">Wallpaper set</string>
+    <string name="category_misc">Misc.</string>
+    <string name="key_contact">contactDev</string>
+    <string name="summary_contact">Want help? Have suggestions? Use this to contact the developer.</string>
+    <string name="title_contact">Contact the Developer</string>
+    <string name="key_review">review</string>
+    <string name="summary_review">Like the app? Consider leaving a review in the Play Store!</string>
+    <string name="title_review">Say Thanks!</string>
 
 </resources>
