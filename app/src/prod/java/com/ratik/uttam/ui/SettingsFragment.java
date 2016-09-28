@@ -1,14 +1,14 @@
 package com.ratik.uttam.ui;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
-import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
-import android.content.Intent;
 
 import com.ratik.uttam.Constants;
 import com.ratik.uttam.R;
@@ -76,6 +76,32 @@ public class SettingsFragment extends PreferenceFragment
                 }
             });
         }
+
+        Preference contactPreference = getPreferenceManager().findPreference(
+                getActivity().getString(R.string.key_contact));
+        contactPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                Intent emailIntent = new Intent(Intent.ACTION_SEND);
+                emailIntent.setType("message/rfc822");
+                emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]
+                        {"ratik96@gmail.com"});
+                startActivity(emailIntent);
+                return true;
+            }
+        });
+
+        Preference reviewPreference = getPreferenceManager().findPreference(
+                getActivity().getString(R.string.key_review));
+        reviewPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                Intent i = new Intent();
+                i.setData(Uri.parse("market://details?id=com.ratik.uttam.prod"));
+                startActivity(i);
+                return true;
+            }
+        });
     }
 
     // PurchaseFinishedListener

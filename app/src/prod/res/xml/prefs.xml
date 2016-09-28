@@ -41,12 +41,21 @@
             android:summary="@string/summary_notif_led"
             android:title="@string/title_notif_led" />
     </PreferenceCategory>
-    <PreferenceCategory
-        android:title="@string/category_iap">
+    <PreferenceCategory android:title="@string/category_iap">
         <Preference
             android:key="@string/key_remove_ads"
             android:summary="@string/summary_remove_ads"
             android:title="@string/title_remove_ads" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/category_misc">
+        <Preference
+            android:key="@string/key_contact"
+            android:summary="@string/summary_contact"
+            android:title="@string/title_contact" />
+        <Preference
+            android:key="@string/key_review"
+            android:summary="@string/summary_review"
+            android:title="@string/title_review" />
     </PreferenceCategory>
 
 </PreferenceScreen>
