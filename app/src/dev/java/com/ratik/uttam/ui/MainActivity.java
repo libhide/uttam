@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
         if (firstRun) {
             // save hero into the internal storage
             wallpaper = BitmapFactory.decodeResource(getResources(), R.drawable.uttam_hero);
-            wallpaper = BitmapUtils.cropBitmapFromCenterAndScreenSize(this, wallpaper);
+            // wallpaper = BitmapUtils.cropBitmapFromCenterAndScreenSize(this, wallpaper);
             FileUtils.saveImage(this, wallpaper, "wallpaper", "png");
 
             // TODO: refactor

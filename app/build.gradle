@@ -8,8 +8,8 @@ android {
         applicationId "com.ratik.uttam"
         minSdkVersion 16
         targetSdkVersion 24
-        versionCode 8
-        versionName "1.0"
+        versionCode 9
+        versionName "1.1"
     }
     buildTypes {
         release {
