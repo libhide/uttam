@@ -39,7 +39,6 @@ import com.ratik.uttam.Constants;
 import com.ratik.uttam.R;
 import com.ratik.uttam.asyncs.SetWallpaperTask;
 import com.ratik.uttam.services.GetPhotoService;
-import com.ratik.uttam.utils.AlarmHelper;
 import com.ratik.uttam.utils.BitmapUtils;
 import com.ratik.uttam.utils.FileUtils;
 import com.ratik.uttam.utils.PhotoUtils;
@@ -120,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             // set alarm
-            AlarmHelper.setAlarm(this);
+            // AlarmHelper.setAlarm(this);
 
             // cast first notif
             sendFirstRunNotification();

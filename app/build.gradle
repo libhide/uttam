@@ -8,8 +8,8 @@ android {
         applicationId "com.ratik.uttam"
         minSdkVersion 16
         targetSdkVersion 24
-        versionCode 9
-        versionName "1.1"
+        versionCode 10
+        versionName "1.2"
     }
     buildTypes {
         release {
@@ -25,10 +25,19 @@ android {
             applicationId "com.ratik.uttam.prod"
         }
     }
+
+    allprojects {
+        repositories {
+            flatDir {
+                dirs 'libs'
+            }
+        }
+    }
 }
 
 dependencies {
     testCompile 'junit:junit:4.12'
+    compile(name:'jobs', ext:'aar')
     compile 'com.android.support:appcompat-v7:24.2.0'
     compile 'com.squareup.okhttp3:okhttp:3.4.1'
     compile 'com.squareup.picasso:picasso:2.5.2'
