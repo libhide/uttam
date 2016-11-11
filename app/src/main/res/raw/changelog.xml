@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<changelog bulletedList="true">
+
+    <changelogversion versionName="2.0" changeDate="Nov xx, 2016">
+        <changelogtext>[b]Update![/b] Updated Uttam's Hero Image.</changelogtext>
+        <changelogtext>[b]Update![/b] Removed the option for weekly wallpaper updates for branding reasons. Sorry!</changelogtext>
+        <changelogtext>[b]Update![/b] Updated user on-boarding flow.</changelogtext>
+        <changelogtext>[b]Update![/b] Streamlined the Settings. Have a look!</changelogtext>
+        <changelogtext>[b]Fix![/b] Inconsistent wallpaper updates.</changelogtext>
+        <changelogtext>[b]Fix![/b] Default preferences are not actually default from the get-go!</changelogtext>
+    </changelogversion>
+
+    <changelogversion versionName="1.1" changeDate="Sept 29, 2016">
+        <changelogtext>Fixed strange scaling issue with the hero image.</changelogtext>
+    </changelogversion>
+
+    <changelogversion versionName="1.0" changeDate="Sept 28, 2016">
+        <changelogtext>Initial release.</changelogtext>
+    </changelogversion>
+
+</changelog>

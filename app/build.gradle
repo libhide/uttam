@@ -9,7 +9,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 24
         versionCode 10
-        versionName "1.2"
+        versionName "2.0"
     }
     buildTypes {
         release {
@@ -43,6 +43,7 @@ dependencies {
     compile 'com.vlonjatg.android:app-tour:1.0'
     compile 'com.firebase:firebase-jobdispatcher:0.5.0'
     prodCompile 'com.google.firebase:firebase-ads:9.0.2'
+    compile 'com.github.gabrielemariotti.changeloglib:changelog:2.1.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

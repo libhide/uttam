@@ -47,6 +47,11 @@
             android:name=".ui.TourActivity"
             android:theme="@style/AppTheme.Fullscreen" />
 
+        <activity
+            android:name=".ui.ChangelogDialog"
+            android:label="@string/activity_changelog_label"
+            android:theme="@style/AppCompatAlertDialogStyle" />
+
         <receiver android:name=".receivers.NotificationReceiver" />
         <receiver android:name=".receivers.JobSetReceiver" />
         <receiver
@@ -68,6 +73,13 @@
                 <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE" />
             </intent-filter>
         </service>
+
+        <receiver android:name=".receivers.UpdateReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_REPLACED" />
+                <data android:scheme="package" android:path="com.ratik.uttam.prod" />
+            </intent-filter>
+        </receiver>
 
     </application>
 
