@@ -1,11 +1,9 @@
 package com.ratik.uttam.utils;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import com.ratik.uttam.Constants;
 import com.ratik.uttam.R;
 
 /**
@@ -38,17 +36,17 @@ public class PrefUtils {
     }
 
     // Refresh Interval methods
-    @SuppressLint("CommitPrefEdits")
-    public static void setRefreshInterval(Context context, String value) {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor editor = sp.edit();
-        if (value.equals("daily")) {
-            editor.putString(Constants.PREF_REFRESH_INTERVAL, "Everyday");
-        } else {
-            editor.putString(Constants.PREF_REFRESH_INTERVAL, "Weekly");
-        }
-        editor.commit();
-    }
+//    @SuppressLint("CommitPrefEdits")
+//    public static void setRefreshInterval(Context context, String value) {
+//        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+//        SharedPreferences.Editor editor = sp.edit();
+//        if (value.equals("daily")) {
+//            editor.putString(Constants.PREF_REFRESH_INTERVAL, "Everyday");
+//        } else {
+//            editor.putString(Constants.PREF_REFRESH_INTERVAL, "Weekly");
+//        }
+//        editor.commit();
+//    }
 
     public static String getRefreshInterval(Context context) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);

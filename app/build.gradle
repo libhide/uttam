@@ -37,11 +37,11 @@ android {
 
 dependencies {
     testCompile 'junit:junit:4.12'
-    compile(name:'jobs', ext:'aar')
     compile 'com.android.support:appcompat-v7:24.2.0'
     compile 'com.squareup.okhttp3:okhttp:3.4.1'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.vlonjatg.android:app-tour:1.0'
+    compile 'com.firebase:firebase-jobdispatcher:0.5.0'
     prodCompile 'com.google.firebase:firebase-ads:9.0.2'
 }
 
