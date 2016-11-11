@@ -3,18 +3,17 @@ package com.ratik.uttam.services;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.IBinder;
-import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.firebase.jobdispatcher.JobParameters;
+import com.firebase.jobdispatcher.JobService;
 import com.ratik.uttam.Constants;
 import com.ratik.uttam.Keys;
 import com.ratik.uttam.R;
@@ -26,7 +25,6 @@ import com.ratik.uttam.utils.BitmapUtils;
 import com.ratik.uttam.utils.FileUtils;
 import com.ratik.uttam.utils.PhotoUtils;
 import com.ratik.uttam.utils.PrefUtils;
-import com.ratik.uttam.utils.Utils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,50 +43,38 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 /**
- * Created by Ratik on 04/03/16.
+ * Created by Ratik on 01/10/16.
  */
-public class GetPhotoService extends Service {
 
-    private static final String TAG = GetPhotoService.class.getSimpleName();
+public class GetPhotoJob extends JobService {
+    public static final String TAG = GetPhotoJob.class.getSimpleName();
 
     private static final int SHOW_WALLPAPER = 1;
     private static int WALLPAPER_NOTIF_ID = 001;
 
     private Context context;
     private Photo photo;
+    private Request request;
 
-    public GetPhotoService() {
-        context = GetPhotoService.this;
-    }
+    private OkHttpClient client;
+    private Call call;
 
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
+    public GetPhotoJob() {
+        context = GetPhotoJob.this;
 
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        getRandomPhoto();
-        return START_STICKY;
-    }
-
-    private void getRandomPhoto() {
-        if (Utils.isAlarmDeferred(this)) {
-            Utils.setAlarmDefState(this, false);
-        }
-        Log.d(TAG, "Getting random photo...");
-
-        // Fetch URL
+        // Construct URL
         String randomUrl = Constants.BASE_URL + Keys.API_KEY + "&category=" + getRandomCategory();
         Log.d(TAG, randomUrl);
 
-        OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder()
+        client = new OkHttpClient();
+        request = new Request.Builder()
                 .url(randomUrl)
                 .build();
+    }
 
-        Call call = client.newCall(request);
+    @Override
+    public boolean onStartJob(final JobParameters jobParameters) {
+        call = client.newCall(request);
         call.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) { }
@@ -99,7 +85,7 @@ public class GetPhotoService extends Service {
                     String jsonData = response.body().string();
                     if (response.isSuccessful()) {
                         photo = parsePhoto(jsonData);
-                        new SaveWallpaperTask().execute();
+                        new GetPhotoJob.SaveWallpaperTask().execute();
                     } else {
                         // ERROR
                     }
@@ -108,6 +94,14 @@ public class GetPhotoService extends Service {
                 }
             }
         });
+
+        return false;
+    }
+
+    @Override
+    public boolean onStopJob(JobParameters jobParameters) {
+        call.cancel();
+        return true; /* we're not done, please reschedule */
     }
 
     private Photo parsePhoto(String jsonData) throws JSONException {
@@ -175,7 +169,7 @@ public class GetPhotoService extends Service {
                 new SetWallpaperTask(context, false).execute(wallpaper);
             }
 
-            // Stop the service
+            // We are done, stop!
             stopSelf();
         }
     }

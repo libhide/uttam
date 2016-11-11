@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.widget.Toast;
 
 import com.ratik.uttam.R;
 import com.vlonjatg.android.apptourlibrary.AppTour;
@@ -15,8 +14,6 @@ import com.vlonjatg.android.apptourlibrary.MaterialSlide;
  * Created by Ratik on 08/03/16.
  */
 public class TourActivity extends AppTour {
-
-    private SetupFragment setupFragment;
 
     @Override
     public void init(@Nullable Bundle savedInstanceState) {
@@ -38,8 +35,6 @@ public class TourActivity extends AppTour {
         addSlide(firstSlide, slideColor);
         addSlide(secondSlide, slideColor);
         addSlide(thirdSlide, slideColor);
-        setupFragment = new SetupFragment();
-        addSlide(setupFragment, slideColor);
 
         // Customize tour
         setSkipButtonTextColor(Color.WHITE);
@@ -50,17 +45,13 @@ public class TourActivity extends AppTour {
 
     @Override
     public void onSkipPressed() {
-        setCurrentSlide(4);
+        setCurrentSlide(3);
     }
 
     @Override
     public void onDonePressed() {
-        if (setupFragment.isSetupButtonEnabled()) {
-            Toast.makeText(this, R.string.set_refresh_interval_first_prompt, Toast.LENGTH_SHORT).show();
-        } else {
-            startActivity(new Intent(TourActivity.this, MainActivity.class));
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-            finish();
-        }
+        startActivity(new Intent(TourActivity.this, MainActivity.class));
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+        finish();
     }
 }

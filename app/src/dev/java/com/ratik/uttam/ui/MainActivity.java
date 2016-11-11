@@ -39,6 +39,7 @@ import com.ratik.uttam.Constants;
 import com.ratik.uttam.R;
 import com.ratik.uttam.asyncs.SetWallpaperTask;
 import com.ratik.uttam.services.GetPhotoService;
+import com.ratik.uttam.utils.AlarmHelper;
 import com.ratik.uttam.utils.BitmapUtils;
 import com.ratik.uttam.utils.FileUtils;
 import com.ratik.uttam.utils.PhotoUtils;
@@ -106,10 +107,10 @@ public class MainActivity extends AppCompatActivity {
             FileUtils.saveImage(this, wallpaper, "wallpaper", "png");
 
             // TODO: refactor
-            PhotoUtils.setFullUrl(this, "https://images.unsplash.com/photo-1449024540548-94f5d5a59230?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&s=dec4b59ca06926527007bd98670f2800");
-            PhotoUtils.setPhotographerName(this, "Mike Wilson");
-            PhotoUtils.setDownloadUrl(this, "https://unsplash.com/photos/rM7B4DheQc0/download");
-            PhotoUtils.setUserProf(this, "https://unsplash.com/mkwlsn");
+            PhotoUtils.setFullUrl(this, "https://images.unsplash.com/photo-1473970367503-7d7f8d1bf998?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&s=1c38107cb3e71ad1c6cb430b0343bd5f");
+            PhotoUtils.setPhotographerName(this, "Martin Sanchez");
+            PhotoUtils.setDownloadUrl(this, "http://unsplash.com/photos/bk4HoBc4k60/download");
+            PhotoUtils.setUserProf(this, "https://unsplash.com/@mzeketv");
 
             // set it as the wallpaper
             try {
@@ -118,10 +119,10 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-            // set alarm
-            // AlarmHelper.setAlarm(this);
+            // set alarm to set job everyday
+            AlarmHelper.setJobSetAlarm(this, true);
 
-            // cast first notif
+            // cast first notification
             sendFirstRunNotification();
 
             // update first run state
@@ -135,7 +136,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
         // Get photo data
         if (wallpaper == null) {
             // get saved image
@@ -223,7 +223,7 @@ public class MainActivity extends AppCompatActivity {
                         .setLargeIcon(BitmapUtils.cropToSquare(wallpaper))
                         .setAutoCancel(true)
                         .setContentTitle("New Wallpaper!")
-                        .setContentText("Photo by " + "Mike Wilson")
+                        .setContentText("Photo by " + "Martin Sanchez")
                         .setStyle(new NotificationCompat.BigPictureStyle()
                                 .bigPicture(wallpaper)
                                 .setBigContentTitle("New Wallpaper!"))
