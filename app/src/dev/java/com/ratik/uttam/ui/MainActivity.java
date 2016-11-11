@@ -1,6 +1,8 @@
 package com.ratik.uttam.ui;
 
 import android.Manifest;
+import android.app.AlarmManager;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.WallpaperManager;
@@ -38,11 +40,13 @@ import android.widget.Toast;
 import com.ratik.uttam.Constants;
 import com.ratik.uttam.R;
 import com.ratik.uttam.asyncs.SetWallpaperTask;
+import com.ratik.uttam.receivers.NotificationReceiver;
 import com.ratik.uttam.services.GetPhotoService;
 import com.ratik.uttam.utils.AlarmHelper;
 import com.ratik.uttam.utils.BitmapUtils;
 import com.ratik.uttam.utils.FileUtils;
 import com.ratik.uttam.utils.PhotoUtils;
+import com.ratik.uttam.utils.PrefUtils;
 import com.ratik.uttam.utils.Utils;
 
 import java.io.File;
@@ -74,11 +78,17 @@ public class MainActivity extends AppCompatActivity {
 
     // Helpers
     private boolean shouldScroll;
+    private boolean isLaunchThroughUpdate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if (getIntent().getExtras() != null &&
+                getIntent().getExtras().containsKey("update")) {
+            isLaunchThroughUpdate = getIntent().getExtras().getBoolean("update");
+        }
 
         // Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -122,6 +132,9 @@ public class MainActivity extends AppCompatActivity {
             // set alarm to set job everyday
             AlarmHelper.setJobSetAlarm(this, true);
 
+            // setup default prefs
+            setupDefaultPrefs();
+
             // cast first notification
             sendFirstRunNotification();
 
@@ -131,6 +144,30 @@ public class MainActivity extends AppCompatActivity {
             // get saved image
             wallpaper = FileUtils.getImageBitmap(this, "wallpaper", "png");
         }
+
+        if (isLaunchThroughUpdate) {
+            // Remove legacy alarms
+            Intent intent = new Intent(this, NotificationReceiver.class);
+            PendingIntent senderOG = PendingIntent.getBroadcast(this,
+                    AlarmHelper.WALLPAPER_NOTIF_PENDING_INTENT_ID, intent, 0);
+            PendingIntent senderDeffered = PendingIntent.getBroadcast(this,
+                    AlarmHelper.WALLPAPER_DEFERRED_NOTIF_PENDING_INTENT_ID, intent, 0);
+
+            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+            alarmManager.cancel(senderOG);
+            alarmManager.cancel(senderDeffered);
+
+            // set alarm to set job everyday
+            AlarmHelper.setJobSetAlarm(this, true);
+
+            // Show changelog
+            startActivity(new Intent(this, ChangelogDialog.class));
+        }
+    }
+
+    private void setupDefaultPrefs() {
+        PrefUtils.setAutomaticWallpaperSet(this, true);
+        PrefUtils.setCustomSoundsState(this, true);
     }
 
     @Override
@@ -217,7 +254,7 @@ public class MainActivity extends AppCompatActivity {
         PendingIntent showWallpaperIntent = PendingIntent.getActivity(this,
                 SHOW_WALLPAPER, intent, 0);
 
-        NotificationCompat.Builder mBuilder =
+        NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.ic_stat_uttam)
                         .setLargeIcon(BitmapUtils.cropToSquare(wallpaper))
@@ -229,9 +266,17 @@ public class MainActivity extends AppCompatActivity {
                                 .setBigContentTitle("New Wallpaper!"))
                         .setContentIntent(showWallpaperIntent);
 
+        if (PrefUtils.userWantsCustomSounds(this)) {
+            builder.setSound(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.uttam));
+        }
+
+        if (PrefUtils.userWantsNotificationLED(this)) {
+            builder.setDefaults(Notification.DEFAULT_LIGHTS);
+        }
+
         NotificationManager mNotifyMgr =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotifyMgr.notify(FIRST_RUN_NOTIFICATION, mBuilder.build());
+        mNotifyMgr.notify(FIRST_RUN_NOTIFICATION, builder.build());
     }
 
     private void doFileSaving() {

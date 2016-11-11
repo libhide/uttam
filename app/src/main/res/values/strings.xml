@@ -63,5 +63,6 @@
     <string name="key_review">review</string>
     <string name="summary_review">Like the app? Consider leaving a review in the Play Store!</string>
     <string name="title_review">Say Thanks!</string>
+    <string name="activity_changelog_label">Uttam Changelog</string>
 
 </resources>

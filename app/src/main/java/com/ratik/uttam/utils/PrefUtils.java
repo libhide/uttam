@@ -10,9 +10,23 @@ import com.ratik.uttam.R;
  * Created by Ratik on 08/03/16.
  */
 public class PrefUtils {
+    public static void setAutomaticWallpaperSet(Context context, boolean b) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putBoolean(context.getString(R.string.key_automatic_wallpaper_set), b);
+        editor.apply();
+    }
+
     public static boolean shouldSetWallpaperAutomatically(Context context) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         return sp.getBoolean(context.getString(R.string.key_automatic_wallpaper_set), false);
+    }
+
+    public static void setCustomSoundsState(Context context, boolean b) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putBoolean(context.getString(R.string.key_custom_sounds), b);
+        editor.apply();
     }
 
     public static boolean userWantsCustomSounds(Context context) {
@@ -20,15 +34,22 @@ public class PrefUtils {
         return sp.getBoolean(context.getString(R.string.key_custom_sounds), false);
     }
 
+    public static void setLEDState(Context context, boolean b) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putBoolean(context.getString(R.string.key_notif_led), b);
+        editor.apply();
+    }
+
     public static boolean userWantsNotificationLED(Context context) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         return sp.getBoolean(context.getString(R.string.key_notif_led), false);
     }
 
-    public static boolean userWantsToFetchOverData(Context context) {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        return sp.getBoolean(context.getString(R.string.key_fetch_over_data), false);
-    }
+//    public static boolean userWantsToFetchOverData(Context context) {
+//        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+//        return sp.getBoolean(context.getString(R.string.key_fetch_over_data), false);
+//    }
 
     public static boolean shouldCompressWallpaper(Context context) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
