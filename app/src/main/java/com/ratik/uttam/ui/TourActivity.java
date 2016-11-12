@@ -35,6 +35,7 @@ public class TourActivity extends AppTour {
         addSlide(firstSlide, slideColor);
         addSlide(secondSlide, slideColor);
         addSlide(thirdSlide, slideColor);
+        addSlide(new AllDoneFragment(), slideColor);
 
         // Customize tour
         setSkipButtonTextColor(Color.WHITE);
@@ -45,7 +46,7 @@ public class TourActivity extends AppTour {
 
     @Override
     public void onSkipPressed() {
-        setCurrentSlide(3);
+        setCurrentSlide(4);
     }
 
     @Override

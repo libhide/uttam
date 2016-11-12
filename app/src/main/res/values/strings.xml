@@ -15,6 +15,7 @@
     <string name="refresh_interval_dialog_title">Select Refresh Interval</string>
     <string name="all_set_text">All Set!</string>
     <string name="set_refresh_interval_first_prompt">Set a refresh interval first</string>
+    <string name="all_done_text">All done! Enjoy!</string>
 
     <!-- New wallpaper notification -->
     <string name="wallpaper_notif_title">New Wallpaper!</string>
