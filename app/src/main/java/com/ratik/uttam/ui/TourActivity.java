@@ -38,7 +38,7 @@ public class TourActivity extends AppTour {
         addSlide(new AllDoneFragment(), slideColor);
 
         // Customize tour
-        setSkipButtonTextColor(Color.WHITE);
+        hideSkip();
         setNextButtonColorToWhite();
         setDoneButtonTextColor(Color.WHITE);
         setActiveDotColor(Color.BLACK);
