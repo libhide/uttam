@@ -183,6 +183,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Is scroll required?
         shouldScroll = wallpaper.getWidth() > screenWidth;
+        Log.i(TAG, "" + shouldScroll);
 
         // Set data
         image.setImageBitmap(wallpaper);
