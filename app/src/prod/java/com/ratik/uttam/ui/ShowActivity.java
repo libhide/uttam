@@ -105,7 +105,7 @@ public class ShowActivity extends AppCompatActivity {
         creditsView = (LinearLayout) findViewById(R.id.creditsContainer);
 
         // Is scroll required?
-        shouldScroll = wallpaper.getWidth() > screenWidth;
+        shouldScroll = wallpaper.getWidth() >= screenWidth;
 
         // Set photo data
         image.setImageBitmap(wallpaper);
@@ -128,7 +128,8 @@ public class ShowActivity extends AppCompatActivity {
         creditsView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(userProfileUrl));
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+                        Uri.parse(userProfileUrl));
                 startActivity(browserIntent);
             }
         });
