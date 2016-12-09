@@ -1,19 +1,19 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion "24.0.2"
+    compileSdkVersion 25
+    buildToolsVersion "25.0.0"
 
     defaultConfig {
         applicationId "com.ratik.uttam"
         minSdkVersion 16
-        targetSdkVersion 24
-        versionCode 10
+        targetSdkVersion 25
+        versionCode 11
         versionName "2.0"
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -25,19 +25,11 @@ android {
             applicationId "com.ratik.uttam.prod"
         }
     }
-
-    allprojects {
-        repositories {
-            flatDir {
-                dirs 'libs'
-            }
-        }
-    }
 }
 
 dependencies {
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:24.2.0'
+    compile 'com.android.support:appcompat-v7:25.0.1'
     compile 'com.squareup.okhttp3:okhttp:3.4.1'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.vlonjatg.android:app-tour:1.0'

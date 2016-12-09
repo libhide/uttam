@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
 
-    <changelogversion versionName="2.0" changeDate="Nov xx, 2016">
-        <changelogtext>[b]Update![/b] Updated Uttam's Hero Image.</changelogtext>
-        <changelogtext>[b]Update![/b] Removed the option for weekly wallpaper updates for branding reasons. Sorry!</changelogtext>
-        <changelogtext>[b]Update![/b] Updated user on-boarding flow.</changelogtext>
-        <changelogtext>[b]Update![/b] Streamlined the Settings. Have a look!</changelogtext>
-        <changelogtext>[b]Fix![/b] Inconsistent wallpaper updates.</changelogtext>
-        <changelogtext>[b]Fix![/b] Default preferences are not actually default from the get-go!</changelogtext>
+    <changelogversion versionName="2.0" changeDate="Dec 09, 2016">
+        <changelogtext>[b](Update)[/b] Updated Uttam's Hero Image.</changelogtext>
+        <changelogtext>[b](Update)[/b] Removed the option for weekly wallpaper updates for branding reasons. Sorry!</changelogtext>
+        <changelogtext>[b](Update)[/b] Updated the user on-boarding flow.</changelogtext>
+        <changelogtext>[b](Update)[/b] Streamlined the Settings. Have a look!</changelogtext>
+        <changelogtext>[b](Fix)[/b] Fixed the inconsistent wallpaper updates.</changelogtext>
+        <changelogtext>[b](Fix)[/b] Made default preferences actually default :P</changelogtext>
+        <changelogtext>[b](Fix)[/b] Squashed some misc. bugs</changelogtext>
     </changelogversion>
 
     <changelogversion versionName="1.1" changeDate="Sept 29, 2016">
