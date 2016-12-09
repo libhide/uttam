@@ -64,7 +64,6 @@ public class ShowActivity extends AppCompatActivity {
 
         // Is scroll required?
         shouldScroll = wallpaper.getWidth() >= screenWidth;
-        Log.i(TAG, "wall width: " + wallpaper.getWidth() + " & screen width: " + screenWidth);
 
         // Set photo data
         image.setImageBitmap(wallpaper);
