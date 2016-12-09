@@ -1,6 +1,8 @@
 package com.ratik.uttam.ui;
 
 import android.Manifest;
+import android.app.AlarmManager;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.WallpaperManager;
@@ -45,10 +47,12 @@ import com.ratik.uttam.iap.utils.IabHelper;
 import com.ratik.uttam.iap.utils.IabResult;
 import com.ratik.uttam.iap.utils.Inventory;
 import com.ratik.uttam.iap.utils.Purchase;
+import com.ratik.uttam.receivers.NotificationReceiver;
 import com.ratik.uttam.utils.AlarmHelper;
 import com.ratik.uttam.utils.BitmapUtils;
 import com.ratik.uttam.utils.FileUtils;
 import com.ratik.uttam.utils.PhotoUtils;
+import com.ratik.uttam.utils.PrefUtils;
 import com.ratik.uttam.utils.Utils;
 
 import java.io.File;
@@ -85,13 +89,19 @@ public class MainActivity extends AppCompatActivity {
     private int screenWidth;
     private int screenHeight;
     private boolean shouldScroll;
+    private boolean isLaunchThroughUpdate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Setting up interstitials
+        if (getIntent().getExtras() != null &&
+                getIntent().getExtras().containsKey("update")) {
+            isLaunchThroughUpdate = getIntent().getExtras().getBoolean("update");
+        }
+
+        // Setting up interstitial ads
         setupAds();
 
         // IAP
@@ -152,10 +162,10 @@ public class MainActivity extends AppCompatActivity {
             FileUtils.saveImage(this, wallpaper, "wallpaper", "png");
 
             // TODO: refactor
-            PhotoUtils.setFullUrl(this, "https://images.unsplash.com/photo-1449024540548-94f5d5a59230?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&s=dec4b59ca06926527007bd98670f2800");
-            PhotoUtils.setPhotographerName(this, "Mike Wilson");
-            PhotoUtils.setDownloadUrl(this, "https://unsplash.com/photos/rM7B4DheQc0/download");
-            PhotoUtils.setUserProf(this, "https://unsplash.com/mkwlsn");
+            PhotoUtils.setFullUrl(this, "https://images.unsplash.com/photo-1473970367503-7d7f8d1bf998?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&s=1c38107cb3e71ad1c6cb430b0343bd5f");
+            PhotoUtils.setPhotographerName(this, "Martin Sanchez");
+            PhotoUtils.setDownloadUrl(this, "http://unsplash.com/photos/bk4HoBc4k60/download");
+            PhotoUtils.setUserProf(this, "https://unsplash.com/@mzeketv");
 
             // set it as the wallpaper
             try {
@@ -164,10 +174,13 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-            // set alarm
-            AlarmHelper.setAlarm(this);
+            // set alarm to set job everyday
+            AlarmHelper.setJobSetAlarm(this, true);
 
-            // cast first notif
+            // setup default prefs
+            setupDefaultPrefs();
+
+            // cast first notification
             sendFirstRunNotification();
 
             // update first run state
@@ -176,6 +189,30 @@ public class MainActivity extends AppCompatActivity {
             // get saved image
             wallpaper = FileUtils.getImageBitmap(this, "wallpaper", "png");
         }
+
+        if (isLaunchThroughUpdate) {
+            // Remove legacy alarms
+            Intent intent = new Intent(this, NotificationReceiver.class);
+            PendingIntent senderOG = PendingIntent.getBroadcast(this,
+                    AlarmHelper.WALLPAPER_NOTIF_PENDING_INTENT_ID, intent, 0);
+            PendingIntent senderDeffered = PendingIntent.getBroadcast(this,
+                    AlarmHelper.WALLPAPER_DEFERRED_NOTIF_PENDING_INTENT_ID, intent, 0);
+
+            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+            alarmManager.cancel(senderOG);
+            alarmManager.cancel(senderDeffered);
+
+            // set alarm to set job everyday
+            AlarmHelper.setJobSetAlarm(this, true);
+
+            // Show changelog
+            startActivity(new Intent(this, ChangelogDialog.class));
+        }
+    }
+
+    private void setupDefaultPrefs() {
+        PrefUtils.setAutomaticWallpaperSet(this, true);
+        PrefUtils.setCustomSoundsState(this, true);
     }
 
     // Listener that's called when we finish querying the items and subscriptions we own
@@ -302,21 +339,29 @@ public class MainActivity extends AppCompatActivity {
         PendingIntent showWallpaperIntent = PendingIntent.getActivity(this,
                 SHOW_WALLPAPER, intent, 0);
 
-        NotificationCompat.Builder mBuilder =
+        NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.ic_stat_uttam)
                         .setLargeIcon(BitmapUtils.cropToSquare(wallpaper))
                         .setAutoCancel(true)
                         .setContentTitle("New Wallpaper!")
-                        .setContentText("Photo by " + "Mike Wilson")
+                        .setContentText("Photo by " + "Martin Sanchez")
                         .setStyle(new NotificationCompat.BigPictureStyle()
                                 .bigPicture(wallpaper)
                                 .setBigContentTitle("New Wallpaper!"))
                         .setContentIntent(showWallpaperIntent);
 
+        if (PrefUtils.userWantsCustomSounds(this)) {
+            builder.setSound(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.uttam));
+        }
+
+        if (PrefUtils.userWantsNotificationLED(this)) {
+            builder.setDefaults(Notification.DEFAULT_LIGHTS);
+        }
+
         NotificationManager mNotifyMgr =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotifyMgr.notify(FIRST_RUN_NOTIFICATION, mBuilder.build());
+        mNotifyMgr.notify(FIRST_RUN_NOTIFICATION, builder.build());
     }
 
     private void doFileSaving() {
