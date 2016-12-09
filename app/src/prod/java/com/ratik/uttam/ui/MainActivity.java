@@ -195,12 +195,12 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, NotificationReceiver.class);
             PendingIntent senderOG = PendingIntent.getBroadcast(this,
                     AlarmHelper.WALLPAPER_NOTIF_PENDING_INTENT_ID, intent, 0);
-            PendingIntent senderDeffered = PendingIntent.getBroadcast(this,
+            PendingIntent senderDeferred = PendingIntent.getBroadcast(this,
                     AlarmHelper.WALLPAPER_DEFERRED_NOTIF_PENDING_INTENT_ID, intent, 0);
 
             AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
             alarmManager.cancel(senderOG);
-            alarmManager.cancel(senderDeffered);
+            alarmManager.cancel(senderDeferred);
 
             // set alarm to set job everyday
             AlarmHelper.setJobSetAlarm(this, true);
@@ -284,7 +284,12 @@ public class MainActivity extends AppCompatActivity {
                     } else {
                         if (savingAd.isLoaded()) {
                             savingAd.show();
-                            Toast.makeText(MainActivity.this, "Close the ad to continue saving...",
+                            Toast.makeText(MainActivity.this,
+                                    "Close the ad to continue saving...",
+                                    Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(MainActivity.this,
+                                    "Uttam is working in the background. Try in a bit?",
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
