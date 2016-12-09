@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
@@ -62,7 +63,8 @@ public class ShowActivity extends AppCompatActivity {
         creditsView = (LinearLayout) findViewById(R.id.creditsContainer);
 
         // Is scroll required?
-        shouldScroll = wallpaper.getWidth() > screenWidth;
+        shouldScroll = wallpaper.getWidth() >= screenWidth;
+        Log.i(TAG, "wall width: " + wallpaper.getWidth() + " & screen width: " + screenWidth);
 
         // Set photo data
         image.setImageBitmap(wallpaper);
@@ -85,7 +87,8 @@ public class ShowActivity extends AppCompatActivity {
         creditsView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(userProfileUrl));
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+                        Uri.parse(userProfileUrl));
                 startActivity(browserIntent);
             }
         });
