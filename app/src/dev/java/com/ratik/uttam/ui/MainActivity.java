@@ -66,9 +66,6 @@ public class MainActivity extends AppCompatActivity {
     private String downloadUrl;
     private String userProfileUrl;
 
-    int screenWidth;
-    int screenHeight;
-
     // Views
     private ImageView image;
     private TextView photographerTextView;
@@ -77,6 +74,8 @@ public class MainActivity extends AppCompatActivity {
     private LinearLayout creditsContainer;
 
     // Helpers
+    private int screenWidth;
+    private int screenHeight;
     private boolean shouldScroll;
     private boolean isLaunchThroughUpdate;
 

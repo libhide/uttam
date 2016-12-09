@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -122,31 +121,6 @@ public class SettingsFragment extends PreferenceFragment
     };
 
     @Override
-    public void onResume() {
-        super.onResume();
-        // For all (most) preferences, attach an OnPreferenceChangeListener
-        // so the UI summary can be updated when the preference changes.
-        bindPreferenceSummaryToValue(findPreference(getString(R.string.key_refresh_interval)));
-    }
-
-    /**
-     * Attaches a listener so the summary is always updated with the preference value.
-     * Also fires the listener once, to initialize the summary (so it shows up before the value
-     * is changed.)
-     */
-    private void bindPreferenceSummaryToValue(Preference preference) {
-        // Set the listener to watch for value changes.
-        preference.setOnPreferenceChangeListener(this);
-
-        // Trigger the listener immediately with the preference's
-        // current value.
-        onPreferenceChange(preference,
-                PreferenceManager
-                        .getDefaultSharedPreferences(preference.getContext())
-                        .getString(preference.getKey(), ""));
-    }
-
-    @Override
     public boolean onPreferenceChange(Preference preference, Object value) {
         String stringValue = value.toString();
 
@@ -159,7 +133,8 @@ public class SettingsFragment extends PreferenceFragment
                 preference.setSummary(listPreference.getEntries()[prefIndex]);
             }
         } else {
-            // For other preferences, set the summary to the value's simple string representation.
+            // For other preferences, set the summary to the value's
+            // simple string representation.
             preference.setSummary(stringValue);
         }
         return true;
