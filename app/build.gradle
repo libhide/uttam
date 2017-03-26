@@ -2,17 +2,17 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.0"
+    buildToolsVersion "25.0.2"
 
     defaultConfig {
         applicationId "com.ratik.uttam"
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 25
-        versionCode 11
-        versionName "2.0"
+        versionCode 12
+        versionName "2.1"
     }
     buildTypes {
-        release {
+        release {8
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -29,8 +29,8 @@ android {
 
 dependencies {
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:25.0.1'
-    compile 'com.squareup.okhttp3:okhttp:3.5.0'
+    compile 'com.android.support:appcompat-v7:25.3.0'
+    compile 'com.squareup.okhttp3:okhttp:3.6.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.vlonjatg.android:app-tour:1.0'
     compile 'com.firebase:firebase-jobdispatcher:0.5.0'

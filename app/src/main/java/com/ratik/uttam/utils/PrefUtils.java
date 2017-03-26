@@ -51,7 +51,7 @@ public class PrefUtils {
 //        return sp.getBoolean(context.getString(R.string.key_fetch_over_data), false);
 //    }
 
-    public static boolean shouldCompressWallpaper(Context context) {
+    static boolean shouldCompressWallpaper(Context context) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         return sp.getBoolean(context.getString(R.string.key_compress_wallpaper), false);
     }
