@@ -9,11 +9,11 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.ratik.uttam.services.GetPhotoJob2;
+import com.ratik.uttam.ui.MainActivity;
 
 import java.util.concurrent.TimeUnit;
 
 import static com.ratik.uttam.services.GetPhotoJob2.TAG;
-import static com.ratik.uttam.ui.MainActivity.WALL_JOB_ID;
 
 /**
  * Created by Ratik on 13/10/16.
@@ -24,7 +24,7 @@ public class JobSetReceiver2 extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         ComponentName serviceName = new ComponentName(context, GetPhotoJob2.class);
-        JobInfo jobInfo = new JobInfo.Builder(WALL_JOB_ID, serviceName)
+        JobInfo jobInfo = new JobInfo.Builder(MainActivity.WALL_JOB_ID, serviceName)
                 .setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED)
                 .setPersisted(true)
                 .setPeriodic(TimeUnit.DAYS.toMillis(1))
