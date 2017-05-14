@@ -1,11 +1,17 @@
 package com.ratik.uttam.ui;
 
+import android.Manifest;
+import android.app.WallpaperManager;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -15,11 +21,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.ratik.uttam.Constants;
 import com.ratik.uttam.R;
-import com.ratik.uttam.asyncs.SetWallpaperTask;
 import com.ratik.uttam.utils.FileUtils;
 import com.ratik.uttam.utils.PhotoUtils;
 import com.ratik.uttam.utils.Utils;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  * Created by Ratik on 29/02/16.
@@ -42,7 +51,8 @@ public class ShowActivity extends AppCompatActivity {
     private String userProfileUrl;
 
     // Helpers
-    private  boolean shouldScroll;
+    private boolean shouldScroll;
+    private File destFile;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -77,9 +87,33 @@ public class ShowActivity extends AppCompatActivity {
         setWallpaperButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new SetWallpaperTask(ShowActivity.this, true).execute(wallpaper);
-                // Finish the activity
-                finish();
+                // Permission stuff for M+
+                int permissionCheck = ContextCompat.checkSelfPermission(ShowActivity.this,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
+                    File srcFile = FileUtils.getSavedFileFromInternalStorage(ShowActivity.this);
+                    destFile = new File(FileUtils.getOutputMediaFileUri(ShowActivity.this).getPath());
+                    try {
+                        boolean copied = FileUtils.makeFileCopy(srcFile, destFile);
+                        if (copied) {
+                            // Successful copy
+                            final Uri contentUri = FileProvider.getUriForFile(
+                                    getApplicationContext(),
+                                    getApplicationContext().getPackageName() + ".provider",
+                                    destFile
+                            );
+                            Intent i = WallpaperManager.getInstance(ShowActivity.this)
+                                    .getCropAndSetWallpaperIntent(contentUri);
+                            ShowActivity.this.startActivityForResult(i, 123);
+                        }
+                    } catch (IOException e) {
+                        Log.e(TAG, "Error while copying file: ", e);
+                    }
+                } else {
+                    ActivityCompat.requestPermissions(ShowActivity.this,
+                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            Constants.CONST_WRITE_EXTERNAL_STORAGE);
+                }
             }
         });
 
@@ -115,7 +149,7 @@ public class ShowActivity extends AppCompatActivity {
 
                 case MotionEvent.ACTION_MOVE:
                     currentX = event.getX();
-                    scrollByX = (int)(downX - currentX);
+                    scrollByX = (int) (downX - currentX);
 
                     // scrolling to left side of image (pic moving to the right)
                     if (currentX > downX) {
@@ -168,8 +202,13 @@ public class ShowActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        finish();
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 123) {
+            if (resultCode == RESULT_OK) {
+                // wallpaper was set
+                destFile.delete();
+                finish();
+            }
+        }
     }
 }
