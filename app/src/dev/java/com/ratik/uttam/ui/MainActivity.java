@@ -1,7 +1,6 @@
 package com.ratik.uttam.ui;
 
 import android.Manifest;
-import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -20,6 +19,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.transition.Slide;
@@ -39,8 +39,6 @@ import android.widget.Toast;
 
 import com.ratik.uttam.Constants;
 import com.ratik.uttam.R;
-import com.ratik.uttam.asyncs.SetWallpaperTask;
-import com.ratik.uttam.receivers.NotificationReceiver;
 import com.ratik.uttam.services.GetPhotoService;
 import com.ratik.uttam.utils.AlarmHelper;
 import com.ratik.uttam.utils.BitmapUtils;
@@ -79,6 +77,8 @@ public class MainActivity extends AppCompatActivity {
     private int screenHeight;
     private boolean shouldScroll;
     private boolean isLaunchThroughUpdate;
+    private File destFile;
+    private Uri contentUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,24 +145,24 @@ public class MainActivity extends AppCompatActivity {
             wallpaper = FileUtils.getImageBitmap(this, "wallpaper", "png");
         }
 
-        if (isLaunchThroughUpdate) {
-            // Remove legacy alarms
-            Intent intent = new Intent(this, NotificationReceiver.class);
-            PendingIntent senderOG = PendingIntent.getBroadcast(this,
-                    AlarmHelper.WALLPAPER_NOTIF_PENDING_INTENT_ID, intent, 0);
-            PendingIntent senderDeffered = PendingIntent.getBroadcast(this,
-                    AlarmHelper.WALLPAPER_DEFERRED_NOTIF_PENDING_INTENT_ID, intent, 0);
-
-            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-            alarmManager.cancel(senderOG);
-            alarmManager.cancel(senderDeffered);
-
-            // set alarm to set job everyday
-            AlarmHelper.setJobSetAlarm(this, true);
-
-            // Show changelog
-            startActivity(new Intent(this, ChangelogDialog.class));
-        }
+//        if (isLaunchThroughUpdate) {
+//            // Remove legacy alarms
+//            Intent intent = new Intent(this, NotificationReceiver.class);
+//            PendingIntent senderOG = PendingIntent.getBroadcast(this,
+//                    AlarmHelper.WALLPAPER_NOTIF_PENDING_INTENT_ID, intent, 0);
+//            PendingIntent senderDeffered = PendingIntent.getBroadcast(this,
+//                    AlarmHelper.WALLPAPER_DEFERRED_NOTIF_PENDING_INTENT_ID, intent, 0);
+//
+//            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+//            alarmManager.cancel(senderOG);
+//            alarmManager.cancel(senderDeffered);
+//
+//            // set alarm to set job everyday
+//            AlarmHelper.setJobSetAlarm(this, true);
+//
+//            // Show changelog
+//            startActivity(new Intent(this, ChangelogDialog.class));
+//        }
     }
 
     private void setupDefaultPrefs() {
@@ -214,7 +214,33 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Set wallpaper
-                new SetWallpaperTask(MainActivity.this, true).execute(wallpaper);
+                // Permission stuff for M+
+                int permissionCheck = ContextCompat.checkSelfPermission(MainActivity.this,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
+                    File srcFile = FileUtils.getSavedFileFromInternalStorage(MainActivity.this);
+                    destFile = new File(FileUtils.getOutputMediaFileUri(MainActivity.this).getPath());
+                    try {
+                        boolean copied = FileUtils.makeFileCopy(srcFile, destFile);
+                        if (copied) {
+                            // Successful copy
+                            final Uri contentUri = FileProvider.getUriForFile(
+                                    getApplicationContext(),
+                                    getApplicationContext().getPackageName() + ".provider",
+                                    destFile
+                            );
+                            Intent i = WallpaperManager.getInstance(MainActivity.this)
+                                    .getCropAndSetWallpaperIntent(contentUri);
+                            MainActivity.this.startActivityForResult(i, 123);
+                        }
+                    } catch (IOException e) {
+                        Log.e(TAG, "Error while copying file: ", e);
+                    }
+                } else {
+                    ActivityCompat.requestPermissions(MainActivity.this,
+                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            Constants.CONST_WRITE_EXTERNAL_STORAGE);
+                }
             }
         });
 
@@ -417,5 +443,15 @@ public class MainActivity extends AppCompatActivity {
         shareIntent.setType("text/plain");
         shareIntent.putExtra(Intent.EXTRA_TEXT, shareText);
         startActivity(shareIntent);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 123) {
+            if (resultCode == RESULT_OK) {
+                // wallpaper was set
+                destFile.delete();
+            }
+        }
     }
 }
