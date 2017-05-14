@@ -78,7 +78,6 @@ public class MainActivity extends AppCompatActivity {
     private boolean shouldScroll;
     private boolean isLaunchThroughUpdate;
     private File destFile;
-    private Uri contentUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

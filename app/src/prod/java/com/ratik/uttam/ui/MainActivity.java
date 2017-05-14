@@ -20,6 +20,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.transition.Slide;
@@ -44,7 +45,6 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.ratik.uttam.Constants;
 import com.ratik.uttam.R;
-import com.ratik.uttam.asyncs.SetWallpaperTask;
 import com.ratik.uttam.iap.utils.IabHelper;
 import com.ratik.uttam.iap.utils.IabResult;
 import com.ratik.uttam.iap.utils.Inventory;
@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int FIRST_RUN_NOTIFICATION = 0;
     private static final int SHOW_WALLPAPER = 1;
+    public static final int WALL_JOB_ID = 1;
 
     // Wallpaper data
     private Bitmap wallpaper;
@@ -92,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
     private int screenHeight;
     private boolean shouldScroll;
     private boolean isLaunchThroughUpdate;
+    private File destFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -305,7 +307,34 @@ public class MainActivity extends AppCompatActivity {
         setWallpaperButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new SetWallpaperTask(MainActivity.this, true).execute(wallpaper);
+                // Set wallpaper
+                // Permission stuff for M+
+                int permissionCheck = ContextCompat.checkSelfPermission(MainActivity.this,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
+                    File srcFile = FileUtils.getSavedFileFromInternalStorage(MainActivity.this);
+                    destFile = new File(FileUtils.getOutputMediaFileUri(MainActivity.this).getPath());
+                    try {
+                        boolean copied = FileUtils.makeFileCopy(srcFile, destFile);
+                        if (copied) {
+                            // Successful copy
+                            final Uri contentUri = FileProvider.getUriForFile(
+                                    getApplicationContext(),
+                                    getApplicationContext().getPackageName() + ".provider",
+                                    destFile
+                            );
+                            Intent i = WallpaperManager.getInstance(MainActivity.this)
+                                    .getCropAndSetWallpaperIntent(contentUri);
+                            MainActivity.this.startActivityForResult(i, 123);
+                        }
+                    } catch (IOException e) {
+                        Log.e(TAG, "Error while copying file: ", e);
+                    }
+                } else {
+                    ActivityCompat.requestPermissions(MainActivity.this,
+                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            Constants.CONST_WRITE_EXTERNAL_STORAGE);
+                }
             }
         });
 
@@ -540,5 +569,15 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         iabHelper = null;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 123) {
+            if (resultCode == RESULT_OK) {
+                // wallpaper was set
+                destFile.delete();
+            }
+        }
     }
 }
