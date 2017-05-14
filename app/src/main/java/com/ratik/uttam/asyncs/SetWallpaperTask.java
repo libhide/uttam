@@ -28,7 +28,6 @@ public class SetWallpaperTask extends AsyncTask<Bitmap, Void, Bitmap> {
         this.shouldShowToast = shouldShowToast;
     }
 
-
     @Override
     protected Bitmap doInBackground(Bitmap... bitmaps) {
         return bitmaps[0];

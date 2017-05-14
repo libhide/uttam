@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.ratik.uttam.receivers.JobSetReceiver;
+import com.ratik.uttam.receivers.JobSetReceiver2;
 import com.ratik.uttam.receivers.NotificationReceiver;
 
 import java.util.Calendar;
@@ -99,7 +100,7 @@ public class AlarmHelper {
         Utils.setAlarmState(context, true);
     }
 
-    public static void postponeAlarm(Context context) {
+    static void postponeAlarm(Context context) {
         Calendar calendar = Calendar.getInstance();
 
         Intent intent = new Intent(context, NotificationReceiver.class);
@@ -146,5 +147,32 @@ public class AlarmHelper {
 
         // Saving alarm-set state
         Utils.setAlarmState(context, true);
+    }
+
+
+    public static void setJobSetAlarm2(Context context) {
+        Calendar calendar = Calendar.getInstance();
+
+        Intent intent = new Intent(context, JobSetReceiver2.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
+                JOB_SET_INTENT_ID, intent, 0);
+
+        AlarmManager alarmManager = (AlarmManager)
+                context.getSystemService(Context.ALARM_SERVICE);
+
+        // We do this because on the first day, the user sees
+        // the hero wallpaper
+        int currentDay = calendar.get(Calendar.DATE);
+        int hours = calendar.get(Calendar.HOUR_OF_DAY);
+        if (hours >= 0 && hours < 7) {
+            calendar.set(Calendar.DATE, currentDay);
+        } else {
+            calendar.set(Calendar.DATE, currentDay + 1);
+        }
+        calendar.set(Calendar.HOUR_OF_DAY, 7);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+
+        alarmManager.set(AlarmManager.RTC, calendar.getTimeInMillis(), pendingIntent);
     }
 }

@@ -54,6 +54,7 @@
 
         <receiver android:name=".receivers.NotificationReceiver" />
         <receiver android:name=".receivers.JobSetReceiver" />
+        <receiver android:name=".receivers.JobSetReceiver2" />
         <receiver
             android:name=".receivers.RebootReceiver"
             android:enabled="true"
@@ -74,10 +75,17 @@
             </intent-filter>
         </service>
 
+        <service
+            android:name=".services.GetPhotoJob2"
+            android:exported="true"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
         <receiver android:name=".receivers.UpdateReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.PACKAGE_REPLACED" />
-                <data android:scheme="package" android:path="com.ratik.uttam.prod" />
+                <data
+                    android:path="com.ratik.uttam.prod"
+                    android:scheme="package" />
             </intent-filter>
         </receiver>
 

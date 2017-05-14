@@ -40,8 +40,8 @@ import android.widget.Toast;
 import com.ratik.uttam.Constants;
 import com.ratik.uttam.R;
 import com.ratik.uttam.asyncs.SetWallpaperTask;
-import com.ratik.uttam.asyncs.WallpaperTask;
 import com.ratik.uttam.receivers.NotificationReceiver;
+import com.ratik.uttam.services.GetPhotoService;
 import com.ratik.uttam.utils.AlarmHelper;
 import com.ratik.uttam.utils.BitmapUtils;
 import com.ratik.uttam.utils.FileUtils;
@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int FIRST_RUN_NOTIFICATION = 0;
     private static final int SHOW_WALLPAPER = 1;
+    public static final int WALL_JOB_ID = 1;
 
     // Wallpaper data
     private Bitmap wallpaper;
@@ -128,8 +129,8 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-            // set alarm to set job everyday
-            AlarmHelper.setJobSetAlarm(this, true);
+            // set alarm to set job for 7am daily
+            AlarmHelper.setJobSetAlarm2(this);
 
             // setup default prefs
             setupDefaultPrefs();
@@ -389,8 +390,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 return true;
             case R.id.action_refresh:
-                // startService(new Intent(getBaseContext(), GetPhotoService.class));
-                new WallpaperTask(this).execute();
+                startService(new Intent(getBaseContext(), GetPhotoService.class));
                 finish();
                 return true;
             default:
