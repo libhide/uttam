@@ -37,6 +37,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.jobdispatcher.FirebaseJobDispatcher;
+import com.firebase.jobdispatcher.GooglePlayDriver;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
@@ -47,7 +49,7 @@ import com.ratik.uttam.iap.utils.IabHelper;
 import com.ratik.uttam.iap.utils.IabResult;
 import com.ratik.uttam.iap.utils.Inventory;
 import com.ratik.uttam.iap.utils.Purchase;
-import com.ratik.uttam.receivers.NotificationReceiver;
+import com.ratik.uttam.receivers.JobSetReceiver;
 import com.ratik.uttam.utils.AlarmHelper;
 import com.ratik.uttam.utils.BitmapUtils;
 import com.ratik.uttam.utils.FileUtils;
@@ -174,8 +176,8 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-            // set alarm to set job everyday
-            AlarmHelper.setJobSetAlarm(this, true);
+            // set alarm to set job for 7am daily
+            AlarmHelper.setJobSetAlarm2(this);
 
             // setup default prefs
             setupDefaultPrefs();
@@ -191,19 +193,18 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (isLaunchThroughUpdate) {
-            // Remove legacy alarms
-            Intent intent = new Intent(this, NotificationReceiver.class);
-            PendingIntent senderOG = PendingIntent.getBroadcast(this,
-                    AlarmHelper.WALLPAPER_NOTIF_PENDING_INTENT_ID, intent, 0);
-            PendingIntent senderDeferred = PendingIntent.getBroadcast(this,
-                    AlarmHelper.WALLPAPER_DEFERRED_NOTIF_PENDING_INTENT_ID, intent, 0);
+            // Cancel all jobdispatcher jobs
+            new FirebaseJobDispatcher(new GooglePlayDriver(this)).cancelAll();
 
+            // Cancel alarm which set the jobdispatcher job
+            Intent intent = new Intent(this, JobSetReceiver.class);
+            PendingIntent pi = PendingIntent.getBroadcast(this,
+                    AlarmHelper.JOB_SET_INTENT_ID, intent, 0);
             AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-            alarmManager.cancel(senderOG);
-            alarmManager.cancel(senderDeferred);
+            alarmManager.cancel(pi);
 
-            // set alarm to set job everyday
-            AlarmHelper.setJobSetAlarm(this, true);
+            // set alarm to set job for 7am daily
+            AlarmHelper.setJobSetAlarm2(this);
 
             // Show changelog
             startActivity(new Intent(this, ChangelogDialog.class));

@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
 
+    <changelogversion versionName="2.1" changeDate="May 14, 2017">
+        <changelogtext>[b](Update)[/b] Wallpaper fetches are now more reliable.</changelogtext>
+        <changelogtext>[b](Fix)[/b] Squashed some bugs.</changelogtext>
+    </changelogversion>
+
     <changelogversion versionName="2.0" changeDate="Dec 09, 2016">
         <changelogtext>[b](Update)[/b] Updated Uttam's Hero Image.</changelogtext>
         <changelogtext>[b](Update)[/b] Removed the option for weekly wallpaper updates for branding reasons. Sorry!</changelogtext>
