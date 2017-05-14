@@ -1,9 +1,16 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'ratik'
+            keyPassword 'zaq123'
+            storeFile file("$rootDir/keystore.jks")
+            storePassword 'zaq123'
+        }
+    }
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
-
     defaultConfig {
         applicationId "com.ratik.uttam"
         minSdkVersion 21
@@ -12,9 +19,11 @@ android {
         versionName "3.0"
     }
     buildTypes {
-        release {8
+        release {
+            8
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
         }
     }
     productFlavors {
