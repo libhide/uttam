@@ -56,6 +56,13 @@ public class PrefUtils {
         return sp.getBoolean(context.getString(R.string.key_compress_wallpaper), false);
     }
 
+    public static void setCompressState(Context context, boolean b) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putBoolean(context.getString(R.string.key_compress_wallpaper), b);
+        editor.apply();
+    }
+
     // Refresh Interval methods
 //    @SuppressLint("CommitPrefEdits")
 //    public static void setRefreshInterval(Context context, String value) {
