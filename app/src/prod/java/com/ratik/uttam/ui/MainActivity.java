@@ -214,6 +214,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupDefaultPrefs() {
+        // Check if device has resolution under 720p
+        if (screenWidth <= 720) {
+            PrefUtils.setCompressState(this, true);
+        } else {
+            PrefUtils.setCompressState(this, false);
+        }
         PrefUtils.setAutomaticWallpaperSet(this, true);
         PrefUtils.setCustomSoundsState(this, true);
     }
