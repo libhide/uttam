@@ -1,0 +1,23 @@
+{
+  "name": "uttam-landing-page",
+  "version": "1.0.0",
+  "description": "A landing page for Uttam.",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": "http://github.com/libhide/uttam-lp",
+  "author": "Ratik Sharma",
+  "license": "MIT",
+  "devDependencies": {
+    "browser-sync": "^2.14.0",
+    "del": "^2.2.2",
+    "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^3.1.1",
+    "gulp-concat": "^2.6.0",
+    "gulp-minify-css": "^1.2.4",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^2.3.2",
+    "gulp-uglify": "^2.0.0"
+  }
+}
