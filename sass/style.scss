@@ -1,0 +1,257 @@
+@import "normalize";
+@import "toast-grid";
+@import "vars";
+@import "simplebox";
+
+$break-point: 900px;
+
+// Base styles
+body {
+  font-family: Lato, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+section {
+  max-width: 960px;
+  margin: 60px auto;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+img {
+  max-width: 100%;
+}
+
+section.full {
+  max-width: 100%;
+}
+
+a {
+  text-decoration: none;
+  color: black;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+// Hero section styles
+#hero {
+  margin-top: 50px;
+}
+
+.phone {
+  background-image: url(../img/phone.jpg);
+  margin: 0 auto;
+  width: 306px;
+  height: 611px;
+  background-size: 306px 611px;
+
+  video {
+    position: relative;
+    left: 13px;
+    top: 57px;
+    width: 279px;
+  }
+
+  @media (max-width: 480px) {
+    display: none;
+  }
+}
+
+.hook-container {
+  @media (max-width: $break-point) {
+    margin-bottom: 50px;
+    margin-left: 10px;
+  }
+}
+
+.hook {
+  margin-top: 190px;
+  font-weight: 300;
+  font-size: 2.5em;
+  margin-bottom: 20px;
+
+  @media (max-width: $break-point) {
+    margin-top: 10px;
+    font-size: 2em;
+  }
+
+  strong {
+    font-weight: 900;
+  }
+}
+
+// Promo section styles
+#promo {
+  height: 670px;
+  background: url(../img/frnds.jpg) center center no-repeat;
+  background-size: cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  position: relative;
+  padding-left: 0;
+  padding-right: 0;
+
+  @media (max-width: $break-point) {
+    height: 400px;
+  }
+}
+
+.outer,
+.inner {
+  border-radius: 100%;
+  background-color: white;
+}
+
+.outer {
+  height: 135px;
+  width: 135px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  opacity: 0.85;
+  justify-content: center;
+  transition: all 400ms ease-in-out;
+
+  @media (max-width: $break-point) {
+    height: 70px;
+    width: 70px;
+  }
+}
+
+.inner {
+  height: 120px;
+  width: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  @media (max-width: $break-point) {
+    height: 60px;
+    width: 60px;
+  }
+}
+
+.play-button {
+  margin-left: 3px;
+  cursor: pointer;
+  width: 40px;
+
+  @media (max-width: $break-point) {
+    width: 20px;
+  }
+}
+
+#player {
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.video-overlay {
+  display: none;
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  pointer-events: none;
+  z-index: 1;
+  background-color: rgba(0,0,0,0.2);
+}
+
+// Helper class for the js
+.whoop {
+  opacity: 1;
+}
+
+// Screenshot section styles
+.screen {
+  img {
+    @media (max-width: $break-point) {
+      width: 85%;
+      display: block;
+      margin: 30px auto;
+    }
+  }
+}
+
+// CTA section styles
+#cta {
+  h1 {
+    margin: 0;
+  }
+
+  h1:first-child {
+    font-weight: 400;
+    margin-bottom: 5px;
+  }
+
+  .download {
+    &::after {
+      content: "→";
+      display: inline-block;
+      padding-left: 0.4em;
+    }
+  }
+}
+
+// Footer styles
+footer hr {
+  margin-bottom: 10px;
+}
+
+.creds {
+  margin: 0;
+  font-size: 1.2em;
+  font-weight: 300;
+
+  @media (max-width: $break-point) {
+    margin-bottom: 10px;
+  }
+}
+
+.heart {
+  margin-bottom: -10px;
+  width: 30px;
+}
+
+// Blog CTA
+#blog-cta {
+  a {
+    text-decoration: none;
+  }
+  div {
+    position: relative;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 60px;
+    width: 100%;
+    background-color: rgba(#02B875, 0.85);
+    transition: background-color 300ms ease-in-out;
+
+    p {
+      text-align: center;
+      margin: 0;
+      color: white;
+      font-size: 1.2em;
+    }
+
+    &:hover {
+      background-color: rgba(#02B875, 1);
+    }
+  }
+  @media (max-width: $break-point) {
+    display: none;
+  }
+}
