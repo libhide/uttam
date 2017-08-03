@@ -15,8 +15,8 @@ android {
         applicationId "com.ratik.uttam"
         minSdkVersion 21
         targetSdkVersion 25
-        versionCode 14
-        versionName "3.0"
+        versionCode 15
+        versionName "3.0.1"
     }
     buildTypes {
         release {
