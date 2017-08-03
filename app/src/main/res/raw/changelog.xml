@@ -3,7 +3,7 @@
 
     <changelogversion versionName="3.0" changeDate="May 14, 2017">
         <changelogtext>[b](Update)[/b] Wallpaper fetches are now more reliable.</changelogtext>
-        <changelogtext>[b](Update)[/b] Users can not crop and set wallpapers if they want to.</changelogtext>
+        <changelogtext>[b](Update)[/b] Users can now crop and set wallpapers if they want to.</changelogtext>
         <changelogtext>[b](Update)[/b] The crop view also allows users to set wallpapers just to their homescreen or lockscreen or both!</changelogtext>
         <changelogtext>[b](Fix)[/b] Some bug squashing!</changelogtext>
     </changelogversion>
