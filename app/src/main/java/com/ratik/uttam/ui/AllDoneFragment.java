@@ -25,7 +25,7 @@ public class AllDoneFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_done, container, false);
 
-        ImageView check = (ImageView) root.findViewById(R.id.imageView);
+        ImageView check = root.findViewById(R.id.imageView);
 
         animator = ObjectAnimator.ofFloat(check, "rotation", -4f, 4f);
         animator.setTarget(check);
