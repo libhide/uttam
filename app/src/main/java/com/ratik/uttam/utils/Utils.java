@@ -22,30 +22,6 @@ public class Utils {
         return sp.getBoolean(Constants.FIRST_RUN, true);
     }
 
-    public static void setAlarmState(Context context, boolean value) {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putBoolean(Constants.ALARM_SET, value);
-        editor.apply();
-    }
-
-    public static boolean isAlarmSet(Context context) {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        return sp.getBoolean(Constants.ALARM_SET, false);
-    }
-
-    public static void setAlarmDefState(Context context, boolean value) {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putBoolean(Constants.ALARM_DEFERRED, value);
-        editor.apply();
-    }
-
-    public static boolean isAlarmDeferred(Context context) {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        return sp.getBoolean(Constants.ALARM_DEFERRED, false);
-    }
-
     public static void setScreenWidth(Context context, int value) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = sp.edit();
@@ -65,7 +41,7 @@ public class Utils {
         editor.apply();
     }
 
-    public static int getScreenHeight(Context context) {
+    static int getScreenHeight(Context context) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         return sp.getInt(Constants.SCREEN_HEIGHT, 1080);
     }

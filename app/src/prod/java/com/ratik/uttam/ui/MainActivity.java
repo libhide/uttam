@@ -1,7 +1,6 @@
 package com.ratik.uttam.ui;
 
 import android.Manifest;
-import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -38,8 +37,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.firebase.jobdispatcher.FirebaseJobDispatcher;
-import com.firebase.jobdispatcher.GooglePlayDriver;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
@@ -49,7 +46,6 @@ import com.ratik.uttam.iap.utils.IabHelper;
 import com.ratik.uttam.iap.utils.IabResult;
 import com.ratik.uttam.iap.utils.Inventory;
 import com.ratik.uttam.iap.utils.Purchase;
-import com.ratik.uttam.receivers.JobSetReceiver;
 import com.ratik.uttam.utils.AlarmHelper;
 import com.ratik.uttam.utils.BitmapUtils;
 import com.ratik.uttam.utils.FileUtils;
@@ -92,18 +88,13 @@ public class MainActivity extends AppCompatActivity {
     private int screenWidth;
     private int screenHeight;
     private boolean shouldScroll;
-    private boolean isLaunchThroughUpdate;
+
     private File destFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        if (getIntent().getExtras() != null &&
-                getIntent().getExtras().containsKey("update")) {
-            isLaunchThroughUpdate = getIntent().getExtras().getBoolean("update");
-        }
 
         // Setting up interstitial ads
         setupAds();
@@ -179,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             // set alarm to set job for 7am daily
-            AlarmHelper.setJobSetAlarm2(this);
+            AlarmHelper.setJobSetAlarm(this);
 
             // setup default prefs
             setupDefaultPrefs();
@@ -192,24 +183,6 @@ public class MainActivity extends AppCompatActivity {
         } else {
             // get saved image
             wallpaper = FileUtils.getImageBitmap(this, "wallpaper", "png");
-        }
-
-        if (isLaunchThroughUpdate) {
-            // Cancel all jobdispatcher jobs
-            new FirebaseJobDispatcher(new GooglePlayDriver(this)).cancelAll();
-
-            // Cancel alarm which set the jobdispatcher job
-            Intent intent = new Intent(this, JobSetReceiver.class);
-            PendingIntent pi = PendingIntent.getBroadcast(this,
-                    AlarmHelper.JOB_SET_INTENT_ID, intent, 0);
-            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-            alarmManager.cancel(pi);
-
-            // set alarm to set job for 7am daily
-            AlarmHelper.setJobSetAlarm2(this);
-
-            // Show changelog
-            startActivity(new Intent(this, ChangelogDialog.class));
         }
     }
 
@@ -419,6 +392,7 @@ public class MainActivity extends AppCompatActivity {
             Log.e(TAG, "Error while copying file: ", e);
         }
     }
+
     private void setupAds() {
         savingAd = new InterstitialAd(this);
         savingAd.setAdUnitId(getString(R.string.interstitial_ad_save));
@@ -580,7 +554,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 123) {
-            if (resultCode == RESULT_OK || requestCode == RESULT_CANCELED) {
+            if (resultCode == RESULT_OK || resultCode == RESULT_CANCELED) {
                 // wallpaper was set
                 destFile.delete();
             }

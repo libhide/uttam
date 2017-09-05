@@ -47,14 +47,8 @@
             android:name=".ui.TourActivity"
             android:theme="@style/AppTheme.Fullscreen" />
 
-        <activity
-            android:name=".ui.ChangelogDialog"
-            android:label="@string/activity_changelog_label"
-            android:theme="@style/AppCompatAlertDialogStyle" />
-
         <receiver android:name=".receivers.NotificationReceiver" />
         <receiver android:name=".receivers.JobSetReceiver" />
-        <receiver android:name=".receivers.JobSetReceiver2" />
         <receiver
             android:name=".receivers.RebootReceiver"
             android:enabled="true"
@@ -69,14 +63,6 @@
 
         <service
             android:name=".services.GetPhotoJob"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE" />
-            </intent-filter>
-        </service>
-
-        <service
-            android:name=".services.GetPhotoJob2"
             android:exported="true"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 

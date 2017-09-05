@@ -26,7 +26,6 @@ import com.ratik.uttam.utils.BitmapUtils;
 import com.ratik.uttam.utils.FileUtils;
 import com.ratik.uttam.utils.PhotoUtils;
 import com.ratik.uttam.utils.PrefUtils;
-import com.ratik.uttam.utils.Utils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -48,7 +47,6 @@ import okhttp3.Response;
  * Created by Ratik on 04/03/16.
  */
 public class GetPhotoService extends Service {
-
     private static final String TAG = GetPhotoService.class.getSimpleName();
 
     private static final int SHOW_WALLPAPER = 1;
@@ -74,9 +72,6 @@ public class GetPhotoService extends Service {
     }
 
     private void getRandomPhoto() {
-        if (Utils.isAlarmDeferred(this)) {
-            Utils.setAlarmDefState(this, false);
-        }
         Log.d(TAG, "Getting random photo...");
 
         // Fetch URL
@@ -84,20 +79,21 @@ public class GetPhotoService extends Service {
         Log.d(TAG, randomUrl);
 
         OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder()
+        final Request request = new Request.Builder()
                 .url(randomUrl)
                 .build();
 
         Call call = client.newCall(request);
         call.enqueue(new Callback() {
             @Override
-            public void onFailure(Call call, IOException e) { }
+            public void onFailure(Call call, IOException e) {
+            }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 try {
-                    String jsonData = response.body().string();
                     if (response.isSuccessful()) {
+                        String jsonData = response.body().string();
                         photo = parsePhoto(jsonData);
                         new SaveWallpaperTask().execute();
                     } else {

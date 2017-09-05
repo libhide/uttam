@@ -71,7 +71,7 @@ public class Photo implements Parcelable {
         dest.writeString(this.userProf);
     }
 
-    protected Photo(Parcel in) {
+    private Photo(Parcel in) {
         this.urlFull = in.readString();
         this.photographer = in.readString();
         this.downloadUrl = in.readString();

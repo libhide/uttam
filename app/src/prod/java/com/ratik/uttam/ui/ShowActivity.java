@@ -63,7 +63,7 @@ public class ShowActivity extends AppCompatActivity {
     private boolean userHasRemovedAds;
 
     // Helpers
-    private  boolean shouldScroll;
+    private boolean shouldScroll;
     private File destFile;
 
     @Override
@@ -231,7 +231,7 @@ public class ShowActivity extends AppCompatActivity {
 
                 case MotionEvent.ACTION_MOVE:
                     currentX = event.getX();
-                    scrollByX = (int)(downX - currentX);
+                    scrollByX = (int) (downX - currentX);
 
                     // scrolling to left side of image (pic moving to the right)
                     if (currentX > downX) {
