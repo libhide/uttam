@@ -76,18 +76,12 @@ public class MainActivity extends AppCompatActivity {
     private int screenWidth;
     private int screenHeight;
     private boolean shouldScroll;
-    private boolean isLaunchThroughUpdate;
     private File destFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        if (getIntent().getExtras() != null &&
-                getIntent().getExtras().containsKey("update")) {
-            isLaunchThroughUpdate = getIntent().getExtras().getBoolean("update");
-        }
 
         // Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -129,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             // set alarm to set job for 7am daily
-            AlarmHelper.setJobSetAlarm2(this);
+            AlarmHelper.setJobSetAlarm(this);
 
             // setup default prefs
             setupDefaultPrefs();
@@ -143,25 +137,6 @@ public class MainActivity extends AppCompatActivity {
             // get saved image
             wallpaper = FileUtils.getImageBitmap(this, "wallpaper", "png");
         }
-
-//        if (isLaunchThroughUpdate) {
-//            // Remove legacy alarms
-//            Intent intent = new Intent(this, NotificationReceiver.class);
-//            PendingIntent senderOG = PendingIntent.getBroadcast(this,
-//                    AlarmHelper.WALLPAPER_NOTIF_PENDING_INTENT_ID, intent, 0);
-//            PendingIntent senderDeffered = PendingIntent.getBroadcast(this,
-//                    AlarmHelper.WALLPAPER_DEFERRED_NOTIF_PENDING_INTENT_ID, intent, 0);
-//
-//            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-//            alarmManager.cancel(senderOG);
-//            alarmManager.cancel(senderDeffered);
-//
-//            // set alarm to set job everyday
-//            AlarmHelper.setJobSetAlarm(this, true);
-//
-//            // Show changelog
-//            startActivity(new Intent(this, ChangelogDialog.class));
-//        }
     }
 
     private void setupDefaultPrefs() {

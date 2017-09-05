@@ -6,8 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.ratik.uttam.receivers.JobSetReceiver;
-import com.ratik.uttam.receivers.JobSetReceiver2;
-import com.ratik.uttam.receivers.NotificationReceiver;
 
 import java.util.Calendar;
 
@@ -15,145 +13,12 @@ import java.util.Calendar;
  * Created by Ratik on 29/03/16.
  */
 public class AlarmHelper {
-    public static final int JOB_SET_INTENT_ID = 0;
+    private static final int JOB_SET_INTENT_ID = 0;
 
-    public static final int WALLPAPER_NOTIF_PENDING_INTENT_ID = 1;
-    public static final int WALLPAPER_DEFERRED_NOTIF_PENDING_INTENT_ID = 2;
-
-    public static void setAlarm(Context context) {
-        Calendar calendar = Calendar.getInstance();
-
-        Intent intent = new Intent(context, NotificationReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
-                WALLPAPER_NOTIF_PENDING_INTENT_ID, intent, 0);
-
-        AlarmManager alarmManager = (AlarmManager)
-                context.getSystemService(Context.ALARM_SERVICE);
-        if (PrefUtils.getRefreshInterval(context).equals("daily")) {
-            // We do this because on the first day, the user sees
-            // the uttam hero wallpaper
-            int currentDay = calendar.get(Calendar.DATE);
-            calendar.set(Calendar.DATE, currentDay + 1);
-            calendar.set(Calendar.HOUR_OF_DAY, 7);
-            calendar.set(Calendar.MINUTE, 0);
-            calendar.set(Calendar.SECOND, 0);
-
-            alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(),
-                    AlarmManager.INTERVAL_DAY, pendingIntent);
-        } else {
-            int currentDay = calendar.get(Calendar.DAY_OF_WEEK);
-            // If the first day of the app is a Monday,
-            // set the alarm for next Monday
-            if (currentDay == Calendar.MONDAY) {
-                int currentDate = calendar.get(Calendar.DATE);
-                currentDate += 7;
-                calendar.set(Calendar.DATE, currentDate);
-            }
-            calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-            calendar.set(Calendar.HOUR_OF_DAY, 7);
-            calendar.set(Calendar.MINUTE, 0);
-            calendar.set(Calendar.SECOND, 0);
-            alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(),
-                    AlarmManager.INTERVAL_DAY * 7, pendingIntent);
-        }
-
-        // Saving alarm-set state
-        Utils.setAlarmState(context, true);
-    }
-
-    public static void setAlarmPostReboot(Context context) {
-        Calendar calendar = Calendar.getInstance();
-
-        Intent intent = new Intent(context, NotificationReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
-                WALLPAPER_NOTIF_PENDING_INTENT_ID, intent, 0);
-
-        AlarmManager alarmManager = (AlarmManager)
-                context.getSystemService(Context.ALARM_SERVICE);
-        if (PrefUtils.getRefreshInterval(context).equals("daily")) {
-            if (calendar.get(Calendar.HOUR_OF_DAY) >= 7) {
-                // If there is a delayed alarm, set it back
-                if (Utils.isAlarmDeferred(context)) {
-                    postponeAlarm(context);
-                }
-
-                int currentDay = calendar.get(Calendar.DATE);
-                calendar.set(Calendar.DATE, currentDay + 1);
-            }
-
-            calendar.set(Calendar.HOUR_OF_DAY, 7);
-            calendar.set(Calendar.MINUTE, 0);
-            calendar.set(Calendar.SECOND, 0);
-
-            alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(),
-                    AlarmManager.INTERVAL_DAY, pendingIntent);
-        } else {
-            calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-            calendar.set(Calendar.HOUR_OF_DAY, 7);
-            calendar.set(Calendar.MINUTE, 0);
-            calendar.set(Calendar.SECOND, 0);
-            alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(),
-                    AlarmManager.INTERVAL_DAY * 7, pendingIntent);
-        }
-
-        // Saving alarm-set state
-        Utils.setAlarmState(context, true);
-    }
-
-    static void postponeAlarm(Context context) {
-        Calendar calendar = Calendar.getInstance();
-
-        Intent intent = new Intent(context, NotificationReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
-                WALLPAPER_DEFERRED_NOTIF_PENDING_INTENT_ID, intent, 0);
-
-        // Postpone fetch by one hour
-        AlarmManager alarmManager = (AlarmManager)
-                context.getSystemService(Context.ALARM_SERVICE);
-        int currentHour = calendar.get(Calendar.HOUR_OF_DAY);
-        calendar.set(Calendar.HOUR_OF_DAY, currentHour + 1);
-        alarmManager.set(AlarmManager.RTC, calendar.getTimeInMillis(), pendingIntent);
-
-        // Saving alarm-set state
-        Utils.setAlarmState(context, true);
-    }
-
-    // New stuff here
-    // ..............
-    public static void setJobSetAlarm(Context context, boolean alarmHasRunForCurrentDay) {
+    public static void setJobSetAlarm(Context context) {
         Calendar calendar = Calendar.getInstance();
 
         Intent intent = new Intent(context, JobSetReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
-                JOB_SET_INTENT_ID, intent, 0);
-
-        AlarmManager alarmManager = (AlarmManager)
-                context.getSystemService(Context.ALARM_SERVICE);
-
-        // We do this because on the first day, the user sees
-        // the uttam hero wallpaper
-        int currentDay = calendar.get(Calendar.DATE);
-        if (alarmHasRunForCurrentDay) {
-            calendar.set(Calendar.DATE, currentDay + 1);
-        } else {
-            calendar.set(Calendar.DATE, currentDay);
-        }
-        calendar.set(Calendar.HOUR_OF_DAY, 7);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-
-        alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(),
-                AlarmManager.INTERVAL_DAY, pendingIntent);
-
-        // Saving alarm-set state
-        Utils.setAlarmState(context, true);
-    }
-
-
-    public static void setJobSetAlarm2(Context context) {
-        Calendar calendar = Calendar.getInstance();
-
-        Intent intent = new Intent(context, JobSetReceiver2.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
                 JOB_SET_INTENT_ID, intent, 0);
 

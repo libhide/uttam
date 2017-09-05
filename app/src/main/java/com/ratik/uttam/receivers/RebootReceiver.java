@@ -13,6 +13,6 @@ public class RebootReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        AlarmHelper.setJobSetAlarm2(context);
+        AlarmHelper.setJobSetAlarm(context);
     }
 }

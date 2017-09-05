@@ -88,7 +88,7 @@ public class FileUtils {
         }
     }
 
-    public static boolean isExternalStorageAvailable(Context context) {
+    private static boolean isExternalStorageAvailable(Context context) {
         String state = Environment.getExternalStorageState();
         return state.equals(Environment.MEDIA_MOUNTED);
     }

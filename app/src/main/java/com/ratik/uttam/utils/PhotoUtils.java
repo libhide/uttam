@@ -10,7 +10,7 @@ import com.ratik.uttam.Constants;
  */
 public class PhotoUtils {
 
-    public static final String filename = "photo";
+    private static final String filename = "photo";
 
     public static void setPhotographerName(Context context, String name) {
         SharedPreferences sp = context.getSharedPreferences(filename, Context.MODE_PRIVATE);
