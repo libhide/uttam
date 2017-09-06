@@ -2,6 +2,7 @@ package com.ratik.uttam.ui;
 
 import android.Manifest;
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.WallpaperManager;
@@ -11,7 +12,9 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Point;
+import android.media.AudioAttributes;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -353,8 +356,36 @@ public class MainActivity extends AppCompatActivity {
         PendingIntent showWallpaperIntent = PendingIntent.getActivity(this,
                 SHOW_WALLPAPER, intent, 0);
 
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        // Notif Channel for O
+        String channelId = Constants.NOTIF_CHANNEL_ID;
+        CharSequence channelName = Constants.NOTIF_CHANNEL_NAME;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel notificationChannel
+                    = new NotificationChannel(channelId, channelName, importance);
+
+            if (PrefUtils.userWantsCustomSounds(this)) {
+                AudioAttributes attrs = new AudioAttributes.Builder()
+                        .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE)
+                        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                        .build();
+                notificationChannel.setSound(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.uttam), attrs);
+            }
+
+            if (PrefUtils.userWantsNotificationLED(this)) {
+                notificationChannel.enableLights(true);
+                notificationChannel.setLightColor(Color.WHITE);
+            }
+
+            notificationChannel.setShowBadge(false);
+            notificationManager.createNotificationChannel(notificationChannel);
+        }
+
         NotificationCompat.Builder builder =
-                new NotificationCompat.Builder(this)
+                new NotificationCompat.Builder(this, channelId)
                         .setSmallIcon(R.drawable.ic_stat_uttam)
                         .setLargeIcon(BitmapUtils.cropToSquare(wallpaper))
                         .setAutoCancel(true)
@@ -373,9 +404,7 @@ public class MainActivity extends AppCompatActivity {
             builder.setDefaults(Notification.DEFAULT_LIGHTS);
         }
 
-        NotificationManager mNotifyMgr =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotifyMgr.notify(FIRST_RUN_NOTIFICATION, builder.build());
+        notificationManager.notify(FIRST_RUN_NOTIFICATION, builder.build());
     }
 
     private void doFileSaving() {

@@ -217,6 +217,7 @@ public class GetPhotoService extends Service {
                 notificationChannel.setLightColor(Color.WHITE);
             }
 
+            notificationChannel.setShowBadge(false);
             notificationManager.createNotificationChannel(notificationChannel);
         }
 
