@@ -25,6 +25,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="40dp"
         android:gravity="center"
+        android:textSize="15sp"
         android:text="@string/all_done_text"
         android:textColor="@android:color/white" />
 
