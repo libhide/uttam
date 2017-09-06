@@ -24,12 +24,6 @@ public class Constants {
     public static final String FIRST_RUN = "first_run";
     public static final String SCREEN_WIDTH = "screen_width";
     public static final String SCREEN_HEIGHT = "screen_width";
-    public static final String ALARM_DEFERRED = "alarm_deferred";
-    public static final String ALARM_SET = "alarm_set";
-    public static final String PREF_REFRESH_INTERVAL = "setRefreshInterval";
-
-    // Helper constants
-    public static final String SAVE_COUNTER = "save_counter";
 
     // Permission constants
     public static final int CONST_WRITE_EXTERNAL_STORAGE = 1;
@@ -37,4 +31,8 @@ public class Constants {
     // IAP constants
     public static final String SKU_REMOVE_ADS = "remove_adverts";
     public static final String REMOVE_ADS = "remove_ads";
+
+    // Notification constants
+    public static final String NOTIF_CHANNEL_ID = "uttam_channel";
+    public static final String NOTIF_CHANNEL_NAME = "General";
 }

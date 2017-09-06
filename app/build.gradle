@@ -36,9 +36,16 @@ android {
     }
 }
 
+repositories {
+    maven {
+        url 'https://maven.google.com'
+        // Alternative URL is 'https://dl.google.com/dl/android/maven2/'
+    }
+}
+
 dependencies {
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:26.+'
+    compile 'com.android.support:appcompat-v7:26.0.0'
     compile 'com.squareup.okhttp3:okhttp:3.9.0'
     compile 'com.vlonjatg.android:app-tour:1.0'
     prodCompile 'com.google.firebase:firebase-ads:9.0.2'
