@@ -287,6 +287,7 @@ public class MainActivity extends AppCompatActivity {
                 notificationChannel.setLightColor(Color.WHITE);
             }
 
+            notificationChannel.setShowBadge(false);
             notificationManager.createNotificationChannel(notificationChannel);
         }
 
