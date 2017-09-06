@@ -196,6 +196,7 @@ public class GetPhotoJob extends JobService {
                     notificationChannel.setLightColor(Color.WHITE);
                 }
 
+                notificationChannel.setShowBadge(false);
                 notificationManager.createNotificationChannel(notificationChannel);
             }
 
