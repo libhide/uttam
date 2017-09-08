@@ -57,7 +57,7 @@ public class FileUtils {
 
     public static Uri getOutputMediaFileUri(Context context) {
         // To be safe, check that the SDCard is mounted or not
-        if (isExternalStorageAvailable(context)) {
+        if (isExternalStorageAvailable()) {
             // Get the external storage directory
             String appName = context.getString(R.string.app_name);
             File mediaStorageDir = new File(
@@ -82,13 +82,12 @@ public class FileUtils {
 
             // Return the file's URI
             return Uri.fromFile(mediaFile);
-        }
-        else {
+        } else {
             return null;
         }
     }
 
-    private static boolean isExternalStorageAvailable(Context context) {
+    private static boolean isExternalStorageAvailable() {
         String state = Environment.getExternalStorageState();
         return state.equals(Environment.MEDIA_MOUNTED);
     }
@@ -108,5 +107,11 @@ public class FileUtils {
             os.close();
         }
         return true;
+    }
+
+    public static boolean clearFile(Context context, String filename) {
+        File dir = context.getFilesDir();
+        File file = new File(dir, filename);
+        return file.delete();
     }
 }

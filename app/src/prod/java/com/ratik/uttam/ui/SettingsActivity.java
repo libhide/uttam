@@ -10,24 +10,30 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.ratik.uttam.R;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by Ratik on 07/03/16.
  */
 public class SettingsActivity extends AppCompatActivity {
 
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+
+    @BindView(R.id.settings_content)
+    FrameLayout settingsContentLayout;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-
-        FrameLayout settingsContentLayout = (FrameLayout)
-                findViewById(R.id.settings_content);
+        ButterKnife.bind(this);
 
         // Toast for testing
         // Toast.makeText(SettingsActivity.this, "User is " + (MainActivity.userHasRemovedAds ? "PREMIUM" : "NOT PREMIUM"), Toast.LENGTH_SHORT).show();
 
         // Add Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         if (getSupportActionBar() != null) {

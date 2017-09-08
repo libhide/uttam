@@ -12,7 +12,7 @@ import java.util.Calendar;
 /**
  * Created by Ratik on 29/03/16.
  */
-public class AlarmHelper {
+public class AlarmUtils {
     private static final int JOB_SET_INTENT_ID = 0;
 
     public static void setJobSetAlarm(Context context) {

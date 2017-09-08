@@ -4,9 +4,9 @@
     <string name="get_started_text">Get Started</string>
 
     <!-- App tour -->
-    <string name="tour_slide_1_text">Uttam is a wallpaper app that gently updates your wallpaper with perfect images everyday.</string>
-    <string name="tour_slide_2_text">Uttam pushes rich notifications for you to interact with.</string>
-    <string name="tour_slide_3_text">You have full control over the setting of the wallpaper. The choice is yours!</string>
+    <string name="tour_slide_1_text">Uttam is a wallpaper app that gently updates your wallpaper with perfectly crafted images everyday.</string>
+    <string name="tour_slide_2_text">Uttam pushes rich notifications for you to interact with. It does so when a new wallpaper is downloaded. </string>
+    <string name="tour_slide_3_text">You have full control over the setting of the wallpaper. You can opt to set it automatically or manually click the notification and set it. The choice is yours!</string>
     <string name="tour_slide_1_heading">Welcome to Uttam!</string>
     <string name="tour_slide_2_heading">Wallpaper notifications</string>
     <string name="tour_slide_3_heading">Full control</string>

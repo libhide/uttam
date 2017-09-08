@@ -12,8 +12,6 @@ import android.widget.Toast;
 import com.ratik.uttam.Constants;
 import com.ratik.uttam.R;
 import com.ratik.uttam.iap.utils.IabHelper;
-import com.ratik.uttam.iap.utils.IabResult;
-import com.ratik.uttam.iap.utils.Purchase;
 
 /**
  * Created by Ratik on 08/03/16.
@@ -44,22 +42,20 @@ public class SettingsFragment extends PreferenceFragment
             removeAdsPreference.setEnabled(true);
 
             iabHelper = new IabHelper(getActivity(), base64EncodedPublicKey);
-            iabHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
-                public void onIabSetupFinished(IabResult result) {
-                    Log.d(TAG, "Setup finished.");
+            iabHelper.startSetup(result -> {
+                Log.d(TAG, "Setup finished.");
 
-                    if (!result.isSuccess()) {
-                        // Oh noes, there was a problem.
-                        Log.e(TAG, "Problem setting up in-app billing: " + result);
-                        return;
-                    }
-
-                    // Have we been disposed of in the meantime? If so, quit.
-                    if (iabHelper == null) return;
-
-                    // IAB is fully set up. Now, let's get an inventory of stuff we own.
-                    Log.d(TAG, "Setup successful.");
+                if (!result.isSuccess()) {
+                    // Oh noes, there was a problem.
+                    Log.e(TAG, "Problem setting up in-app billing: " + result);
+                    return;
                 }
+
+                // Have we been disposed of in the meantime? If so, quit.
+                if (iabHelper == null) return;
+
+                // IAB is fully set up. Now, let's get an inventory of stuff we own.
+                Log.d(TAG, "Setup successful.");
             });
 
             removeAdsPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -104,19 +100,16 @@ public class SettingsFragment extends PreferenceFragment
     }
 
     // PurchaseFinishedListener
-    IabHelper.OnIabPurchaseFinishedListener purchaseFinishedListener = new IabHelper.OnIabPurchaseFinishedListener() {
-        @Override
-        public void onIabPurchaseFinished(IabResult result, Purchase info) {
-            if (result.isFailure()) {
-                Log.d(TAG, "Error purchasing: " + result);
-                Toast.makeText(getActivity(), "Error purchasing at the moment. Try again later.",
-                        Toast.LENGTH_SHORT).show();
-            } else if (info.getSku().equals(Constants.SKU_REMOVE_ADS)) {
-                // Success
-                Toast.makeText(getActivity(), "Purchased!", Toast.LENGTH_SHORT).show();
-                // Finish SettingActivity
-                getActivity().finish();
-            }
+    IabHelper.OnIabPurchaseFinishedListener purchaseFinishedListener = (result, info) -> {
+        if (result.isFailure()) {
+            Log.d(TAG, "Error purchasing: " + result);
+            Toast.makeText(getActivity(), "Error purchasing at the moment. Try again later.",
+                    Toast.LENGTH_SHORT).show();
+        } else if (info.getSku().equals(Constants.SKU_REMOVE_ADS)) {
+            // Success
+            Toast.makeText(getActivity(), "Purchased!", Toast.LENGTH_SHORT).show();
+            // Finish SettingActivity
+            getActivity().finish();
         }
     };
 

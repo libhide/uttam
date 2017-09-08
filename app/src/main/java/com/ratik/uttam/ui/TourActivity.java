@@ -15,6 +15,8 @@ import com.vlonjatg.android.apptourlibrary.MaterialSlide;
  */
 public class TourActivity extends AppTour {
 
+    private AllDoneFragment doneFragment;
+
     @Override
     public void init(@Nullable Bundle savedInstanceState) {
         int slideColor = Color.parseColor("#3d3d3d");
@@ -23,19 +25,20 @@ public class TourActivity extends AppTour {
         String second = getString(R.string.tour_slide_2_text);
         String third = getString(R.string.tour_slide_3_text);
 
-        Fragment firstSlide = MaterialSlide.newInstance(R.drawable.tour_graphic_1, getString(R.string.tour_slide_1_heading),
-                first, Color.WHITE, Color.WHITE);
+        Fragment firstSlide = MaterialSlide.newInstance(R.drawable.tour_graphic_1,
+                getString(R.string.tour_slide_1_heading), first, Color.WHITE, Color.WHITE);
 
-        Fragment secondSlide = MaterialSlide.newInstance(R.drawable.tour_graphic_2, getString(R.string.tour_slide_2_heading),
-                second, Color.WHITE, Color.WHITE);
+        Fragment secondSlide = MaterialSlide.newInstance(R.drawable.tour_graphic_2,
+                getString(R.string.tour_slide_2_heading), second, Color.WHITE, Color.WHITE);
 
-        Fragment thirdSlide = MaterialSlide.newInstance(R.drawable.tour_graphic_3, getString(R.string.tour_slide_3_heading),
-                third, Color.WHITE, Color.WHITE);
+        Fragment thirdSlide = MaterialSlide.newInstance(R.drawable.tour_graphic_3,
+                getString(R.string.tour_slide_3_heading), third, Color.WHITE, Color.WHITE);
 
         addSlide(firstSlide, slideColor);
         addSlide(secondSlide, slideColor);
         addSlide(thirdSlide, slideColor);
-        addSlide(new AllDoneFragment(), slideColor);
+        doneFragment = new AllDoneFragment();
+        addSlide(doneFragment, slideColor);
 
         // Customize tour
         hideSkip();
@@ -51,6 +54,8 @@ public class TourActivity extends AppTour {
 
     @Override
     public void onDonePressed() {
+        doneFragment.hideCircle();
+
         startActivity(new Intent(TourActivity.this, MainActivity.class));
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         finish();
