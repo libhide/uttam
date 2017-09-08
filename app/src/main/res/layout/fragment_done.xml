@@ -3,17 +3,31 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="60dp"
+    android:paddingBottom="60dp"
     tools:background="#3d3d3d">
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:indeterminateTint="@android:color/white"
+        android:visibility="invisible" />
+
     <ImageView
+        android:id="@+id/circle"
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:layout_centerInParent="true"
         android:src="@drawable/circle" />
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/checkmark"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_centerInParent="true"
@@ -25,8 +39,9 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="40dp"
         android:gravity="center"
-        android:textSize="15sp"
+        android:padding="20dp"
         android:text="@string/all_done_text"
-        android:textColor="@android:color/white" />
+        android:textColor="@android:color/white"
+        android:textSize="18sp" />
 
 </RelativeLayout>
