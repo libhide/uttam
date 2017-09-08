@@ -1,4 +1,6 @@
 apply plugin: 'com.android.application'
+apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     signingConfigs {
@@ -9,6 +11,7 @@ android {
             storePassword 'zaq123'
         }
     }
+
     compileSdkVersion 26
     buildToolsVersion "26.0.1"
     defaultConfig {
@@ -18,6 +21,7 @@ android {
         versionCode 16
         versionName "3.1"
     }
+
     buildTypes {
         release {
             8
@@ -26,6 +30,12 @@ android {
             signingConfig signingConfigs.config
         }
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
     productFlavors {
         dev {
             applicationId "com.ratik.uttam.dev"
@@ -41,6 +51,7 @@ repositories {
         url 'https://maven.google.com'
         // Alternative URL is 'https://dl.google.com/dl/android/maven2/'
     }
+    mavenCentral()
 }
 
 dependencies {
@@ -49,6 +60,6 @@ dependencies {
     compile 'com.squareup.okhttp3:okhttp:3.9.0'
     compile 'com.vlonjatg.android:app-tour:1.0'
     prodCompile 'com.google.firebase:firebase-ads:9.0.2'
+    compile 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 }
-
-apply plugin: 'com.google.gms.google-services'

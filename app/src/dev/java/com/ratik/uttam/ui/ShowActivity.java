@@ -30,27 +30,36 @@ import com.ratik.uttam.utils.Utils;
 import java.io.File;
 import java.io.IOException;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by Ratik on 29/02/16.
  */
 public class ShowActivity extends AppCompatActivity {
 
+    // Constants
     private static final String TAG = ShowActivity.class.getSimpleName();
 
-    private int screenWidth;
-
-    private Bitmap wallpaper;
-
     // Views
-    private ImageView image;
-    private TextView photographerTextView;
-    private ImageButton setWallpaperButton;
-    private LinearLayout creditsView;
+    @BindView(R.id.wallpaper)
+    ImageView wallpaperImageView;
 
+    @BindView(R.id.photographerTextView)
+    TextView photographerTextView;
+
+    @BindView(R.id.wallpaperSetButton)
+    ImageButton setWallpaperButton;
+
+    @BindView(R.id.creditsContainer)
+    LinearLayout creditsView;
+
+    // Misc.
+    private int screenWidth;
+    private Bitmap wallpaper;
     private String photographer;
     private String userProfileUrl;
 
-    // Helpers
     private boolean shouldScroll;
     private File destFile;
 
@@ -58,6 +67,7 @@ public class ShowActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show);
+        ButterKnife.bind(this);
 
         screenWidth = Utils.getScreenWidth(this);
 
@@ -66,64 +76,52 @@ public class ShowActivity extends AppCompatActivity {
         photographer = PhotoUtils.getPhotographerName(this);
         userProfileUrl = PhotoUtils.getUserProf(this);
 
-        // Views init
-        image = (ImageView) findViewById(R.id.wallpaper);
-        photographerTextView = (TextView) findViewById(R.id.photographerTextView);
-        setWallpaperButton = (ImageButton) findViewById(R.id.wallpaperSetButton);
-        creditsView = (LinearLayout) findViewById(R.id.creditsContainer);
-
         // Is scroll required?
         shouldScroll = wallpaper.getWidth() >= screenWidth;
 
         // Set photo data
-        image.setImageBitmap(wallpaper);
+        wallpaperImageView.setImageBitmap(wallpaper);
         if (getResources().getConfiguration().orientation
                 != Configuration.ORIENTATION_LANDSCAPE && shouldScroll) {
-            image.setOnTouchListener(imageScrollListener);
+            wallpaperImageView.setOnTouchListener(imageScrollListener);
         }
         photographerTextView.setText(Utils.toTitleCase(photographer));
 
         // Click listeners
-        setWallpaperButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Permission stuff for M+
-                int permissionCheck = ContextCompat.checkSelfPermission(ShowActivity.this,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE);
-                if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
-                    File srcFile = FileUtils.getSavedFileFromInternalStorage(ShowActivity.this);
-                    destFile = new File(FileUtils.getOutputMediaFileUri(ShowActivity.this).getPath());
-                    try {
-                        boolean copied = FileUtils.makeFileCopy(srcFile, destFile);
-                        if (copied) {
-                            // Successful copy
-                            final Uri contentUri = FileProvider.getUriForFile(
-                                    getApplicationContext(),
-                                    getApplicationContext().getPackageName() + ".provider",
-                                    destFile
-                            );
-                            Intent i = WallpaperManager.getInstance(ShowActivity.this)
-                                    .getCropAndSetWallpaperIntent(contentUri);
-                            ShowActivity.this.startActivityForResult(i, 123);
-                        }
-                    } catch (IOException e) {
-                        Log.e(TAG, "Error while copying file: ", e);
+        setWallpaperButton.setOnClickListener(v -> {
+            // Permission stuff for M+
+            int permissionCheck = ContextCompat.checkSelfPermission(ShowActivity.this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
+                File srcFile = FileUtils.getSavedFileFromInternalStorage(ShowActivity.this);
+                destFile = new File(FileUtils.getOutputMediaFileUri(ShowActivity.this).getPath());
+                try {
+                    boolean copied = FileUtils.makeFileCopy(srcFile, destFile);
+                    if (copied) {
+                        // Successful copy
+                        final Uri contentUri = FileProvider.getUriForFile(
+                                getApplicationContext(),
+                                getApplicationContext().getPackageName() + ".provider",
+                                destFile
+                        );
+                        Intent i = WallpaperManager.getInstance(ShowActivity.this)
+                                .getCropAndSetWallpaperIntent(contentUri);
+                        ShowActivity.this.startActivityForResult(i, 123);
                     }
-                } else {
-                    ActivityCompat.requestPermissions(ShowActivity.this,
-                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                            Constants.CONST_WRITE_EXTERNAL_STORAGE);
+                } catch (IOException e) {
+                    Log.e(TAG, "Error while copying file: ", e);
                 }
+            } else {
+                ActivityCompat.requestPermissions(ShowActivity.this,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        Constants.CONST_WRITE_EXTERNAL_STORAGE);
             }
         });
 
-        creditsView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW,
-                        Uri.parse(userProfileUrl));
-                startActivity(browserIntent);
-            }
+        creditsView.setOnClickListener(v -> {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+                    Uri.parse(userProfileUrl));
+            startActivity(browserIntent);
         });
     }
 
@@ -134,7 +132,7 @@ public class ShowActivity extends AppCompatActivity {
 
         public boolean onTouch(View view, MotionEvent event) {
             // set maximum scroll amount (based on center of image)
-            int maxX = ((wallpaper.getWidth() / 2)) - (screenWidth / 2 - 200);
+            int maxX = ((wallpaper.getWidth() / 2)) - (screenWidth / 2);
 
             // set scroll limits
             final int maxLeft = (maxX * -1);
@@ -178,12 +176,10 @@ public class ShowActivity extends AppCompatActivity {
                             totalX = maxRight;
                         }
                     }
-
-                    image.scrollBy(scrollByX, 0);
+                    wallpaperImageView.scrollBy(scrollByX, 0);
                     downX = currentX;
                     break;
             }
-
             return true;
         }
     };
@@ -193,11 +189,11 @@ public class ShowActivity extends AppCompatActivity {
         super.onConfigurationChanged(newConfig);
         int orientation = newConfig.orientation;
         if (orientation == Configuration.ORIENTATION_PORTRAIT && shouldScroll) {
-            image.scrollTo(0, 0);
-            image.setOnTouchListener(imageScrollListener);
+            wallpaperImageView.scrollTo(0, 0);
+            wallpaperImageView.setOnTouchListener(imageScrollListener);
         } else {
-            image.scrollTo(0, 0);
-            image.setOnTouchListener(null);
+            wallpaperImageView.scrollTo(0, 0);
+            wallpaperImageView.setOnTouchListener(null);
         }
     }
 

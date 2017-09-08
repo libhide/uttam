@@ -1,26 +1,18 @@
 package com.ratik.uttam.ui;
 
 import android.Manifest;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.WallpaperManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.Point;
-import android.media.AudioAttributes;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
@@ -49,9 +41,9 @@ import com.ratik.uttam.iap.utils.IabHelper;
 import com.ratik.uttam.iap.utils.IabResult;
 import com.ratik.uttam.iap.utils.Inventory;
 import com.ratik.uttam.iap.utils.Purchase;
-import com.ratik.uttam.utils.AlarmHelper;
-import com.ratik.uttam.utils.BitmapUtils;
+import com.ratik.uttam.utils.AlarmUtils;
 import com.ratik.uttam.utils.FileUtils;
+import com.ratik.uttam.utils.NotificationUtils;
 import com.ratik.uttam.utils.PhotoUtils;
 import com.ratik.uttam.utils.PrefUtils;
 import com.ratik.uttam.utils.Utils;
@@ -59,13 +51,15 @@ import com.ratik.uttam.utils.Utils;
 import java.io.File;
 import java.io.IOException;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+import static com.ratik.uttam.R.id.creditsContainer;
+
 public class MainActivity extends AppCompatActivity {
 
     // Constants
     private static final String TAG = MainActivity.class.getSimpleName();
-
-    private static final int FIRST_RUN_NOTIFICATION = 0;
-    private static final int SHOW_WALLPAPER = 1;
     public static final int WALL_JOB_ID = 1;
 
     // Wallpaper data
@@ -75,11 +69,23 @@ public class MainActivity extends AppCompatActivity {
     private String userProfileUrl;
 
     // Views
-    private ImageView image;
-    private TextView photographerTextView;
-    private ImageButton saveWallpaperButton;
-    private ImageButton setWallpaperButton;
-    private LinearLayout creditsContainer;
+    @BindView(R.id.wallpaper)
+    ImageView wallpaperImageView;
+
+    @BindView(R.id.photographerTextView)
+    TextView photographerTextView;
+
+    @BindView(R.id.wallpaperSetButton)
+    ImageButton setWallpaperButton;
+
+    @BindView(creditsContainer)
+    LinearLayout creditsView;
+
+    @BindView(R.id.wallpaperSaveButton)
+    ImageButton saveWallpaperButton;
+
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
 
     private InterstitialAd savingAd;
 
@@ -98,6 +104,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
 
         // Setting up interstitial ads
         setupAds();
@@ -110,31 +117,28 @@ public class MainActivity extends AppCompatActivity {
         // Start setup. This is asynchronous and the specified listener
         // will be called once setup completes.
         Log.d(TAG, "Starting setup.");
-        iabHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
-            public void onIabSetupFinished(IabResult result) {
-                Log.d(TAG, "Setup finished.");
+        iabHelper.startSetup(result -> {
+            Log.d(TAG, "Setup finished.");
 
-                if (!result.isSuccess()) {
-                    // Oh noes, there was a problem.
-                    Log.e(TAG, "Problem setting up in-app billing: " + result);
-                    return;
-                }
+            if (!result.isSuccess()) {
+                // Oh noes, there was a problem.
+                Log.e(TAG, "Problem setting up in-app billing: " + result);
+                return;
+            }
 
-                // Have we been disposed of in the meantime? If so, quit.
-                if (iabHelper == null) return;
+            // Have we been disposed of in the meantime? If so, quit.
+            if (iabHelper == null) return;
 
-                // IAB is fully set up. Now, let's get an inventory of stuff we own.
-                Log.d(TAG, "Setup successful. Querying inventory.");
-                try {
-                    iabHelper.queryInventoryAsync(mGotInventoryListener);
-                } catch (IabHelper.IabAsyncInProgressException e) {
-                    Log.e(TAG, "Error querying inventory. Another async operation in progress.");
-                }
+            // IAB is fully set up. Now, let's get an inventory of stuff we own.
+            Log.d(TAG, "Setup successful. Querying inventory.");
+            try {
+                iabHelper.queryInventoryAsync(mGotInventoryListener);
+            } catch (IabHelper.IabAsyncInProgressException e) {
+                Log.e(TAG, "Error querying inventory. Another async operation in progress.");
             }
         });
 
         // Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle("");
@@ -145,13 +149,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Save the screen width for later use
         saveScreenSize();
-
-        // Views init
-        image = (ImageView) findViewById(R.id.wallpaper);
-        photographerTextView = (TextView) findViewById(R.id.photographerTextView);
-        saveWallpaperButton = (ImageButton) findViewById(R.id.wallpaperSaveButton);
-        setWallpaperButton = (ImageButton) findViewById(R.id.wallpaperSetButton);
-        creditsContainer = (LinearLayout) findViewById(R.id.creditsContainer);
 
         if (firstRun) {
             // save hero into the internal storage
@@ -173,13 +170,13 @@ public class MainActivity extends AppCompatActivity {
             }
 
             // set alarm to set job for 7am daily
-            AlarmHelper.setJobSetAlarm(this);
+            AlarmUtils.setJobSetAlarm(this);
 
             // setup default prefs
             setupDefaultPrefs();
 
             // cast first notification
-            sendFirstRunNotification();
+            NotificationUtils.pushFirstNotification(this, wallpaper);
 
             // update first run state
             Utils.setFirstRun(this, false);
@@ -249,83 +246,74 @@ public class MainActivity extends AppCompatActivity {
         shouldScroll = wallpaper.getWidth() > screenWidth;
 
         // Set data
-        image.setImageBitmap(wallpaper);
+        wallpaperImageView.setImageBitmap(wallpaper);
         if (getResources().getConfiguration().orientation
                 != Configuration.ORIENTATION_LANDSCAPE && shouldScroll) {
-            image.setOnTouchListener(imageScrollListener);
+            wallpaperImageView.setOnTouchListener(imageScrollListener);
         }
         photographerTextView.setText(Utils.toTitleCase(photographer));
 
         // Click listeners
-        saveWallpaperButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Permission stuff for M+
-                int permissionCheck = ContextCompat.checkSelfPermission(MainActivity.this,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE);
-                if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
-                    if (userHasRemovedAds) {
-                        doFileSaving();
+        saveWallpaperButton.setOnClickListener(v -> {
+            // Permission stuff for M+
+            int permissionCheck = ContextCompat.checkSelfPermission(MainActivity.this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
+                if (userHasRemovedAds) {
+                    doFileSaving();
+                } else {
+                    if (savingAd.isLoaded()) {
+                        savingAd.show();
+                        Toast.makeText(MainActivity.this,
+                                "Close the ad to continue saving...",
+                                Toast.LENGTH_SHORT).show();
                     } else {
-                        if (savingAd.isLoaded()) {
-                            savingAd.show();
-                            Toast.makeText(MainActivity.this,
-                                    "Close the ad to continue saving...",
-                                    Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(MainActivity.this,
-                                    "Uttam is working in the background. Try in a bit?",
-                                    Toast.LENGTH_SHORT).show();
-                        }
+                        Toast.makeText(MainActivity.this,
+                                "Uttam is working in the background. Try in a bit?",
+                                Toast.LENGTH_SHORT).show();
                     }
-                } else {
-                    ActivityCompat.requestPermissions(MainActivity.this,
-                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                            Constants.CONST_WRITE_EXTERNAL_STORAGE);
                 }
+            } else {
+                ActivityCompat.requestPermissions(MainActivity.this,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        Constants.CONST_WRITE_EXTERNAL_STORAGE);
             }
         });
 
-        setWallpaperButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Set wallpaper
-                // Permission stuff for M+
-                int permissionCheck = ContextCompat.checkSelfPermission(MainActivity.this,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE);
-                if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
-                    File srcFile = FileUtils.getSavedFileFromInternalStorage(MainActivity.this);
-                    destFile = new File(FileUtils.getOutputMediaFileUri(MainActivity.this).getPath());
-                    try {
-                        boolean copied = FileUtils.makeFileCopy(srcFile, destFile);
-                        if (copied) {
-                            // Successful copy
-                            final Uri contentUri = FileProvider.getUriForFile(
-                                    getApplicationContext(),
-                                    getApplicationContext().getPackageName() + ".provider",
-                                    destFile
-                            );
-                            Intent i = WallpaperManager.getInstance(MainActivity.this)
-                                    .getCropAndSetWallpaperIntent(contentUri);
-                            MainActivity.this.startActivityForResult(i, 123);
-                        }
-                    } catch (IOException e) {
-                        Log.e(TAG, "Error while copying file: ", e);
+        setWallpaperButton.setOnClickListener(v -> {
+            // Set wallpaper
+            // Permission stuff for M+
+            int permissionCheck = ContextCompat.checkSelfPermission(MainActivity.this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
+                File srcFile = FileUtils.getSavedFileFromInternalStorage(MainActivity.this);
+                destFile = new File(FileUtils.getOutputMediaFileUri(MainActivity.this).getPath());
+                try {
+                    boolean copied = FileUtils.makeFileCopy(srcFile, destFile);
+                    if (copied) {
+                        // Successful copy
+                        final Uri contentUri = FileProvider.getUriForFile(
+                                getApplicationContext(),
+                                getApplicationContext().getPackageName() + ".provider",
+                                destFile
+                        );
+                        Intent i = WallpaperManager.getInstance(MainActivity.this)
+                                .getCropAndSetWallpaperIntent(contentUri);
+                        MainActivity.this.startActivityForResult(i, 123);
                     }
-                } else {
-                    ActivityCompat.requestPermissions(MainActivity.this,
-                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                            Constants.CONST_WRITE_EXTERNAL_STORAGE);
+                } catch (IOException e) {
+                    Log.e(TAG, "Error while copying file: ", e);
                 }
+            } else {
+                ActivityCompat.requestPermissions(MainActivity.this,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        Constants.CONST_WRITE_EXTERNAL_STORAGE);
             }
         });
 
-        creditsContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(userProfileUrl));
-                startActivity(browserIntent);
-            }
+        creditsView.setOnClickListener(v -> {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(userProfileUrl));
+            startActivity(browserIntent);
         });
 
         // Do cool stuff for L+
@@ -346,65 +334,6 @@ public class MainActivity extends AppCompatActivity {
 
         Utils.setScreenWidth(this, screenWidth);
         Utils.setScreenHeight(this, screenHeight);
-    }
-
-    private void sendFirstRunNotification() {
-        // Content Intent
-        Intent intent = new Intent(this, ShowActivity.class);
-
-        // Content PendingIntent
-        PendingIntent showWallpaperIntent = PendingIntent.getActivity(this,
-                SHOW_WALLPAPER, intent, 0);
-
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-        // Notif Channel for O
-        String channelId = Constants.NOTIF_CHANNEL_ID;
-        CharSequence channelName = Constants.NOTIF_CHANNEL_NAME;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel notificationChannel
-                    = new NotificationChannel(channelId, channelName, importance);
-
-            if (PrefUtils.userWantsCustomSounds(this)) {
-                AudioAttributes attrs = new AudioAttributes.Builder()
-                        .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE)
-                        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                        .build();
-                notificationChannel.setSound(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.uttam), attrs);
-            }
-
-            if (PrefUtils.userWantsNotificationLED(this)) {
-                notificationChannel.enableLights(true);
-                notificationChannel.setLightColor(Color.WHITE);
-            }
-
-            notificationChannel.setShowBadge(false);
-            notificationManager.createNotificationChannel(notificationChannel);
-        }
-
-        NotificationCompat.Builder builder =
-                new NotificationCompat.Builder(this, channelId)
-                        .setSmallIcon(R.drawable.ic_stat_uttam)
-                        .setLargeIcon(BitmapUtils.cropToSquare(wallpaper))
-                        .setAutoCancel(true)
-                        .setContentTitle("New Wallpaper!")
-                        .setContentText("Photo by " + "Martin Sanchez")
-                        .setStyle(new NotificationCompat.BigPictureStyle()
-                                .bigPicture(wallpaper)
-                                .setBigContentTitle("New Wallpaper!"))
-                        .setContentIntent(showWallpaperIntent);
-
-        if (PrefUtils.userWantsCustomSounds(this)) {
-            builder.setSound(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.uttam));
-        }
-
-        if (PrefUtils.userWantsNotificationLED(this)) {
-            builder.setDefaults(Notification.DEFAULT_LIGHTS);
-        }
-
-        notificationManager.notify(FIRST_RUN_NOTIFICATION, builder.build());
     }
 
     private void doFileSaving() {
@@ -510,7 +439,7 @@ public class MainActivity extends AppCompatActivity {
                             totalX = maxRight;
                         }
                     }
-                    image.scrollBy(scrollByX, 0);
+                    wallpaperImageView.scrollBy(scrollByX, 0);
                     downX = currentX;
                     break;
             }
@@ -551,11 +480,11 @@ public class MainActivity extends AppCompatActivity {
         super.onConfigurationChanged(newConfig);
         int orientation = newConfig.orientation;
         if (orientation == Configuration.ORIENTATION_PORTRAIT && shouldScroll) {
-            image.scrollTo(0, 0);
-            image.setOnTouchListener(imageScrollListener);
+            wallpaperImageView.scrollTo(0, 0);
+            wallpaperImageView.setOnTouchListener(imageScrollListener);
         } else {
-            image.scrollTo(0, 0);
-            image.setOnTouchListener(null);
+            wallpaperImageView.scrollTo(0, 0);
+            wallpaperImageView.setOnTouchListener(null);
         }
     }
 
