@@ -69,7 +69,7 @@ public class GetPhotoJob extends JobService {
         @Override
         protected JobParameters[] doInBackground(JobParameters... params) {
 //            String randomUrl = Constants.BASE_URL
-//                    + Keys.API_KEY + "&category=" + getRandomCategory();
+//                    + Keys.CLIENT_ID + "&category=" + getRandomCategory();
 //            Log.d(TAG, randomUrl);
 
             Uri.Builder builder = new Uri.Builder();
@@ -77,7 +77,7 @@ public class GetPhotoJob extends JobService {
                     .authority("api.unsplash.com")
                     .appendPath("photos")
                     .appendPath("random")
-                    .appendQueryParameter("client_id", Keys.API_KEY)
+                    .appendQueryParameter("client_id", Keys.CLIENT_ID)
                     .appendQueryParameter("category", FetchUtils.getRandomCategory())
                     .build();
             String fetchUrl = builder.toString();

@@ -5,7 +5,9 @@ package com.ratik.uttam;
  */
 public class Constants {
 
-//  /photos/random/?client_id=";
+    public class API {
+        public static final String BASE_URL = "https://api.unsplash.com/";
+    }
 
     // JSON API constants
     public static final String CONST_URLS = "urls";
