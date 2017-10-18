@@ -38,10 +38,9 @@ public class FileUtils {
         }
     }
 
-    public static Bitmap getImageBitmap(Context context, String name, String extension) {
-        name = name + "." + extension;
+    public static Bitmap getImageBitmap(Context context, String filename) {
         try {
-            FileInputStream fis = context.openFileInput(name);
+            FileInputStream fis = context.openFileInput(filename);
             Bitmap b = BitmapFactory.decodeStream(fis);
             fis.close();
             return b;

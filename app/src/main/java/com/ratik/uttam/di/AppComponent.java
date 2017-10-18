@@ -5,8 +5,10 @@ import com.ratik.uttam.data.DatabaseRealm;
 import com.ratik.uttam.data.impl.PhotoRepositoryImpl;
 import com.ratik.uttam.di.module.ApiModule;
 import com.ratik.uttam.di.module.AppContextModule;
+import com.ratik.uttam.di.module.PresenterModule;
 import com.ratik.uttam.di.module.RepositoryModule;
 import com.ratik.uttam.services.GetPhotoService;
+import com.ratik.uttam.ui.MainActivity;
 
 import javax.inject.Singleton;
 
@@ -17,16 +19,16 @@ import dagger.Component;
  */
 
 @Singleton
-@Component(modules = {AppContextModule.class, ApiModule.class, RepositoryModule.class})
+@Component(modules = {AppContextModule.class, PresenterModule.class,
+                      ApiModule.class, RepositoryModule.class})
 public interface AppComponent {
 
-    // app
     void inject(UttamApplication application);
 
-    // api
     void inject(GetPhotoService service);
 
-    // repository
     void inject(DatabaseRealm databaseRealm);
     void inject(PhotoRepositoryImpl photoRepository);
+
+    void inject(MainActivity activity);
 }
