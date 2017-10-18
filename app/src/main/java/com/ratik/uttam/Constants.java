@@ -9,18 +9,6 @@ public class Constants {
         public static final String BASE_URL = "https://api.unsplash.com/";
     }
 
-    // JSON API constants
-    public static final String CONST_URLS = "urls";
-    public static final String CONST_URL_FULL = "full";
-
-    public static final String CONST_USER = "user";
-    public static final String CONST_NAME = "name";
-    public static final String CONST_USER_PROF = "user_prof";
-
-    public static final String CONST_LINKS = "links";
-    public static final String CONST_HTML = "html";
-    public static final String CONST_DOWNLOAD = "download";
-
     // Preference constants
     public static final String FIRST_RUN = "first_run";
     public static final String SCREEN_WIDTH = "screen_width";

@@ -1,5 +1,7 @@
 package com.ratik.uttam.data.impl;
 
+import android.content.Context;
+
 import com.ratik.uttam.data.DatabaseRealm;
 import com.ratik.uttam.data.PhotoRepository;
 import com.ratik.uttam.di.Injector;
@@ -14,6 +16,9 @@ import javax.inject.Inject;
  */
 
 public class PhotoRepositoryImpl implements PhotoRepository {
+
+    @Inject
+    Context context;
 
     @Inject
     DatabaseRealm databaseRealm;
@@ -36,5 +41,6 @@ public class PhotoRepositoryImpl implements PhotoRepository {
     @Override
     public void clear() {
         databaseRealm.clear();
+        // FileUtils.clearFile(context, "wallpaper.png");
     }
 }
