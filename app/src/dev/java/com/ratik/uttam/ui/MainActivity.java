@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.WallpaperManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -21,8 +20,6 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -76,7 +73,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     Toolbar toolbar;
 
     // Helpers
-    private boolean shouldScroll;
     private File destFile;
 
     @Inject
@@ -232,66 +228,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         }
     }
 
-    private View.OnTouchListener imageScrollListener = new View.OnTouchListener() {
-        float downX;
-        int totalX;
-        int scrollByX;
-
-        public boolean onTouch(View view, MotionEvent event) {
-            // set maximum scroll amount (based on center of image)
-            int maxX = ((wallpaper.getWidth() / 2))
-                    - (Utils.getScreenWidth(MainActivity.this) / 2);
-
-            // set scroll limits
-            final int maxLeft = (maxX * -1);
-            final int maxRight = maxX;
-
-            float currentX;
-
-            switch (event.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    downX = event.getX();
-                    break;
-
-                case MotionEvent.ACTION_MOVE:
-                    currentX = event.getX();
-                    scrollByX = (int) (downX - currentX);
-
-                    // scrolling to left side of image (pic moving to the right)
-                    if (currentX > downX) {
-                        if (totalX == maxLeft) {
-                            scrollByX = 0;
-                        }
-                        if (totalX > maxLeft) {
-                            totalX = totalX + scrollByX;
-                        }
-                        if (totalX < maxLeft) {
-                            scrollByX = maxLeft - (totalX - scrollByX);
-                            totalX = maxLeft;
-                        }
-                    }
-
-                    // scrolling to right side of image (pic moving to the left)
-                    if (currentX < downX) {
-                        if (totalX == maxRight) {
-                            scrollByX = 0;
-                        }
-                        if (totalX < maxRight) {
-                            totalX = totalX + scrollByX;
-                        }
-                        if (totalX > maxRight) {
-                            scrollByX = maxRight - (totalX - scrollByX);
-                            totalX = maxRight;
-                        }
-                    }
-                    wallpaperImageView.scrollBy(scrollByX, 0);
-                    downX = currentX;
-                    break;
-            }
-            return true;
-        }
-    };
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.actions, menu);
@@ -323,19 +259,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         }
     }
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        int orientation = newConfig.orientation;
-        if (orientation == Configuration.ORIENTATION_PORTRAIT && shouldScroll) {
-            wallpaperImageView.scrollTo(0, 0);
-            wallpaperImageView.setOnTouchListener(imageScrollListener);
-        } else {
-            wallpaperImageView.scrollTo(0, 0);
-            wallpaperImageView.setOnTouchListener(null);
-        }
-    }
-
     private void shareWallpaper() {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         String shareText = "Great wallpaper from " + photo.getPhotographerName()
@@ -362,16 +285,11 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
         wallpaper = FileUtils.getImageBitmap(this, photo.getPhotoFSPath());
         // shouldScroll flag
-        shouldScroll = wallpaper.getWidth() > Utils.getScreenWidth(this);
+        // shouldScroll = wallpaper.getWidth() > Utils.getScreenWidth(this);
 
         // set views
         wallpaperImageView.setImageBitmap(wallpaper);
         photographerTextView.setText(photo.getPhotographerName());
-
-        if (getResources().getConfiguration().orientation
-                != Configuration.ORIENTATION_LANDSCAPE && shouldScroll) {
-            wallpaperImageView.setOnTouchListener(imageScrollListener);
-        }
 
         if (Utils.isFirstRun(this)) {
             // Set it as the wallpaper
@@ -384,7 +302,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
             // cast first notification
             NotificationUtils.pushFirstNotification(this, photo);
         }
-
     }
 
     @Override
