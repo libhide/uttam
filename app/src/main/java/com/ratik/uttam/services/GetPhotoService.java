@@ -3,7 +3,6 @@ package com.ratik.uttam.services;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
@@ -71,9 +70,11 @@ public class GetPhotoService extends Service {
     }
 
     private void getRandomPhoto() {
+        // Clear db
+        repository.clear();
+        // Get new image
         Log.d(TAG, "Getting random photo...");
-        service
-                .getRandomPhoto(Keys.CLIENT_ID, FetchUtils.getRandomCategory())
+        service.getRandomPhoto(Keys.CLIENT_ID, FetchUtils.getRandomCategory())
                 .enqueue(new Callback<Photo>() {
                     @Override
                     public void onResponse(Call<Photo> call, Response<Photo> response) {
@@ -126,7 +127,7 @@ public class GetPhotoService extends Service {
 
                 // Notify User
                 // Send Notification
-                notifyUser(photo, image);
+                notifyUser(p);
 
                 // If user wants auto-magical setting
                 if (PrefUtils.shouldSetWallpaperAutomatically(context)) {
@@ -139,7 +140,7 @@ public class GetPhotoService extends Service {
         });
     }
 
-    private void notifyUser(Photo photo, Bitmap wallpaper) {
-        NotificationUtils.pushNewWallpaperNotif(context, photo, wallpaper);
+    private void notifyUser(_Photo photo) {
+        NotificationUtils.pushNewWallpaperNotif(context, photo);
     }
 }

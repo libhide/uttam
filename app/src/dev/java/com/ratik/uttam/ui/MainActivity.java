@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Point;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,7 +18,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.transition.Slide;
 import android.util.Log;
-import android.view.Display;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,33 +32,29 @@ import android.widget.Toast;
 
 import com.ratik.uttam.Constants;
 import com.ratik.uttam.R;
+import com.ratik.uttam.data.DatabaseRealm;
+import com.ratik.uttam.di.Injector;
+import com.ratik.uttam.model._Photo;
 import com.ratik.uttam.services.GetPhotoService;
-import com.ratik.uttam.utils.AlarmUtils;
 import com.ratik.uttam.utils.FileUtils;
 import com.ratik.uttam.utils.NotificationUtils;
-import com.ratik.uttam.utils.PhotoUtils;
-import com.ratik.uttam.utils.PrefUtils;
 import com.ratik.uttam.utils.Utils;
 
 import java.io.File;
 import java.io.IOException;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.ratik.uttam.R.id.creditsContainer;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MainContract.View {
 
     // Constants
     private static final String TAG = MainActivity.class.getSimpleName();
     public static final int WALL_JOB_ID = 1;
-
-    // Wallpaper data
-    private Bitmap wallpaper;
-    private String photographer;
-    private String downloadUrl;
-    private String userProfileUrl;
 
     // Views
     @BindView(R.id.wallpaper)
@@ -82,17 +76,64 @@ public class MainActivity extends AppCompatActivity {
     Toolbar toolbar;
 
     // Helpers
-    private int screenWidth;
-    private int screenHeight;
     private boolean shouldScroll;
     private File destFile;
+
+    @Inject
+    MainContract.Presenter presenter;
+
+    @Inject
+    DatabaseRealm realm;
+
+    private Bitmap wallpaper;
+    private _Photo photo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Injection
+        Injector.getAppComponent().inject(this);
+
+        // Bind views
         ButterKnife.bind(this);
 
+        init();
+
+        // set the presenter's view
+        presenter.setView(this);
+
+        if (Utils.isFirstRun(this)) {
+            // Create first photo
+            _Photo photo = new _Photo();
+            photo.setPhotographerName("Efe Kurnaz");
+            photo.setPhotographerUserName("@efekurnaz");
+            photo.setPhotoFullUrl("https://images.unsplash.com/photo-1500462918059-b1a0cb512f1d?dpr=1&auto=format&fit=crop&w=1534&h=&q=60&cs=tinysrgb&crop=");
+            photo.setPhotoFSPath("wallpaper.png");
+            photo.setPhotoHtmlUrl("https://unsplash.com/photos/RnCPiXixooY");
+            photo.setPhotoDownloadUrl("https://unsplash.com/photos/RnCPiXixooY/download");
+
+            presenter.setPhoto(photo);
+
+            // save actual photo to internal storage
+            Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.uttam_hero);
+            FileUtils.saveImage(this, b, "wallpaper", "png");
+
+            presenter.loadPhoto();
+
+            // set alarm to set job for 7am daily
+            // AlarmUtils.setJobSetAlarm(this);
+
+            // update first run state
+            Utils.setFirstRun(this, false);
+        } else {
+            // Load the photo from storage
+            presenter.loadPhoto();
+        }
+    }
+
+    private void init() {
         // Toolbar
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
@@ -100,84 +141,23 @@ public class MainActivity extends AppCompatActivity {
             getSupportActionBar().setIcon(R.drawable.uttam);
         }
 
-        boolean firstRun = Utils.isFirstRun(this);
-
-        // Save the screen width for later use
-        saveScreenSize();
-
-        if (firstRun) {
-            // save hero into the internal storage
-            wallpaper = BitmapFactory.decodeResource(getResources(), R.drawable.uttam_hero);
-            // wallpaper = BitmapUtils.cropBitmapFromCenterAndScreenSize(this, wallpaper);
-            FileUtils.saveImage(this, wallpaper, "wallpaper", "png");
-
-            // TODO: refactor
-            PhotoUtils.setFullUrl(this, "https://images.unsplash.com/photo-1473970367503-7d7f8d1bf998?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&s=1c38107cb3e71ad1c6cb430b0343bd5f");
-            PhotoUtils.setPhotographerName(this, "Martin Sanchez");
-            PhotoUtils.setDownloadUrl(this, "http://unsplash.com/photos/bk4HoBc4k60/download");
-            PhotoUtils.setUserProf(this, "https://unsplash.com/@mzeketv");
-
-            // set it as the wallpaper
-            try {
-                WallpaperManager.getInstance(this).setBitmap(wallpaper);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            // set alarm to set job for 7am daily
-            AlarmUtils.setJobSetAlarm(this);
-
-            // setup default prefs
-            setupDefaultPrefs();
-
-            // cast first notification
-            NotificationUtils.pushFirstNotification(this, wallpaper);
-
-            // update first run state
-            Utils.setFirstRun(this, false);
+        // Adjust theme
+        // Do cool stuff for L+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setEnterTransition(new Slide(Gravity.RIGHT));
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         } else {
-            // get saved image
-            wallpaper = FileUtils.getImageBitmap(this, "wallpaper", "png");
+            setTheme(R.style.AppTheme_Fullscreen);
         }
-    }
-
-    private void setupDefaultPrefs() {
-        // Check if device has resolution under 720p
-        if (screenWidth <= 720) {
-            PrefUtils.setCompressState(this, true);
-        } else {
-            PrefUtils.setCompressState(this, false);
-        }
-        PrefUtils.setAutomaticWallpaperSet(this, true);
-        PrefUtils.setCustomSoundsState(this, true);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        // Get photo data
-        if (wallpaper == null) {
-            // get saved image
-            wallpaper = FileUtils.getImageBitmap(this, "wallpaper", "png");
-        }
-        photographer = PhotoUtils.getPhotographerName(this);
-        downloadUrl = PhotoUtils.getDownloadUrl(this);
-        userProfileUrl = PhotoUtils.getUserProf(this);
-
-        // Is scroll required?
-        shouldScroll = wallpaper.getWidth() > screenWidth;
-
-        // Set data
-        wallpaperImageView.setImageBitmap(wallpaper);
-        if (getResources().getConfiguration().orientation
-                != Configuration.ORIENTATION_LANDSCAPE && shouldScroll) {
-            wallpaperImageView.setOnTouchListener(imageScrollListener);
-        }
-        photographerTextView.setText(Utils.toTitleCase(photographer));
 
         // Click listeners
         saveWallpaperButton.setOnClickListener(v -> {
-            // Permission stuff for M+
+            // Runtime Permissions
             int permissionCheck = ContextCompat.checkSelfPermission(MainActivity.this,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE);
             if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
@@ -190,8 +170,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         setWallpaperButton.setOnClickListener(v -> {
-            // Set wallpaper
-            // Permission stuff for M+
+            // Runtime Permissions
             int permissionCheck = ContextCompat.checkSelfPermission(MainActivity.this,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE);
             if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
@@ -220,29 +199,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        creditsView.setOnClickListener((View.OnClickListener) v -> {
-            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(userProfileUrl));
-            startActivity(browserIntent);
+        creditsView.setOnClickListener(v -> {
+            presenter.showWallpaperCredits();
         });
-
-        // Do cool stuff for L+
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setEnterTransition(new Slide(Gravity.RIGHT));
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        } else {
-            setTheme(R.style.AppTheme_Fullscreen);
-        }
-    }
-
-    private void saveScreenSize() {
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        screenWidth = size.x;
-        screenHeight = size.y;
-
-        Utils.setScreenWidth(this, screenWidth);
-        Utils.setScreenHeight(this, screenHeight);
     }
 
     private void doFileSaving() {
@@ -280,7 +239,8 @@ public class MainActivity extends AppCompatActivity {
 
         public boolean onTouch(View view, MotionEvent event) {
             // set maximum scroll amount (based on center of image)
-            int maxX = ((wallpaper.getWidth() / 2)) - (screenWidth / 2);
+            int maxX = ((wallpaper.getWidth() / 2))
+                    - (Utils.getScreenWidth(MainActivity.this) / 2);
 
             // set scroll limits
             final int maxLeft = (maxX * -1);
@@ -342,7 +302,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_settings:
-                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                presenter.launchSettings(SettingsActivity.class);
                 return true;
             case R.id.action_share:
                 int permissionCheck = ContextCompat.checkSelfPermission(MainActivity.this,
@@ -356,8 +316,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 return true;
             case R.id.action_refresh:
-                startService(new Intent(getBaseContext(), GetPhotoService.class));
-                finish();
+                presenter.refreshPhoto();
                 return true;
             default:
                 return false;
@@ -379,7 +338,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void shareWallpaper() {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
-        String shareText = "Great wallpaper from " + photographer + " on @getuttamapp today! " + downloadUrl;
+        String shareText = "Great wallpaper from " + photo.getPhotographerName()
+                + " on @getuttamapp today! " + photo.getPhotoDownloadUrl();
         shareIntent.setType("text/plain");
         shareIntent.putExtra(Intent.EXTRA_TEXT, shareText);
         startActivity(shareIntent);
@@ -393,5 +353,61 @@ public class MainActivity extends AppCompatActivity {
                 destFile.delete();
             }
         }
+    }
+
+    @Override
+    public void displayPhoto(_Photo p) {
+        // save the returned photo
+        this.photo = p;
+
+        wallpaper = FileUtils.getImageBitmap(this, photo.getPhotoFSPath());
+        // shouldScroll flag
+        shouldScroll = wallpaper.getWidth() > Utils.getScreenWidth(this);
+
+        // set views
+        wallpaperImageView.setImageBitmap(wallpaper);
+        photographerTextView.setText(photo.getPhotographerName());
+
+        if (getResources().getConfiguration().orientation
+                != Configuration.ORIENTATION_LANDSCAPE && shouldScroll) {
+            wallpaperImageView.setOnTouchListener(imageScrollListener);
+        }
+
+        if (Utils.isFirstRun(this)) {
+            // Set it as the wallpaper
+            try {
+                WallpaperManager.getInstance(this).setBitmap(wallpaper);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            // cast first notification
+            NotificationUtils.pushFirstNotification(this, photo);
+        }
+
+    }
+
+    @Override
+    public void showSettings(Class settingsActivity) {
+        startActivity(new Intent(this, settingsActivity));
+    }
+
+    @Override
+    public void refreshPhoto() {
+        startService(new Intent(this, GetPhotoService.class));
+        finish();
+    }
+
+    @Override
+    public void showWallpaperCredits() {
+        String url = "http://unsplash.com/" + photo.getPhotographerUserName();
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        startActivity(browserIntent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        realm.close();
     }
 }

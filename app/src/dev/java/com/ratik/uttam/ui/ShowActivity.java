@@ -72,7 +72,7 @@ public class ShowActivity extends AppCompatActivity {
         screenWidth = Utils.getScreenWidth(this);
 
         // Get photo data
-        wallpaper = FileUtils.getImageBitmap(this, "wallpaper", "png");
+        // wallpaper = FileUtils.getImageBitmap(this, "wallpaper", "png");
         photographer = PhotoUtils.getPhotographerName(this);
         userProfileUrl = PhotoUtils.getUserProf(this);
 

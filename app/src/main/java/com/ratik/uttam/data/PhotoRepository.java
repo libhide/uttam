@@ -8,5 +8,6 @@ import com.ratik.uttam.model._Photo;
 
 public interface PhotoRepository {
     void putPhoto(_Photo photo);
-    void getPhoto();
+    _Photo getPhoto();
+    void clear();
 }

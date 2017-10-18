@@ -3,6 +3,7 @@ package com.ratik.uttam.di;
 import com.ratik.uttam.UttamApplication;
 import com.ratik.uttam.di.module.ApiModule;
 import com.ratik.uttam.di.module.AppContextModule;
+import com.ratik.uttam.di.module.PresenterModule;
 import com.ratik.uttam.di.module.RepositoryModule;
 
 import java.util.Objects;
@@ -23,6 +24,7 @@ public class Injector {
                 .appContextModule(new AppContextModule(application))
                 .apiModule(new ApiModule())
                 .repositoryModule(new RepositoryModule())
+                .presenterModule(new PresenterModule())
                 .build();
     }
 
