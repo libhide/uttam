@@ -62,10 +62,10 @@
 
         <service android:name=".services.GetPhotoService" />
 
-        <service
-            android:name=".services.GetPhotoJob"
-            android:exported="true"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
+        <!--<service-->
+            <!--android:name=".services.GetPhotoJob"-->
+            <!--android:exported="true"-->
+            <!--android:permission="android.permission.BIND_JOB_SERVICE" />-->
 
         <receiver android:name=".receivers.UpdateReceiver">
             <intent-filter>

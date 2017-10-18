@@ -5,6 +5,8 @@ import com.ratik.uttam.data.PhotoRepository;
 import com.ratik.uttam.di.Injector;
 import com.ratik.uttam.model._Photo;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 /**
@@ -26,7 +28,13 @@ public class PhotoRepositoryImpl implements PhotoRepository {
     }
 
     @Override
-    public void getPhoto() {
+    public _Photo getPhoto() {
+        List<_Photo> photos = databaseRealm.findAll(_Photo.class);
+        return photos.get(0); // there will be only one at all times
+    }
 
+    @Override
+    public void clear() {
+        databaseRealm.clear();
     }
 }

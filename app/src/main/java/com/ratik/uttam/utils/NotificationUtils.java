@@ -15,7 +15,7 @@ import android.support.v4.app.NotificationCompat;
 
 import com.ratik.uttam.Constants;
 import com.ratik.uttam.R;
-import com.ratik.uttam.model.Photo;
+import com.ratik.uttam.model._Photo;
 import com.ratik.uttam.ui.MainActivity;
 import com.ratik.uttam.ui.ShowActivity;
 
@@ -29,7 +29,7 @@ public class NotificationUtils {
     private static int WALLPAPER_NOTIF_ID = 001;
     private static final int FIRST_RUN_NOTIFICATION = 0;
 
-    public static void pushNewWallpaperNotif(Context context, Photo photo, Bitmap wallpaper) {
+    public static void pushNewWallpaperNotif(Context context, _Photo photo) {
         // Content Intent
         Intent intent;
         if (PrefUtils.shouldSetWallpaperAutomatically(context)) {
@@ -70,13 +70,14 @@ public class NotificationUtils {
             notificationManager.createNotificationChannel(notificationChannel);
         }
 
+        Bitmap wallpaper = FileUtils.getImageBitmap(context, photo.getPhotoFSPath());
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(context, channelId)
                         .setSmallIcon(R.drawable.ic_stat_uttam)
                         .setLargeIcon(BitmapUtils.cropToSquare(wallpaper))
                         .setAutoCancel(true)
                         .setContentTitle(context.getString(R.string.wallpaper_notif_title))
-                        .setContentText(context.getString(R.string.wallpaper_notif_photo_by) + photo.getPhotographer())
+                        .setContentText(context.getString(R.string.wallpaper_notif_photo_by) + photo.getPhotographerName())
                         .setStyle(new NotificationCompat.BigPictureStyle()
                                 .bigPicture(wallpaper)
                                 .setBigContentTitle(context.getString(R.string.wallpaper_notif_title)))
@@ -94,7 +95,7 @@ public class NotificationUtils {
         notificationManager.notify(WALLPAPER_NOTIF_ID, builder.build());
     }
 
-    public static void pushFirstNotification(Context context, Bitmap wallpaper) {
+    public static void pushFirstNotification(Context context, _Photo photo) {
         // Content Intent
         Intent intent = new Intent(context, MainActivity.class);
 
@@ -130,13 +131,14 @@ public class NotificationUtils {
             notificationManager.createNotificationChannel(notificationChannel);
         }
 
+        Bitmap wallpaper = FileUtils.getImageBitmap(context, photo.getPhotoFSPath());
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(context, channelId)
                         .setSmallIcon(R.drawable.ic_stat_uttam)
                         .setLargeIcon(BitmapUtils.cropToSquare(wallpaper))
                         .setAutoCancel(true)
                         .setContentTitle("New Wallpaper!")
-                        .setContentText("Photo by " + "Martin Sanchez")
+                        .setContentText("Photo by " + photo.getPhotographerName())
                         .setStyle(new NotificationCompat.BigPictureStyle()
                                 .bigPicture(wallpaper)
                                 .setBigContentTitle("New Wallpaper!"))

@@ -29,6 +29,7 @@ public class DatabaseRealm {
 
     public void setup() {
         if (realmConfiguration == null) {
+            Realm.init(mContext);
             realmConfiguration = new RealmConfiguration.Builder().build();
             Realm.setDefaultConfiguration(realmConfiguration);
         } else {
@@ -54,5 +55,12 @@ public class DatabaseRealm {
 
     public void close() {
         getRealmInstance().close();
+    }
+
+    public void clear() {
+        Realm realm = getRealmInstance();
+        realm.beginTransaction();
+        realm.deleteAll();
+        realm.commitTransaction();
     }
 }

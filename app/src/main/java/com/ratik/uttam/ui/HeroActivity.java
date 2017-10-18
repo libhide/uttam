@@ -3,18 +3,21 @@ package com.ratik.uttam.ui;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
+import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.transition.Fade;
+import android.view.Display;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 
 import com.ratik.uttam.R;
+import com.ratik.uttam.utils.PrefUtils;
 import com.ratik.uttam.utils.Utils;
 
 import butterknife.BindView;
@@ -64,6 +67,12 @@ public class HeroActivity extends AppCompatActivity {
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             }, 800);
         }
+
+        // save the user's screen size for later use
+        saveScreenSize();
+
+        // set default prefs for the user
+        setupDefaultPrefs();
     }
 
     private void doAnimations() {
@@ -101,4 +110,24 @@ public class HeroActivity extends AppCompatActivity {
         super.onPause();
         finish();
     }
+
+    private void saveScreenSize() {
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        Utils.setScreenWidth(this, size.x);
+        Utils.setScreenHeight(this, size.y);
+    }
+
+    private void setupDefaultPrefs() {
+        // Check if device has resolution under 720p
+        if (Utils.getScreenWidth(this) <= 720) {
+            PrefUtils.setCompressState(this, true);
+        } else {
+            PrefUtils.setCompressState(this, false);
+        }
+        PrefUtils.setAutomaticWallpaperSet(this, true);
+        PrefUtils.setCustomSoundsState(this, true);
+    }
+
 }
