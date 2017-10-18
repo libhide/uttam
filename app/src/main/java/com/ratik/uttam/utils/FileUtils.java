@@ -26,11 +26,10 @@ public class FileUtils {
 
     private static final String TAG = FileUtils.class.getSimpleName();
 
-    public static void saveImage(Context context, Bitmap b, String name, String extension) {
-        name = name + "." + extension;
+    public static void saveImage(Context context, Bitmap b, String filename) {
         FileOutputStream out;
         try {
-            out = context.openFileOutput(name, Context.MODE_PRIVATE);
+            out = context.openFileOutput(filename, Context.MODE_PRIVATE);
             b.compress(Bitmap.CompressFormat.PNG, 100, out);
             out.close();
         } catch (IOException e) {

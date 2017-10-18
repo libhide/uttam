@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
             // save actual photo to internal storage
             Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.uttam_hero);
-            FileUtils.saveImage(this, b, "wallpaper", "png");
+            FileUtils.saveImage(this, b, "wallpaper.png");
 
             presenter.loadPhoto();
 

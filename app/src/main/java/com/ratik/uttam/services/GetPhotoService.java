@@ -1,6 +1,7 @@
 package com.ratik.uttam.services;
 
 import android.app.Service;
+import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
@@ -70,16 +71,14 @@ public class GetPhotoService extends Service {
     }
 
     private void getRandomPhoto() {
-        // Clear db
         repository.clear();
-        // Get new image
-        Log.d(TAG, "Getting random photo...");
+        Log.i(TAG, "Getting random photo...");
         service.getRandomPhoto(Keys.CLIENT_ID, FetchUtils.getRandomCategory())
                 .enqueue(new Callback<Photo>() {
                     @Override
                     public void onResponse(Call<Photo> call, Response<Photo> response) {
                         if (response.isSuccessful()) {
-                            // Photo yay!
+                            Log.i(TAG, "Photo fetched successfully!");
                             Photo photo = response.body();
                             savePhoto(photo);
                         }
@@ -111,8 +110,7 @@ public class GetPhotoService extends Service {
         .subscribe((image) -> {
             if (image != null) {
                 // Save photo to internal storage
-                FileUtils.clearFile(context, "wallpaper.png");
-                FileUtils.saveImage(context, image, "wallpaper", "png");
+                FileUtils.saveImage(context, image, "wallpaper.png");
 
                 // Save photo data to Realm
                 _Photo p = new _Photo();
@@ -121,26 +119,20 @@ public class GetPhotoService extends Service {
                 p.setPhotoDownloadUrl(photo.getLinks().getDownloadLink());
                 p.setPhotoHtmlUrl(photo.getLinks().getHtmlLink());
                 p.setPhotoFullUrl(photo.getUrls().getFullUrl());
-                // todo: make dynamic?
                 p.setPhotoFSPath("wallpaper.png");
                 repository.putPhoto(p);
 
                 // Notify User
-                // Send Notification
-                notifyUser(p);
+                NotificationUtils.pushNewWallpaperNotif(context, p);
 
-                // If user wants auto-magical setting
+                // If user wants auto-magical setting, set the wallpaper
                 if (PrefUtils.shouldSetWallpaperAutomatically(context)) {
-                    // new SetWallpaperTask(context, false).execute(wallpaper);
+                    WallpaperManager.getInstance(context).setBitmap(image);
                 }
 
                 // Stop self
                 stopSelf();
             }
         });
-    }
-
-    private void notifyUser(_Photo photo) {
-        NotificationUtils.pushNewWallpaperNotif(context, photo);
     }
 }
