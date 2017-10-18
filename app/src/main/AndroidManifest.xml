@@ -33,12 +33,6 @@
             android:theme="@style/AppTheme" />
 
         <activity
-            android:name=".ui.ShowActivity"
-            android:configChanges="orientation|screenSize"
-            android:excludeFromRecents="true"
-            android:theme="@style/AppTheme.Fullscreen" />
-
-        <activity
             android:name=".ui.SettingsActivity"
             android:label="@string/settings_label"
             android:parentActivityName=".ui.MainActivity"

@@ -17,7 +17,6 @@ import com.ratik.uttam.Constants;
 import com.ratik.uttam.R;
 import com.ratik.uttam.model._Photo;
 import com.ratik.uttam.ui.MainActivity;
-import com.ratik.uttam.ui.ShowActivity;
 
 /**
  * Created by Ratik on 08/09/17.
@@ -31,12 +30,7 @@ public class NotificationUtils {
 
     public static void pushNewWallpaperNotif(Context context, _Photo photo) {
         // Content Intent
-        Intent intent;
-        if (PrefUtils.shouldSetWallpaperAutomatically(context)) {
-            intent = new Intent(context, MainActivity.class);
-        } else {
-            intent = new Intent(context, ShowActivity.class);
-        }
+        Intent intent = new Intent(context, MainActivity.class);
 
         // Content PendingIntent
         PendingIntent showWallpaperIntent = PendingIntent.getActivity(context,
