@@ -56,7 +56,7 @@
 
     <!-- Toast message strings -->
     <string name="setting_text">Setting wallpaper…</string>
-    <string name="wallpaper_set_text">Wallpaper set</string>
+    <string name="wallpaper_set_text">Wallpaper set successfully!</string>
     <string name="category_misc">Misc.</string>
     <string name="key_contact">contactDev</string>
     <string name="summary_contact">Want help? Have suggestions? Use this to contact the developer.</string>
@@ -65,5 +65,7 @@
     <string name="summary_review">Like the app? Consider leaving a review in the Play Store!</string>
     <string name="title_review">Say Thanks!</string>
     <string name="activity_changelog_label">Uttam Changelog</string>
+    <string name="wallpaper_saved_message">Wallpaper saved successfully!</string>
+    <string name="wallpaper_share_text">Great wallpaper from %1$s on @getuttamapp today! %2$s</string>
 
 </resources>

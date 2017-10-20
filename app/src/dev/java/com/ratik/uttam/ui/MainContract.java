@@ -19,6 +19,7 @@ public interface MainContract {
         void setView(MainContract.View view);
         void loadPhoto();
         void setPhoto(_Photo photo);
+        void destroy();
 
         void refreshPhoto();
         void savePhotoToStorage();
