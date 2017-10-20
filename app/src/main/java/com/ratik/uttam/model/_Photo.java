@@ -7,19 +7,19 @@ import io.realm.RealmObject;
  */
 
 public class _Photo extends RealmObject {
-    private String photoFSPath;
+    private String photoFileName;
     private String photographerName;
     private String photographerUserName;
     private String photoFullUrl;
     private String photoDownloadUrl;
     private String photoHtmlUrl;
 
-    public String getPhotoFSPath() {
-        return photoFSPath;
+    public String getPhotoFileName() {
+        return photoFileName;
     }
 
-    public void setPhotoFSPath(String photoFSPath) {
-        this.photoFSPath = photoFSPath;
+    public void setPhotoFileName(String photoFileName) {
+        this.photoFileName = photoFileName;
     }
 
     public String getPhotographerName() {

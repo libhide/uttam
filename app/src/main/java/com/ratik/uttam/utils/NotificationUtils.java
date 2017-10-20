@@ -64,7 +64,8 @@ public class NotificationUtils {
             notificationManager.createNotificationChannel(notificationChannel);
         }
 
-        Bitmap wallpaper = FileUtils.getImageBitmap(context, photo.getPhotoFSPath());
+        Bitmap wallpaper = FileUtils.getBitmapFromInternalStorage(context, photo.getPhotoFileName());
+        wallpaper = BitmapUtils.getCompressedBitmap(wallpaper);
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(context, channelId)
                         .setSmallIcon(R.drawable.ic_stat_uttam)
@@ -125,17 +126,18 @@ public class NotificationUtils {
             notificationManager.createNotificationChannel(notificationChannel);
         }
 
-        Bitmap wallpaper = FileUtils.getImageBitmap(context, photo.getPhotoFSPath());
+        Bitmap wallpaper = FileUtils.getBitmapFromInternalStorage(context, photo.getPhotoFileName());
+        wallpaper = BitmapUtils.getCompressedBitmap(wallpaper);
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(context, channelId)
                         .setSmallIcon(R.drawable.ic_stat_uttam)
                         .setLargeIcon(BitmapUtils.cropToSquare(wallpaper))
                         .setAutoCancel(true)
-                        .setContentTitle("New Wallpaper!")
-                        .setContentText("Photo by " + photo.getPhotographerName())
+                        .setContentTitle(context.getString(R.string.wallpaper_notif_title))
+                        .setContentText(context.getString(R.string.wallpaper_notif_photo_by) + photo.getPhotographerName())
                         .setStyle(new NotificationCompat.BigPictureStyle()
                                 .bigPicture(wallpaper)
-                                .setBigContentTitle("New Wallpaper!"))
+                                .setBigContentTitle(context.getString(R.string.wallpaper_notif_title)))
                         .setContentIntent(showWallpaperIntent);
 
         if (PrefUtils.userWantsCustomSounds(context)) {

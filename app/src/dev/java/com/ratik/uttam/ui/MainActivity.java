@@ -3,20 +3,14 @@ package com.ratik.uttam.ui;
 import android.Manifest;
 import android.app.WallpaperManager;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.transition.Slide;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,17 +21,18 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.jakewharton.rxbinding2.view.RxView;
 import com.ratik.uttam.Constants;
 import com.ratik.uttam.R;
-import com.ratik.uttam.data.DatabaseRealm;
 import com.ratik.uttam.di.Injector;
 import com.ratik.uttam.model._Photo;
 import com.ratik.uttam.services.GetPhotoService;
+import com.ratik.uttam.utils.FetchUtils;
 import com.ratik.uttam.utils.FileUtils;
 import com.ratik.uttam.utils.NotificationUtils;
 import com.ratik.uttam.utils.Utils;
+import com.tbruyelle.rxpermissions2.RxPermissions;
 
-import java.io.File;
 import java.io.IOException;
 
 import javax.inject.Inject;
@@ -46,12 +41,20 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.ratik.uttam.R.id.creditsContainer;
+import static com.ratik.uttam.utils.FileUtils.getUriForFileInExternalStorage;
+import static com.ratik.uttam.utils.FileUtils.transferFileFromInternalStorageToExternalStorage;
 
 public class MainActivity extends AppCompatActivity implements MainContract.View {
 
     // Constants
-    private static final String TAG = MainActivity.class.getSimpleName();
-    public static final int WALL_JOB_ID = 1;
+    private static final int REQUEST_CODE_SET_WALLPAPER = 1;
+
+    // Member variables
+    @Inject
+    MainContract.Presenter presenter;
+
+    private RxPermissions rxPermissions;
+    private _Photo photo;
 
     // Views
     @BindView(R.id.wallpaper)
@@ -72,62 +75,34 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
-    // Helpers
-    private File destFile;
-
-    @Inject
-    MainContract.Presenter presenter;
-
-    @Inject
-    DatabaseRealm realm;
-
-    private Bitmap wallpaper;
-    private _Photo photo;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Injection
         Injector.getAppComponent().inject(this);
-
-        // Bind views
         ButterKnife.bind(this);
 
         init();
 
-        // set the presenter's view
+        // Set the presenter's view
         presenter.setView(this);
 
         if (Utils.isFirstRun(this)) {
-            // Create first photo
-            _Photo photo = new _Photo();
-            photo.setPhotographerName("Efe Kurnaz");
-            photo.setPhotographerUserName("@efekurnaz");
-            photo.setPhotoFullUrl("https://images.unsplash.com/photo-1500462918059-b1a0cb512f1d?dpr=1&auto=format&fit=crop&w=1534&h=&q=60&cs=tinysrgb&crop=");
-            photo.setPhotoFSPath("wallpaper.png");
-            photo.setPhotoHtmlUrl("https://unsplash.com/photos/RnCPiXixooY");
-            photo.setPhotoDownloadUrl("https://unsplash.com/photos/RnCPiXixooY/download");
+            _Photo photo = FetchUtils.getHeroPhoto();
+            Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.uttam_hero);
+            FileUtils.saveBitmapToInternalStorage(this, b, Constants.General.WALLPAPER_FILE_NAME);
 
             presenter.setPhoto(photo);
 
-            // save actual photo to internal storage
-            Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.uttam_hero);
-            FileUtils.saveImage(this, b, "wallpaper.png");
-
-            presenter.loadPhoto();
-
             // set alarm to set job for 7am daily
             // AlarmUtils.setJobSetAlarm(this);
-
-            // update first run state
-            Utils.setFirstRun(this, false);
-        } else {
-            // Load the photo from storage
-            presenter.loadPhoto();
         }
+
+        presenter.loadPhoto();
     }
+
+    // region INITIALIZATION
 
     private void init() {
         // Toolbar
@@ -145,147 +120,51 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         } else {
             setTheme(R.style.AppTheme_Fullscreen);
         }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
 
         // Click listeners
-        saveWallpaperButton.setOnClickListener(v -> {
-            // Runtime Permissions
-            int permissionCheck = ContextCompat.checkSelfPermission(MainActivity.this,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE);
-            if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
-                doFileSaving();
-            } else {
-                ActivityCompat.requestPermissions(MainActivity.this,
-                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                        Constants.CONST_WRITE_EXTERNAL_STORAGE);
-            }
-        });
+        setupClickListeners();
+    }
 
-        setWallpaperButton.setOnClickListener(v -> {
-            // Runtime Permissions
-            int permissionCheck = ContextCompat.checkSelfPermission(MainActivity.this,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE);
-            if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
-                File srcFile = FileUtils.getSavedFileFromInternalStorage(MainActivity.this);
-                destFile = new File(FileUtils.getOutputMediaFileUri(MainActivity.this).getPath());
-                try {
-                    boolean copied = FileUtils.makeFileCopy(srcFile, destFile);
-                    if (copied) {
-                        // Successful copy
-                        final Uri contentUri = FileProvider.getUriForFile(
-                                getApplicationContext(),
-                                getApplicationContext().getPackageName() + ".provider",
-                                destFile
-                        );
-                        Intent i = WallpaperManager.getInstance(MainActivity.this)
-                                .getCropAndSetWallpaperIntent(contentUri);
-                        MainActivity.this.startActivityForResult(i, 123);
+    private void setupClickListeners() {
+        rxPermissions = new RxPermissions(this);
+
+        RxView.clicks(saveWallpaperButton)
+                .compose(rxPermissions.ensure(Manifest.permission.WRITE_EXTERNAL_STORAGE))
+                .subscribe(granted -> {
+                    if (granted) {
+                        boolean transferred = transferFileFromInternalStorageToExternalStorage(this, Constants.General.WALLPAPER_FILE_NAME);
+                        if (transferred) {
+                            Toast.makeText(MainActivity.this, R.string.wallpaper_saved_message, Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(this, "Fine, okay. :(", Toast.LENGTH_SHORT).show();
                     }
-                } catch (IOException e) {
-                    Log.e(TAG, "Error while copying file: ", e);
-                }
-            } else {
-                ActivityCompat.requestPermissions(MainActivity.this,
-                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                        Constants.CONST_WRITE_EXTERNAL_STORAGE);
-            }
-        });
+                });
 
-        creditsView.setOnClickListener(v -> {
-            presenter.showWallpaperCredits();
-        });
+        RxView.clicks(setWallpaperButton)
+                .compose(rxPermissions.ensure(Manifest.permission.WRITE_EXTERNAL_STORAGE))
+                .subscribe(granted -> {
+                    if (granted) {
+                        doWallpaperSetting();
+                    } else {
+                        Toast.makeText(this, "Fine, okay. :(", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        RxView.clicks(creditsView)
+                .subscribe(click -> presenter.showWallpaperCredits());
     }
 
-    private void doFileSaving() {
-        File srcFile = FileUtils.getSavedFileFromInternalStorage(MainActivity.this);
-        File destFile = new File(FileUtils.getOutputMediaFileUri(MainActivity.this).getPath());
-        try {
-            boolean copied = FileUtils.makeFileCopy(srcFile, destFile);
-            if (copied) {
-                Toast.makeText(MainActivity.this, "Wallpaper saved", Toast.LENGTH_SHORT).show();
-                Intent scanFileIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(destFile));
-                sendBroadcast(scanFileIntent);
-            }
-        } catch (IOException e) {
-            Log.e(TAG, "Error while copying file: ", e);
-        }
-    }
+    // endregion
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case Constants.CONST_WRITE_EXTERNAL_STORAGE:
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // Copy from internal storage to the SD card
-                    Toast.makeText(MainActivity.this, "Permission granted! Try doing what you were trying to do again?", Toast.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(MainActivity.this, "Alright! We won't save the file.", Toast.LENGTH_SHORT).show();
-                }
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.actions, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_settings:
-                presenter.launchSettings(SettingsActivity.class);
-                return true;
-            case R.id.action_share:
-                int permissionCheck = ContextCompat.checkSelfPermission(MainActivity.this,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE);
-                if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
-                    shareWallpaper();
-                } else {
-                    ActivityCompat.requestPermissions(MainActivity.this,
-                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                            Constants.CONST_WRITE_EXTERNAL_STORAGE);
-                }
-                return true;
-            case R.id.action_refresh:
-                presenter.refreshPhoto();
-                return true;
-            default:
-                return false;
-        }
-    }
-
-    private void shareWallpaper() {
-        Intent shareIntent = new Intent(Intent.ACTION_SEND);
-        String shareText = "Great wallpaper from " + photo.getPhotographerName()
-                + " on @getuttamapp today! " + photo.getPhotoDownloadUrl();
-        shareIntent.setType("text/plain");
-        shareIntent.putExtra(Intent.EXTRA_TEXT, shareText);
-        startActivity(shareIntent);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 123) {
-            if (resultCode == RESULT_OK || resultCode == RESULT_CANCELED) {
-                // wallpaper was set
-                destFile.delete();
-            }
-        }
-    }
+    // region VIEW-LOGIC
 
     @Override
     public void displayPhoto(_Photo p) {
         // save the returned photo
         this.photo = p;
 
-        wallpaper = FileUtils.getImageBitmap(this, photo.getPhotoFSPath());
-        // shouldScroll flag
-        // shouldScroll = wallpaper.getWidth() > Utils.getScreenWidth(this);
+        Bitmap wallpaper = FileUtils.getBitmapFromInternalStorage(this, Constants.General.WALLPAPER_FILE_NAME);
 
         // set views
         wallpaperImageView.setImageBitmap(wallpaper);
@@ -301,6 +180,9 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
             // cast first notification
             NotificationUtils.pushFirstNotification(this, photo);
+
+            // update first run state
+            Utils.setFirstRun(this, false);
         }
     }
 
@@ -317,14 +199,81 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     @Override
     public void showWallpaperCredits() {
-        String url = "http://unsplash.com/" + photo.getPhotographerUserName();
+        String url = Constants.General.BASE_URL + photo.getPhotographerUserName();
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         startActivity(browserIntent);
+    }
+
+    // endregion
+
+    // region ACTIVITY OVERRIDES
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE_SET_WALLPAPER) {
+            if (resultCode == RESULT_OK) {
+                Toast.makeText(this, R.string.wallpaper_set_text, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.actions, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                presenter.launchSettings(SettingsActivity.class);
+                return true;
+            case R.id.action_share:
+                rxPermissions
+                        .request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        .subscribe(granted -> {
+                            if (granted) {
+                                shareWallpaper();
+                            }
+                        });
+                return true;
+            case R.id.action_refresh:
+                presenter.refreshPhoto();
+                return true;
+            default:
+                return false;
+        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        realm.close();
+        presenter.destroy();
     }
+
+    // endregion
+
+    // region HELPERS
+
+    private void doWallpaperSetting() {
+        Uri uri = getUriForFileInExternalStorage(this, Constants.General.WALLPAPER_FILE_NAME);
+        if (uri != null) {
+            Intent intent = WallpaperManager.getInstance(this).getCropAndSetWallpaperIntent(uri);
+            startActivityForResult(intent, REQUEST_CODE_SET_WALLPAPER);
+        } else {
+            Toast.makeText(this, "Uri is null.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void shareWallpaper() {
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        String shareText = String.format(getString(R.string.wallpaper_share_text),
+                photo.getPhotographerName(), photo.getPhotoDownloadUrl());
+        shareIntent.setType("text/plain");
+        shareIntent.putExtra(Intent.EXTRA_TEXT, shareText);
+        startActivity(shareIntent);
+    }
+
+    // endregion
 }
