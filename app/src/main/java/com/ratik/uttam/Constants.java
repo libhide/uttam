@@ -9,13 +9,23 @@ public class Constants {
         public static final String BASE_URL = "https://api.unsplash.com/";
     }
 
+    public class General {
+        public static final String BASE_URL = "https://unsplash.com/";
+        public static final String WALLPAPER_FILE_NAME = "wallpaper.png";
+    }
+
+    public class Fetch {
+        public static final int WALLPAPER_FETCH_JOB_ID = 1;
+    }
+
     // Preference constants
     public static final String FIRST_RUN = "first_run";
     public static final String SCREEN_WIDTH = "screen_width";
     public static final String SCREEN_HEIGHT = "screen_width";
 
     // Permission constants
-    public static final int CONST_WRITE_EXTERNAL_STORAGE = 1;
+    public static final int CONST_WRITE_EXTERNAL_STORAGE_SAVING = 1;
+    public static final int CONST_WRITE_EXTERNAL_STORAGE_SHARING = 2;
 
     // IAP constants
     public static final String SKU_REMOVE_ADS = "remove_adverts";

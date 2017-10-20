@@ -9,6 +9,7 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.ratik.uttam.Constants;
 import com.ratik.uttam.Keys;
 import com.ratik.uttam.api.UnsplashService;
 import com.ratik.uttam.data.PhotoRepository;
@@ -110,7 +111,7 @@ public class GetPhotoService extends Service {
         .subscribe((image) -> {
             if (image != null) {
                 // Save photo to internal storage
-                FileUtils.saveImage(context, image, "wallpaper.png");
+                FileUtils.saveBitmapToInternalStorage(context, image, Constants.General.WALLPAPER_FILE_NAME);
 
                 // Save photo data to Realm
                 _Photo p = new _Photo();
@@ -119,7 +120,7 @@ public class GetPhotoService extends Service {
                 p.setPhotoDownloadUrl(photo.getLinks().getDownloadLink());
                 p.setPhotoHtmlUrl(photo.getLinks().getHtmlLink());
                 p.setPhotoFullUrl(photo.getUrls().getFullUrl());
-                p.setPhotoFSPath("wallpaper.png");
+                p.setPhotoFileName(Constants.General.WALLPAPER_FILE_NAME);
                 repository.putPhoto(p);
 
                 // Notify User
@@ -129,6 +130,8 @@ public class GetPhotoService extends Service {
                 if (PrefUtils.shouldSetWallpaperAutomatically(context)) {
                     WallpaperManager.getInstance(context).setBitmap(image);
                 }
+
+                Log.i(TAG, "Photo saved successfully!");
 
                 // Stop self
                 stopSelf();
