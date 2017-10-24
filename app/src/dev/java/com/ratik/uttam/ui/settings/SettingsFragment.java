@@ -1,4 +1,4 @@
-package com.ratik.uttam.ui;
+package com.ratik.uttam.ui.settings;
 
 import android.os.Bundle;
 import android.preference.PreferenceFragment;

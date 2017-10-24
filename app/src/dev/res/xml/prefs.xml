@@ -9,16 +9,4 @@
             android:title="@string/title_automatic_wallpaper_set" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="Notification">
-        <SwitchPreference
-            android:defaultValue="true"
-            android:key="@string/key_custom_sounds"
-            android:summary="@string/summary_custom_sounds"
-            android:title="@string/title_custom_sounds" />
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="@string/key_notif_led"
-            android:summary="@string/summary_notif_led"
-            android:title="@string/title_notif_led" />
-    </PreferenceCategory>
 </PreferenceScreen>

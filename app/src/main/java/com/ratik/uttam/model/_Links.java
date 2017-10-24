@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by Ratik on 17/10/17.
  */
 
-public class Links {
+public class _Links {
 
     @SerializedName("html")
     private String htmlLink;
@@ -18,15 +18,7 @@ public class Links {
         return htmlLink;
     }
 
-    public void setHtmlLink(String htmlLink) {
-        this.htmlLink = htmlLink;
-    }
-
     public String getDownloadLink() {
         return downloadLink;
-    }
-
-    public void setDownloadLink(String downloadLink) {
-        this.downloadLink = downloadLink;
     }
 }

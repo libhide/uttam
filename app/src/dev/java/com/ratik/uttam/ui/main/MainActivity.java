@@ -1,4 +1,4 @@
-package com.ratik.uttam.ui;
+package com.ratik.uttam.ui.main;
 
 import android.Manifest;
 import android.app.WallpaperManager;
@@ -25,9 +25,10 @@ import com.jakewharton.rxbinding2.view.RxView;
 import com.ratik.uttam.Constants;
 import com.ratik.uttam.R;
 import com.ratik.uttam.di.Injector;
-import com.ratik.uttam.model._Photo;
+import com.ratik.uttam.model.Photo;
 import com.ratik.uttam.services.GetPhotoService;
-import com.ratik.uttam.ui.main.MainContract;
+import com.ratik.uttam.ui.settings.SettingsActivity;
+import com.ratik.uttam.utils.AlarmUtils;
 import com.ratik.uttam.utils.FetchUtils;
 import com.ratik.uttam.utils.FileUtils;
 import com.ratik.uttam.utils.NotificationUtils;
@@ -55,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     MainContract.Presenter presenter;
 
     private RxPermissions rxPermissions;
-    private _Photo photo;
+    private Photo photo;
 
     // Views
     @BindView(R.id.wallpaper)
@@ -90,14 +91,14 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         presenter.setView(this);
 
         if (Utils.isFirstRun(this)) {
-            _Photo photo = FetchUtils.getHeroPhoto();
+            Photo photo = FetchUtils.getHeroPhoto();
             Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.uttam_hero);
             FileUtils.saveBitmapToInternalStorage(this, b, Constants.General.WALLPAPER_FILE_NAME);
 
             presenter.setPhoto(photo);
 
-            // set alarm to set job for 7am daily
-            // AlarmUtils.setJobSetAlarm(this);
+            // set alarm to set job for 7 AM
+            AlarmUtils.setJobSetAlarm(this);
         }
 
         presenter.loadPhoto();
@@ -153,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
                 });
 
         RxView.clicks(creditsView)
-                .subscribe(click -> presenter.showWallpaperCredits());
+                .subscribe(click -> showWallpaperCredits());
     }
 
     // endregion
@@ -161,7 +162,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     // region VIEW-LOGIC
 
     @Override
-    public void displayPhoto(_Photo p) {
+    public void displayPhoto(Photo p) {
         // save the returned photo
         this.photo = p;
 
@@ -190,19 +191,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     @Override
     public void showSettings(Class settingsActivity) {
         startActivity(new Intent(this, settingsActivity));
-    }
-
-    @Override
-    public void refreshPhoto() {
-        startService(new Intent(this, GetPhotoService.class));
-        finish();
-    }
-
-    @Override
-    public void showWallpaperCredits() {
-        String url = Constants.General.BASE_URL + photo.getPhotographerUserName();
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-        startActivity(browserIntent);
     }
 
     // endregion
@@ -240,7 +228,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
                         });
                 return true;
             case R.id.action_refresh:
-                presenter.refreshPhoto();
+                refreshPhoto();
                 return true;
             default:
                 return false;
@@ -256,6 +244,17 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     // endregion
 
     // region HELPERS
+
+    public void refreshPhoto() {
+        startService(new Intent(this, GetPhotoService.class));
+        finish();
+    }
+
+    public void showWallpaperCredits() {
+        String url = Constants.General.BASE_URL + photo.getPhotographerUserName();
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        startActivity(browserIntent);
+    }
 
     private void doWallpaperSetting() {
         Uri uri = getUriForFileInExternalStorage(this, Constants.General.WALLPAPER_FILE_NAME);

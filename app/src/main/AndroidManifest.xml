@@ -18,7 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ui.HeroActivity"
+            android:name=".ui.hero.HeroActivity"
             android:theme="@style/AppTheme.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,21 +28,20 @@
         </activity>
 
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".ui.main.MainActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/AppTheme" />
 
         <activity
-            android:name=".ui.SettingsActivity"
+            android:name=".ui.settings.SettingsActivity"
             android:label="@string/settings_label"
-            android:parentActivityName=".ui.MainActivity"
+            android:parentActivityName=".ui.main.MainActivity"
             android:theme="@style/AppTheme" />
 
         <activity
-            android:name=".ui.TourActivity"
+            android:name=".ui.tour.TourActivity"
             android:theme="@style/AppTheme.Fullscreen" />
 
-        <receiver android:name=".receivers.NotificationReceiver" />
         <receiver android:name=".receivers.JobSetReceiver" />
         <receiver
             android:name=".receivers.RebootReceiver"
@@ -56,19 +55,10 @@
 
         <service android:name=".services.GetPhotoService" />
 
-        <!--<service-->
-            <!--android:name=".services.GetPhotoJob"-->
-            <!--android:exported="true"-->
-            <!--android:permission="android.permission.BIND_JOB_SERVICE" />-->
-
-        <receiver android:name=".receivers.UpdateReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
-                <data
-                    android:path="com.ratik.uttam.prod"
-                    android:scheme="package" />
-            </intent-filter>
-        </receiver>
+        <service
+            android:name=".services.GetPhotoJob"
+            android:exported="true"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"

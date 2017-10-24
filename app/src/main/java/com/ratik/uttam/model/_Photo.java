@@ -5,38 +5,26 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by Ratik on 26/02/16.
  */
-public class Photo {
+public class _Photo {
 
     @SerializedName("urls")
-    private Urls urls;
+    private _Urls urls;
 
     @SerializedName("links")
-    private Links links;
+    private _Links links;
 
     @SerializedName("user")
-    private Photographer photographer;
+    private _Photographer photographer;
 
-    public Urls getUrls() {
+    public _Urls getUrls() {
         return urls;
     }
 
-    public void setUrls(Urls urls) {
-        this.urls = urls;
-    }
-
-    public Links getLinks() {
+    public _Links getLinks() {
         return links;
     }
 
-    public void setLinks(Links links) {
-        this.links = links;
-    }
-
-    public Photographer getPhotographer() {
+    public _Photographer getPhotographer() {
         return photographer;
-    }
-
-    public void setPhotographer(Photographer photographer) {
-        this.photographer = photographer;
     }
 }

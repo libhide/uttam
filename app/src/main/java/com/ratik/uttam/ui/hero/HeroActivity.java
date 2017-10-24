@@ -1,4 +1,4 @@
-package com.ratik.uttam.ui;
+package com.ratik.uttam.ui.hero;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
@@ -17,11 +17,14 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.ratik.uttam.R;
+import com.ratik.uttam.ui.main.MainActivity;
+import com.ratik.uttam.ui.tour.TourActivity;
 import com.ratik.uttam.utils.PrefUtils;
 import com.ratik.uttam.utils.Utils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by Ratik on 06/03/16.
@@ -40,39 +43,37 @@ public class HeroActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        boolean firstRun = Utils.isFirstRun(this);
-        if (firstRun) {
-            setContentView(R.layout.activity_hero);
-            ButterKnife.bind(this);
-
-            if (getStartedButton != null) {
-                getStartedButton.setOnClickListener((v) -> {
-                    startActivity(new Intent(HeroActivity.this, TourActivity.class));
-                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                });
-
-            }
-            // Animations
-            doAnimations();
-        } else {
-            setContentView(R.layout.activity_splash);
-            // ButterKnife.bind(this);
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                getWindow().setExitTransition(new Fade());
-            }
-            new Handler().postDelayed(() -> {
-                // Start Main
-                startActivity(new Intent(HeroActivity.this, MainActivity.class));
-                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-            }, 800);
-        }
-
         // save the user's screen size for later use
         saveScreenSize();
 
         // set default prefs for the user
         setupDefaultPrefs();
+
+        boolean firstRun = Utils.isFirstRun(this);
+        if (firstRun) {
+            setContentView(R.layout.activity_hero);
+            ButterKnife.bind(this);
+            doAnimations();
+        } else {
+            setContentView(R.layout.activity_splash);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                getWindow().setExitTransition(new Fade());
+            }
+
+            new Handler().postDelayed(() -> {
+                // Start Main
+                startActivity(new Intent(HeroActivity.this, MainActivity.class));
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+            }, 600);
+        }
+    }
+
+    @OnClick(R.id.getStartedButton)
+    public void getStarted() {
+        // Start Tour
+        startActivity(new Intent(HeroActivity.this, TourActivity.class));
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 
     private void doAnimations() {
@@ -126,8 +127,5 @@ public class HeroActivity extends AppCompatActivity {
         } else {
             PrefUtils.setCompressState(this, false);
         }
-        PrefUtils.setAutomaticWallpaperSet(this, true);
-        PrefUtils.setCustomSoundsState(this, true);
     }
-
 }

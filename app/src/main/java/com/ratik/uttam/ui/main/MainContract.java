@@ -1,6 +1,6 @@
-package com.ratik.uttam.ui;
+package com.ratik.uttam.ui.main;
 
-import com.ratik.uttam.model._Photo;
+import com.ratik.uttam.model.Photo;
 
 /**
  * Created by Ratik on 17/10/17.
@@ -9,24 +9,20 @@ import com.ratik.uttam.model._Photo;
 public interface MainContract {
 
     interface View {
-        void displayPhoto(_Photo photo);
+        void displayPhoto(Photo photo);
+
         void showSettings(Class settingsActivity);
-        void refreshPhoto();
-        void showWallpaperCredits();
     }
 
     interface Presenter {
         void setView(MainContract.View view);
+
         void loadPhoto();
-        void setPhoto(_Photo photo);
+
+        void setPhoto(Photo photo);
+
         void destroy();
 
-        void refreshPhoto();
-        void savePhotoToStorage();
-        void setPhotoAsWallpaper();
-
         void launchSettings(Class settingsActivity);
-
-        void showWallpaperCredits();
     }
 }

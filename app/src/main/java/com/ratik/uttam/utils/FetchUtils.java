@@ -1,7 +1,7 @@
 package com.ratik.uttam.utils;
 
 import com.ratik.uttam.Constants;
-import com.ratik.uttam.model._Photo;
+import com.ratik.uttam.model.Photo;
 
 import java.util.Random;
 
@@ -10,6 +10,8 @@ import java.util.Random;
  */
 
 public class FetchUtils {
+    private static final String TAG = FetchUtils.class.getSimpleName();
+
     public static String getRandomCategory() {
         // 2 == Buildings, 4 == Nature
         int[] categories = {2, 4};
@@ -18,8 +20,8 @@ public class FetchUtils {
         return "" + categories[index];
     }
 
-    public static _Photo getHeroPhoto() {
-        _Photo photo = new _Photo();
+    public static Photo getHeroPhoto() {
+        Photo photo = new Photo();
         photo.setPhotographerName("Efe Kurnaz");
         photo.setPhotographerUserName("@efekurnaz");
         photo.setPhotoFullUrl("https://images.unsplash.com/photo-1500462918059-b1a0cb512f1d?dpr=1&auto=format&fit=crop&w=1534&h=&q=60&cs=tinysrgb&crop=");

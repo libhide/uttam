@@ -1,10 +1,7 @@
-package com.ratik.uttam.ui;
+package com.ratik.uttam.ui.main;
 
-import com.ratik.uttam.data.DatabaseRealm;
 import com.ratik.uttam.data.PhotoRepository;
-import com.ratik.uttam.model._Photo;
-
-import javax.inject.Inject;
+import com.ratik.uttam.model.Photo;
 
 /**
  * Created by Ratik on 17/10/17.
@@ -12,12 +9,8 @@ import javax.inject.Inject;
 
 public class MainPresenterImpl implements MainContract.Presenter {
 
-    @Inject
-    DatabaseRealm realm;
-
     private MainContract.View view;
     private PhotoRepository repository;
-    private _Photo photo;
 
     public MainPresenterImpl(PhotoRepository repository) {
         this.repository = repository;
@@ -30,42 +23,22 @@ public class MainPresenterImpl implements MainContract.Presenter {
 
     @Override
     public void loadPhoto() {
-        photo = repository.getPhoto();
+        Photo photo = repository.getPhoto();
         view.displayPhoto(photo);
     }
 
     @Override
-    public void setPhoto(_Photo photo) {
+    public void setPhoto(Photo photo) {
         repository.putPhoto(photo);
     }
 
     @Override
     public void destroy() {
-        realm.close();
-    }
-
-    @Override
-    public void refreshPhoto() {
-        view.refreshPhoto();
-    }
-
-    @Override
-    public void savePhotoToStorage() {
-
-    }
-
-    @Override
-    public void setPhotoAsWallpaper() {
-
+        repository.getRealm().close();
     }
 
     @Override
     public void launchSettings(Class settingsActivity) {
         view.showSettings(settingsActivity);
-    }
-
-    @Override
-    public void showWallpaperCredits() {
-        view.showWallpaperCredits();
     }
 }
