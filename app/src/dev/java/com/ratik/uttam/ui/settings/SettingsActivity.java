@@ -38,7 +38,7 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            goToMain();
+            finish();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -46,11 +46,6 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        goToMain();
-    }
-
-    private void goToMain() {
-        // Finish
         finish();
     }
 }

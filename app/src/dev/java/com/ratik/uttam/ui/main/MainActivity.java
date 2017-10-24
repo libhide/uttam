@@ -27,6 +27,7 @@ import com.ratik.uttam.R;
 import com.ratik.uttam.di.Injector;
 import com.ratik.uttam.model._Photo;
 import com.ratik.uttam.services.GetPhotoService;
+import com.ratik.uttam.ui.main.MainContract;
 import com.ratik.uttam.utils.FetchUtils;
 import com.ratik.uttam.utils.FileUtils;
 import com.ratik.uttam.utils.NotificationUtils;
