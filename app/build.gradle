@@ -83,9 +83,7 @@ dependencies {
     // Ads
     prodCompile 'com.google.firebase:firebase-ads:9.0.2'
 
-    // Logging
-    compile 'com.jakewharton.timber:timber:4.5.1'
-
     // Testing
     testCompile 'junit:junit:4.12'
+    testCompile 'org.mockito:mockito-core:2.10.0'
 }

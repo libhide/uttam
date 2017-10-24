@@ -1,4 +1,4 @@
-package com.ratik.uttam.ui;
+package com.ratik.uttam.ui.tour;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
 import com.ratik.uttam.R;
+import com.ratik.uttam.ui.main.MainActivity;
 import com.vlonjatg.android.apptourlibrary.AppTour;
 import com.vlonjatg.android.apptourlibrary.MaterialSlide;
 

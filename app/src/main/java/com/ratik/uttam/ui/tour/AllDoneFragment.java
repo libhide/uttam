@@ -1,4 +1,4 @@
-package com.ratik.uttam.ui;
+package com.ratik.uttam.ui.tour;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

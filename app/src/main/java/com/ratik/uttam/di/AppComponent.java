@@ -7,8 +7,9 @@ import com.ratik.uttam.di.module.ApiModule;
 import com.ratik.uttam.di.module.AppContextModule;
 import com.ratik.uttam.di.module.PresenterModule;
 import com.ratik.uttam.di.module.RepositoryModule;
+import com.ratik.uttam.services.GetPhotoJob;
 import com.ratik.uttam.services.GetPhotoService;
-import com.ratik.uttam.ui.MainActivity;
+import com.ratik.uttam.ui.main.MainActivity;
 
 import javax.inject.Singleton;
 
@@ -26,6 +27,7 @@ public interface AppComponent {
     void inject(UttamApplication application);
 
     void inject(GetPhotoService service);
+    void inject(GetPhotoJob job);
 
     void inject(DatabaseRealm databaseRealm);
     void inject(PhotoRepositoryImpl photoRepository);

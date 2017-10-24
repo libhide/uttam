@@ -1,12 +1,10 @@
 package com.ratik.uttam.services;
 
-import android.app.Service;
 import android.app.WallpaperManager;
+import android.app.job.JobParameters;
+import android.app.job.JobService;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.BitmapFactory;
-import android.os.IBinder;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.ratik.uttam.Constants;
@@ -14,8 +12,8 @@ import com.ratik.uttam.Keys;
 import com.ratik.uttam.api.UnsplashService;
 import com.ratik.uttam.data.PhotoRepository;
 import com.ratik.uttam.di.Injector;
-import com.ratik.uttam.model.Photo;
 import com.ratik.uttam.model._Photo;
+import com.ratik.uttam.model.Photo;
 import com.ratik.uttam.utils.BitmapUtils;
 import com.ratik.uttam.utils.FetchUtils;
 import com.ratik.uttam.utils.FileUtils;
@@ -38,10 +36,11 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * Created by Ratik on 04/03/16.
+ * Created by Ratik on 23/10/17.
  */
-public class GetPhotoService extends Service {
-    private static final String TAG = GetPhotoService.class.getSimpleName();
+
+public class GetPhotoJob extends JobService {
+    private static final String TAG = GetPhotoJob.class.getSimpleName();
 
     @Inject
     UnsplashService service;
@@ -51,8 +50,8 @@ public class GetPhotoService extends Service {
 
     private Context context;
 
-    public GetPhotoService() {
-        context = GetPhotoService.this;
+    public GetPhotoJob() {
+        context = GetPhotoJob.this;
     }
 
     @Override
@@ -62,18 +61,17 @@ public class GetPhotoService extends Service {
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        getRandomPhoto();
-        return START_STICKY;
+    public boolean onStartJob(JobParameters jobParameters) {
+        getRandomPhoto(jobParameters);
+        return true;
     }
 
-    @Nullable
     @Override
-    public IBinder onBind(Intent intent) {
-        return null;
+    public boolean onStopJob(JobParameters jobParameters) {
+        return true;
     }
 
-    private void getRandomPhoto() {
+    private void getRandomPhoto(JobParameters parameters) {
         repository.clear();
         Log.i(TAG, "Getting random photo...");
         service.getRandomPhoto(Keys.CLIENT_ID, FetchUtils.getRandomCategory())
@@ -83,7 +81,7 @@ public class GetPhotoService extends Service {
                         if (response.isSuccessful()) {
                             Log.i(TAG, "Photo fetched successfully!");
                             _Photo photo = response.body();
-                            savePhoto(photo);
+                            savePhoto(photo, parameters);
                         }
                     }
 
@@ -94,7 +92,7 @@ public class GetPhotoService extends Service {
                 });
     }
 
-    private void savePhoto(_Photo photo) {
+    private void savePhoto(_Photo photo, JobParameters parameters) {
         Observable.fromCallable(() -> {
             URL url = new URL(photo.getUrls().getFullUrl());
             Log.i(TAG, "Url: " + url.toString());
@@ -137,8 +135,8 @@ public class GetPhotoService extends Service {
 
                 Log.i(TAG, "Photo saved successfully!");
 
-                stopSelf();
-
+                // job is done
+                jobFinished(parameters, false);
             } else {
                 Log.i(TAG, "Saving isn't working for some reason.");
             }
