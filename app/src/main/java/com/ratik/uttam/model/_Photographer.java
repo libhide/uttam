@@ -8,7 +8,7 @@ import io.realm.annotations.PrimaryKey;
  * Created by Ratik on 17/10/17.
  */
 
-public class Photographer {
+public class _Photographer {
 
     @SerializedName("name")
     private String name;
@@ -21,15 +21,7 @@ public class Photographer {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getUsername() {
         return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 }

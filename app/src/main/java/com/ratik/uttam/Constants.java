@@ -21,11 +21,7 @@ public class Constants {
     // Preference constants
     public static final String FIRST_RUN = "first_run";
     public static final String SCREEN_WIDTH = "screen_width";
-    public static final String SCREEN_HEIGHT = "screen_width";
-
-    // Permission constants
-    public static final int CONST_WRITE_EXTERNAL_STORAGE_SAVING = 1;
-    public static final int CONST_WRITE_EXTERNAL_STORAGE_SHARING = 2;
+    public static final String SCREEN_HEIGHT = "screen_height";
 
     // IAP constants
     public static final String SKU_REMOVE_ADS = "remove_adverts";

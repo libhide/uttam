@@ -1,8 +1,8 @@
 package com.ratik.uttam.di.module;
 
 import com.ratik.uttam.data.PhotoRepository;
-import com.ratik.uttam.ui.MainContract;
-import com.ratik.uttam.ui.MainPresenterImpl;
+import com.ratik.uttam.ui.main.MainContract;
+import com.ratik.uttam.ui.main.MainPresenterImpl;
 
 import dagger.Module;
 import dagger.Provides;

@@ -28,6 +28,9 @@ public class FileUtils {
     private static final String TAG = FileUtils.class.getSimpleName();
 
     public static void saveBitmapToInternalStorage(Context context, Bitmap b, String filename) {
+        // Clear old file
+        clearFile(context, filename);
+
         FileOutputStream out;
         try {
             out = context.openFileOutput(filename, Context.MODE_PRIVATE);
