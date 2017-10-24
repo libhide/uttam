@@ -1,42 +1,64 @@
 package com.ratik.uttam.model;
 
-import com.google.gson.annotations.SerializedName;
+import io.realm.RealmObject;
 
 /**
- * Created by Ratik on 26/02/16.
+ * Created by Ratik on 17/10/17.
  */
-public class Photo {
 
-    @SerializedName("urls")
-    private Urls urls;
+public class _Photo extends RealmObject {
+    private String photoFileName;
+    private String photographerName;
+    private String photographerUserName;
+    private String photoFullUrl;
+    private String photoDownloadUrl;
+    private String photoHtmlUrl;
 
-    @SerializedName("links")
-    private Links links;
-
-    @SerializedName("user")
-    private Photographer photographer;
-
-    public Urls getUrls() {
-        return urls;
+    public String getPhotoFileName() {
+        return photoFileName;
     }
 
-    public void setUrls(Urls urls) {
-        this.urls = urls;
+    public void setPhotoFileName(String photoFileName) {
+        this.photoFileName = photoFileName;
     }
 
-    public Links getLinks() {
-        return links;
+    public String getPhotographerName() {
+        return photographerName;
     }
 
-    public void setLinks(Links links) {
-        this.links = links;
+    public void setPhotographerName(String photographerName) {
+        this.photographerName = photographerName;
     }
 
-    public Photographer getPhotographer() {
-        return photographer;
+    public String getPhotographerUserName() {
+        return photographerUserName;
     }
 
-    public void setPhotographer(Photographer photographer) {
-        this.photographer = photographer;
+    public void setPhotographerUserName(String photographerUserName) {
+        this.photographerUserName = photographerUserName;
+    }
+
+    public String getPhotoFullUrl() {
+        return photoFullUrl;
+    }
+
+    public void setPhotoFullUrl(String photoFullUrl) {
+        this.photoFullUrl = photoFullUrl;
+    }
+
+    public String getPhotoDownloadUrl() {
+        return photoDownloadUrl;
+    }
+
+    public void setPhotoDownloadUrl(String photoDownloadUrl) {
+        this.photoDownloadUrl = photoDownloadUrl;
+    }
+
+    public String getPhotoHtmlUrl() {
+        return photoHtmlUrl;
+    }
+
+    public void setPhotoHtmlUrl(String photoHtmlUrl) {
+        this.photoHtmlUrl = photoHtmlUrl;
     }
 }
