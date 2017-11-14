@@ -9,6 +9,7 @@ import com.ratik.uttam.di.module.PresenterModule;
 import com.ratik.uttam.di.module.RepositoryModule;
 import com.ratik.uttam.services.GetPhotoJob;
 import com.ratik.uttam.services.GetPhotoService;
+import com.ratik.uttam.ui.hero.HeroActivity;
 import com.ratik.uttam.ui.main.MainActivity;
 
 import javax.inject.Singleton;
@@ -32,5 +33,6 @@ public interface AppComponent {
     void inject(DatabaseRealm databaseRealm);
     void inject(PhotoRepositoryImpl photoRepository);
 
+    void inject(HeroActivity activity);
     void inject(MainActivity activity);
 }

@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.WallpaperManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -28,8 +27,6 @@ import com.ratik.uttam.di.Injector;
 import com.ratik.uttam.model.Photo;
 import com.ratik.uttam.services.GetPhotoService;
 import com.ratik.uttam.ui.settings.SettingsActivity;
-import com.ratik.uttam.utils.AlarmUtils;
-import com.ratik.uttam.utils.FetchUtils;
 import com.ratik.uttam.utils.FileUtils;
 import com.ratik.uttam.utils.NotificationUtils;
 import com.ratik.uttam.utils.Utils;
@@ -89,17 +86,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
         // Set the presenter's view
         presenter.setView(this);
-
-        if (Utils.isFirstRun(this)) {
-            Photo photo = FetchUtils.getHeroPhoto();
-            Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.uttam_hero);
-            FileUtils.saveBitmapToInternalStorage(this, b, Constants.General.WALLPAPER_FILE_NAME);
-
-            presenter.setPhoto(photo);
-
-            // set alarm to set job for 7 AM
-            AlarmUtils.setJobSetAlarm(this);
-        }
 
         presenter.loadPhoto();
     }
