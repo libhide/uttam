@@ -3,6 +3,8 @@ package com.ratik.uttam.ui.hero;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,11 +18,20 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.ratik.uttam.Constants;
 import com.ratik.uttam.R;
+import com.ratik.uttam.data.PhotoRepository;
+import com.ratik.uttam.di.Injector;
+import com.ratik.uttam.model.Photo;
 import com.ratik.uttam.ui.main.MainActivity;
 import com.ratik.uttam.ui.tour.TourActivity;
+import com.ratik.uttam.utils.AlarmUtils;
+import com.ratik.uttam.utils.FetchUtils;
+import com.ratik.uttam.utils.FileUtils;
 import com.ratik.uttam.utils.PrefUtils;
 import com.ratik.uttam.utils.Utils;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,6 +41,9 @@ import butterknife.OnClick;
  * Created by Ratik on 06/03/16.
  */
 public class HeroActivity extends AppCompatActivity {
+
+    @Inject
+    PhotoRepository repository;
 
     @Nullable
     @BindView(R.id.uttam)
@@ -43,17 +57,14 @@ public class HeroActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // save the user's screen size for later use
-        saveScreenSize();
-
-        // set default prefs for the user
-        setupDefaultPrefs();
+        Injector.getAppComponent().inject(this);
 
         boolean firstRun = Utils.isFirstRun(this);
         if (firstRun) {
             setContentView(R.layout.activity_hero);
             ButterKnife.bind(this);
             doAnimations();
+            setupAppForUser();
         } else {
             setContentView(R.layout.activity_splash);
 
@@ -67,6 +78,24 @@ public class HeroActivity extends AppCompatActivity {
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             }, 600);
         }
+    }
+
+    private void setupAppForUser() {
+        // save the user's screen size for later use
+        saveScreenSize();
+
+        // set default prefs for the user
+        setupDefaultPrefs();
+
+        // Save first photo for user
+        Photo photo = FetchUtils.getHeroPhoto();
+        Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.uttam_hero);
+        FileUtils.saveBitmapToInternalStorage(this, b, Constants.General.WALLPAPER_FILE_NAME);
+
+        repository.putPhoto(photo);
+
+        // set alarm to set job for 7 AM
+        AlarmUtils.setJobSetAlarm(this);
     }
 
     @OnClick(R.id.getStartedButton)
