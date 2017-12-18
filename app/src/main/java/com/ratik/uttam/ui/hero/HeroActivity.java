@@ -25,7 +25,6 @@ import com.ratik.uttam.di.Injector;
 import com.ratik.uttam.model.Photo;
 import com.ratik.uttam.ui.main.MainActivity;
 import com.ratik.uttam.ui.tour.TourActivity;
-import com.ratik.uttam.utils.AlarmUtils;
 import com.ratik.uttam.utils.FetchUtils;
 import com.ratik.uttam.utils.FileUtils;
 import com.ratik.uttam.utils.PrefUtils;
@@ -93,9 +92,6 @@ public class HeroActivity extends AppCompatActivity {
         FileUtils.saveBitmapToInternalStorage(this, b, Constants.General.WALLPAPER_FILE_NAME);
 
         repository.putPhoto(photo);
-
-        // set alarm to set job for 7 AM
-        AlarmUtils.setJobSetAlarm(this);
     }
 
     @OnClick(R.id.getStartedButton)
