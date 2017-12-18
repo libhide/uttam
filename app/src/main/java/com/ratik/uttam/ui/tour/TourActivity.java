@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 
 import com.ratik.uttam.R;
 import com.ratik.uttam.ui.main.MainActivity;
+import com.ratik.uttam.utils.AlarmUtils;
 import com.ratik.uttam.utils.Utils;
 import com.vlonjatg.android.apptourlibrary.AppTour;
 import com.vlonjatg.android.apptourlibrary.MaterialSlide;
@@ -56,8 +57,8 @@ public class TourActivity extends AppTour {
 
     @Override
     public void onDonePressed() {
-        // Set firstRun to false
-        Utils.setFirstRun(this, false);
+        // set alarm to set job for 7 AM
+        AlarmUtils.setJobSetAlarm(this);
 
         doneFragment.hideCircle();
 
