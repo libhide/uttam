@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'realm-android'
 
@@ -14,7 +13,7 @@ android {
     }
 
     compileSdkVersion 26
-    buildToolsVersion "26.0.1"
+    buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "com.ratik.uttam"
         minSdkVersion 21
@@ -36,6 +35,8 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    flavorDimensions "default"
 
     productFlavors {
         dev {
