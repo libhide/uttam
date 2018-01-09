@@ -1,6 +1,6 @@
 package com.ratik.uttam.di.module;
 
-import com.ratik.uttam.data.PhotoRepository;
+import com.ratik.uttam.data.DataStore;
 import com.ratik.uttam.ui.main.MainContract;
 import com.ratik.uttam.ui.main.MainPresenterImpl;
 
@@ -15,7 +15,7 @@ import dagger.Provides;
 public class PresenterModule {
 
     @Provides
-    public MainContract.Presenter provideMainPresenter(PhotoRepository repository) {
-        return new MainPresenterImpl(repository);
+    public MainContract.Presenter provideMainPresenter(DataStore dataStore) {
+        return new MainPresenterImpl(dataStore);
     }
 }
