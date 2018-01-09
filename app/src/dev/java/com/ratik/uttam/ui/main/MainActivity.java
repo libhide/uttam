@@ -3,7 +3,6 @@ package com.ratik.uttam.ui.main;
 import android.Manifest;
 import android.app.WallpaperManager;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -27,8 +26,8 @@ import com.ratik.uttam.di.Injector;
 import com.ratik.uttam.model.Photo;
 import com.ratik.uttam.services.GetPhotoService;
 import com.ratik.uttam.ui.settings.SettingsActivity;
-import com.ratik.uttam.utils.FileUtils;
 import com.ratik.uttam.utils.NotificationUtils;
+import com.ratik.uttam.utils.PhotoSaver;
 import com.ratik.uttam.utils.Utils;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
@@ -51,6 +50,12 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     // Member variables
     @Inject
     MainContract.Presenter presenter;
+
+    @Inject
+    NotificationUtils notificationUtils;
+
+    @Inject
+    PhotoSaver photoSaver;
 
     private RxPermissions rxPermissions;
     private Photo photo;
@@ -152,22 +157,20 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         // save the returned photo
         this.photo = p;
 
-        Bitmap wallpaper = FileUtils.getBitmapFromInternalStorage(this, Constants.General.WALLPAPER_FILE_NAME);
-
         // set views
-        wallpaperImageView.setImageBitmap(wallpaper);
+        wallpaperImageView.setImageBitmap(photo.getPhoto());
         photographerTextView.setText(photo.getPhotographerName());
 
         if (Utils.isFirstRun(this)) {
             // Set it as the wallpaper
             try {
-                WallpaperManager.getInstance(this).setBitmap(wallpaper);
+                WallpaperManager.getInstance(this).setBitmap(photo.getPhoto());
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
             // cast first notification
-            NotificationUtils.pushFirstNotification(this, photo);
+            notificationUtils.pushFirstNotification(photo);
 
             // update first run state
             Utils.setFirstRun(this, false);

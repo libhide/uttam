@@ -1,6 +1,6 @@
 package com.ratik.uttam.ui.main;
 
-import com.ratik.uttam.data.PhotoRepository;
+import com.ratik.uttam.data.DataStore;
 import com.ratik.uttam.model.Photo;
 
 /**
@@ -10,10 +10,10 @@ import com.ratik.uttam.model.Photo;
 public class MainPresenterImpl implements MainContract.Presenter {
 
     private MainContract.View view;
-    private PhotoRepository repository;
+    private DataStore dataStore;
 
-    public MainPresenterImpl(PhotoRepository repository) {
-        this.repository = repository;
+    public MainPresenterImpl(DataStore dataStore) {
+        this.dataStore = dataStore;
     }
 
     @Override
@@ -23,18 +23,18 @@ public class MainPresenterImpl implements MainContract.Presenter {
 
     @Override
     public void loadPhoto() {
-        Photo photo = repository.getPhoto();
+        Photo photo = dataStore.getPhoto();
         view.displayPhoto(photo);
     }
 
     @Override
     public void setPhoto(Photo photo) {
-        repository.putPhoto(photo);
+        dataStore.putPhoto(photo);
     }
 
     @Override
     public void destroy() {
-        repository.getRealm().close();
+        // nothing
     }
 
     @Override

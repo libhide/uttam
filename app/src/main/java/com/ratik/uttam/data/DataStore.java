@@ -6,12 +6,10 @@ import com.ratik.uttam.model.Photo;
  * Created by Ratik on 17/10/17.
  */
 
-public interface PhotoRepository {
+public interface DataStore {
     void putPhoto(Photo photo);
 
     Photo getPhoto();
-
-    DatabaseRealm getRealm();
 
     void clear();
 }

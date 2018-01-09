@@ -9,16 +9,14 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.ratik.uttam.Constants;
 import com.ratik.uttam.Keys;
 import com.ratik.uttam.api.UnsplashService;
-import com.ratik.uttam.data.PhotoRepository;
+import com.ratik.uttam.data.DataStore;
 import com.ratik.uttam.di.Injector;
 import com.ratik.uttam.model.Photo;
 import com.ratik.uttam.model._Photo;
 import com.ratik.uttam.utils.BitmapUtils;
 import com.ratik.uttam.utils.FetchUtils;
-import com.ratik.uttam.utils.FileUtils;
 import com.ratik.uttam.utils.NotificationUtils;
 import com.ratik.uttam.utils.PrefUtils;
 import com.ratik.uttam.utils.Utils;
@@ -47,7 +45,10 @@ public class GetPhotoService extends Service {
     UnsplashService service;
 
     @Inject
-    PhotoRepository repository;
+    DataStore dataStore;
+
+    @Inject
+    NotificationUtils notificationUtils;
 
     private Context context;
 
@@ -74,7 +75,7 @@ public class GetPhotoService extends Service {
     }
 
     private void getRandomPhoto() {
-        repository.clear();
+        // repository.clear();
         Log.i(TAG, "Getting random photo...");
         service.getRandomPhoto(Keys.CLIENT_ID, FetchUtils.getRandomCategory())
                 .enqueue(new Callback<_Photo>() {
@@ -114,21 +115,18 @@ public class GetPhotoService extends Service {
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe((image) -> {
             if (image != null) {
-                // Save photo to internal storage
-                FileUtils.saveBitmapToInternalStorage(context, image, Constants.General.WALLPAPER_FILE_NAME);
-
-                // Save photo data to Realm
                 Photo p = new Photo();
                 p.setPhotographerName(Utils.toTitleCase(photo.getPhotographer().getName()));
                 p.setPhotographerUserName(photo.getPhotographer().getUsername());
                 p.setPhotoDownloadUrl(photo.getLinks().getDownloadLink());
                 p.setPhotoHtmlUrl(photo.getLinks().getHtmlLink());
                 p.setPhotoFullUrl(photo.getUrls().getFullUrl());
-                p.setPhotoFileName(Constants.General.WALLPAPER_FILE_NAME);
-                repository.putPhoto(p);
+                p.setPhoto(image);
+
+                dataStore.putPhoto(p);
 
                 // Notify User
-                NotificationUtils.pushNewWallpaperNotif(context, p);
+                notificationUtils.pushNewWallpaperNotif(p);
 
                 // If user wants auto-magical setting, set the wallpaper
                 if (PrefUtils.shouldSetWallpaperAutomatically(context)) {
