@@ -3,8 +3,9 @@ package com.ratik.uttam.di;
 import com.ratik.uttam.UttamApplication;
 import com.ratik.uttam.di.module.ApiModule;
 import com.ratik.uttam.di.module.AppContextModule;
+import com.ratik.uttam.di.module.DataModule;
 import com.ratik.uttam.di.module.PresenterModule;
-import com.ratik.uttam.di.module.RepositoryModule;
+import com.ratik.uttam.di.module.UtilsModule;
 
 import java.util.Objects;
 
@@ -23,8 +24,9 @@ public class Injector {
         appComponent = DaggerAppComponent.builder()
                 .appContextModule(new AppContextModule(application))
                 .apiModule(new ApiModule())
-                .repositoryModule(new RepositoryModule())
+                .dataModule(new DataModule())
                 .presenterModule(new PresenterModule())
+                .utilsModule(new UtilsModule())
                 .build();
     }
 

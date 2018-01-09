@@ -18,15 +18,14 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 
-import com.ratik.uttam.Constants;
 import com.ratik.uttam.R;
-import com.ratik.uttam.data.PhotoRepository;
+import com.ratik.uttam.data.DataStore;
 import com.ratik.uttam.di.Injector;
 import com.ratik.uttam.model.Photo;
 import com.ratik.uttam.ui.main.MainActivity;
 import com.ratik.uttam.ui.tour.TourActivity;
 import com.ratik.uttam.utils.FetchUtils;
-import com.ratik.uttam.utils.FileUtils;
+import com.ratik.uttam.utils.PhotoSaver;
 import com.ratik.uttam.utils.PrefUtils;
 import com.ratik.uttam.utils.Utils;
 
@@ -42,7 +41,10 @@ import butterknife.OnClick;
 public class HeroActivity extends AppCompatActivity {
 
     @Inject
-    PhotoRepository repository;
+    DataStore dataStore;
+
+    @Inject
+    PhotoSaver photoSaver;
 
     @Nullable
     @BindView(R.id.uttam)
@@ -87,11 +89,13 @@ public class HeroActivity extends AppCompatActivity {
         setupDefaultPrefs();
 
         // Save first photo for user
-        Photo photo = FetchUtils.getHeroPhoto();
         Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.uttam_hero);
-        FileUtils.saveBitmapToInternalStorage(this, b, Constants.General.WALLPAPER_FILE_NAME);
+        Photo photo = FetchUtils.getHeroPhoto();
+        photo.setPhoto(b);
 
-        repository.putPhoto(photo);
+        photoSaver.setFileName("wallpaper.png").save(b);
+
+        dataStore.putPhoto(photo);
     }
 
     @OnClick(R.id.getStartedButton)

@@ -18,6 +18,14 @@ public class Constants {
         public static final int WALLPAPER_FETCH_JOB_ID = 1;
     }
 
+    public class Data {
+        public static final String PHOTOGRAPHER_NAME = "photographer_name";
+        public static final String PHOTOGRAPHER_USERNAME = "photographer_username";
+        public static final String FULL_URL = "full_url";
+        public static final String DOWNLOAD_URL = "download_url";
+        public static final String HTML_URL = "html_url";
+    }
+
     // Preference constants
     public static final String FIRST_RUN = "first_run";
     public static final String SCREEN_WIDTH = "screen_width";

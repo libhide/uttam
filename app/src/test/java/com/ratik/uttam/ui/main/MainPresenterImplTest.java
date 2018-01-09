@@ -1,6 +1,6 @@
 package com.ratik.uttam.ui.main;
 
-import com.ratik.uttam.data.PhotoRepository;
+import com.ratik.uttam.data.DataStore;
 import com.ratik.uttam.model.Photo;
 import com.ratik.uttam.ui.settings.SettingsActivity;
 
@@ -25,7 +25,7 @@ public class MainPresenterImplTest {
     MainContract.View view;
 
     @Mock
-    PhotoRepository repository;
+    DataStore repository;
 
     Photo testPhoto;
 

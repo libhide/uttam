@@ -11,8 +11,11 @@ import android.support.v4.app.NotificationCompat;
 
 import com.ratik.uttam.Constants;
 import com.ratik.uttam.R;
+import com.ratik.uttam.di.Injector;
 import com.ratik.uttam.model.Photo;
 import com.ratik.uttam.ui.main.MainActivity;
+
+import javax.inject.Inject;
 
 /**
  * Created by Ratik on 08/09/17.
@@ -24,7 +27,17 @@ public class NotificationUtils {
     private static int WALLPAPER_NOTIF_ID = 001;
     private static final int FIRST_RUN_NOTIFICATION = 0;
 
-    public static void pushNewWallpaperNotif(Context context, Photo photo) {
+    private Context context;
+
+    @Inject
+    PhotoSaver photoSaver;
+
+    public NotificationUtils(Context context) {
+        this.context = context;
+        Injector.getAppComponent().inject(this);
+    }
+
+    public void pushNewWallpaperNotif(Photo photo) {
         // Content Intent
         Intent intent = new Intent(context, MainActivity.class);
 
@@ -47,7 +60,7 @@ public class NotificationUtils {
             notificationManager.createNotificationChannel(notificationChannel);
         }
 
-        Bitmap wallpaper = FileUtils.getBitmapFromInternalStorage(context, photo.getPhotoFileName());
+        Bitmap wallpaper = photoSaver.load();
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(context, channelId)
                         .setSmallIcon(R.drawable.ic_stat_uttam)
@@ -64,7 +77,7 @@ public class NotificationUtils {
         notificationManager.notify(WALLPAPER_NOTIF_ID, builder.build());
     }
 
-    public static void pushFirstNotification(Context context, Photo photo) {
+    public void pushFirstNotification(Photo photo) {
         // Content Intent
         Intent intent = new Intent(context, MainActivity.class);
 
@@ -87,7 +100,7 @@ public class NotificationUtils {
             notificationManager.createNotificationChannel(notificationChannel);
         }
 
-        Bitmap wallpaper = FileUtils.getBitmapFromInternalStorage(context, photo.getPhotoFileName());
+        Bitmap wallpaper = photoSaver.load();
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(context, channelId)
                         .setSmallIcon(R.drawable.ic_stat_uttam)
