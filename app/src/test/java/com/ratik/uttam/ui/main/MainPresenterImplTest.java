@@ -2,12 +2,10 @@ package com.ratik.uttam.ui.main;
 
 import com.ratik.uttam.data.DataStore;
 import com.ratik.uttam.model.Photo;
-import com.ratik.uttam.ui.settings.SettingsActivity;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import static junit.framework.Assert.assertEquals;
@@ -25,7 +23,7 @@ public class MainPresenterImplTest {
     MainContract.View view;
 
     @Mock
-    DataStore repository;
+    DataStore dataStore;
 
     Photo testPhoto;
 
@@ -33,7 +31,7 @@ public class MainPresenterImplTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
 
-        presenter = new MainPresenterImpl(repository);
+        presenter = new MainPresenterImpl(dataStore);
         presenter.setView(view);
 
         testPhoto = new Photo();
@@ -42,36 +40,24 @@ public class MainPresenterImplTest {
     @Test
     public void shouldLoadPhotoIntoView() throws Exception {
         // arrange
-        when(repository.getPhoto()).thenReturn(testPhoto);
+        when(dataStore.getPhoto()).thenReturn(testPhoto);
 
         // act
-        presenter.loadPhoto();
+        presenter.getPhoto();
 
         // assert
-        verify(view).displayPhoto(testPhoto);
+        verify(view).showPhoto(testPhoto);
     }
 
     @Test
     public void shouldBeAbleToStoreAPhotoInTheRepository() throws Exception {
         // arrange
-        when(repository.getPhoto()).thenReturn(testPhoto);
+        when(dataStore.getPhoto()).thenReturn(testPhoto);
 
         // act
-        presenter.setPhoto(testPhoto);
+        presenter.putPhoto(testPhoto);
 
         // assert
-        assertEquals(testPhoto, repository.getPhoto());
-    }
-
-    @Test
-    public void shouldOpenSettingsWhenAskedTo() throws Exception {
-        // Arrange
-        Class settings = SettingsActivity.class;
-
-        // Act
-        presenter.launchSettings(settings);
-
-        // Assert
-        Mockito.verify(view).showSettings(settings);
+        assertEquals(testPhoto, dataStore.getPhoto());
     }
 }
