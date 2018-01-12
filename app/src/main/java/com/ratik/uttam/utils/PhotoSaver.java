@@ -22,6 +22,8 @@ public class PhotoSaver {
     private Context context;
     private boolean external = false;
 
+    private File photoFile;
+
     public PhotoSaver(Context context) {
         this.context = context;
     }
@@ -39,6 +41,14 @@ public class PhotoSaver {
     public PhotoSaver setDirectoryName(String directoryName) {
         this.directoryName = directoryName;
         return this;
+    }
+
+    public boolean isExternal() {
+        return external;
+    }
+
+    public File getPhotoFile() {
+        return photoFile;
     }
 
     public void save(Bitmap bitmapImage) {
@@ -61,17 +71,17 @@ public class PhotoSaver {
 
     private File createFile() {
         File directory;
-        if(external){
+        if (external) {
             directory = getAlbumStorageDir(directoryName);
-        }
-        else {
+        } else {
             directory = context.getDir(directoryName, Context.MODE_PRIVATE);
         }
-        if(!directory.exists() && !directory.mkdirs()){
-            Log.e("PhotoSaver","Error creating directory " + directory);
+        if (!directory.exists() && !directory.mkdirs()) {
+            Log.e("PhotoSaver", "Error creating directory " + directory);
         }
 
-        return new File(directory, fileName);
+        photoFile = new File(directory, fileName);
+        return photoFile;
     }
 
     private File getAlbumStorageDir(String albumName) {
@@ -107,5 +117,9 @@ public class PhotoSaver {
             }
         }
         return null;
+    }
+
+    public boolean deleteFile() {
+        return photoFile.delete();
     }
 }

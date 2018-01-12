@@ -75,7 +75,6 @@ public class GetPhotoService extends Service {
     }
 
     private void getRandomPhoto() {
-        // repository.clear();
         Log.i(TAG, "Getting random photo...");
         service.getRandomPhoto(Keys.CLIENT_ID, FetchUtils.getRandomCategory())
                 .enqueue(new Callback<_Photo>() {
@@ -136,7 +135,6 @@ public class GetPhotoService extends Service {
                 Log.i(TAG, "Photo saved successfully!");
 
                 stopSelf();
-
             } else {
                 Log.i(TAG, "Saving isn't working for some reason.");
             }
