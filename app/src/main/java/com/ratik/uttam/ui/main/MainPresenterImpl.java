@@ -22,23 +22,13 @@ public class MainPresenterImpl implements MainContract.Presenter {
     }
 
     @Override
-    public void loadPhoto() {
+    public void getPhoto() {
         Photo photo = dataStore.getPhoto();
-        view.displayPhoto(photo);
+        view.showPhoto(photo);
     }
 
     @Override
-    public void setPhoto(Photo photo) {
+    public void putPhoto(Photo photo) {
         dataStore.putPhoto(photo);
-    }
-
-    @Override
-    public void destroy() {
-        // nothing
-    }
-
-    @Override
-    public void launchSettings(Class settingsActivity) {
-        view.showSettings(settingsActivity);
     }
 }

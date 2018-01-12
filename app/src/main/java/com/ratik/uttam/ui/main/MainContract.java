@@ -9,20 +9,14 @@ import com.ratik.uttam.model.Photo;
 public interface MainContract {
 
     interface View {
-        void displayPhoto(Photo photo);
-
-        void showSettings(Class settingsActivity);
+        void showPhoto(Photo photo);
     }
 
     interface Presenter {
         void setView(MainContract.View view);
 
-        void loadPhoto();
+        void getPhoto();
 
-        void setPhoto(Photo photo);
-
-        void destroy();
-
-        void launchSettings(Class settingsActivity);
+        void putPhoto(Photo photo);
     }
 }

@@ -29,7 +29,9 @@ public class DataStoreImpl implements DataStore {
 
     @Override
     public void putPhoto(Photo photo) {
-        photoSaver.save(photo.getPhoto());
+        photoSaver.setExternal(false)
+                  .setFileName(Constants.General.WALLPAPER_FILE_NAME)
+                  .save(photo.getPhoto());
 
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(Constants.Data.PHOTOGRAPHER_NAME, photo.getPhotographerName());
