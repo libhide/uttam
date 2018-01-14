@@ -4,11 +4,16 @@ import com.ratik.uttam.data.DataStore;
 import com.ratik.uttam.model.Photo;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import static junit.framework.Assert.assertEquals;
+import java.io.IOException;
+
+import io.reactivex.Single;
+
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -17,15 +22,19 @@ import static org.mockito.Mockito.when;
  */
 public class MainPresenterImplTest {
 
-    MainPresenterImpl presenter;
-
+    @Rule
+    public RxSchedulerRule rule = new RxSchedulerRule();
     @Mock
+    private
     MainContract.View view;
 
     @Mock
+    private
     DataStore dataStore;
 
-    Photo testPhoto;
+    private MainPresenterImpl presenter;
+
+    private Photo testPhoto;
 
     @Before
     public void setUp() throws Exception {
@@ -38,26 +47,37 @@ public class MainPresenterImplTest {
     }
 
     @Test
-    public void shouldLoadPhotoIntoView() throws Exception {
-        // arrange
-        when(dataStore.getPhoto()).thenReturn(testPhoto);
+    public void shouldLoadPhotoIntoView() {
+        // given
+        when(dataStore.getPhoto()).thenReturn(Single.just(testPhoto));
 
-        // act
+        // when
         presenter.getPhoto();
 
-        // assert
+        // then
         verify(view).showPhoto(testPhoto);
+        verify(view, never()).onGetPhotoFailed();
     }
 
     @Test
-    public void shouldBeAbleToStoreAPhotoInTheRepository() throws Exception {
-        // arrange
-        when(dataStore.getPhoto()).thenReturn(testPhoto);
+    public void shouldShowErrorView() {
+        // given
+        when(dataStore.getPhoto()).thenReturn(Single.error(new IOException()));
 
-        // act
+        // when
+        presenter.getPhoto();
+
+        // then
+        verify(view).onGetPhotoFailed();
+        verify(view, never()).showPhoto(testPhoto);
+    }
+
+    @Test
+    public void shouldBeAbleToStoreAPhotoInTheRepository() {
+        // when
         presenter.putPhoto(testPhoto);
 
-        // assert
-        assertEquals(testPhoto, dataStore.getPhoto());
+        // then
+        verify(dataStore).putPhoto(testPhoto);
     }
 }
