@@ -2,6 +2,7 @@ package com.ratik.uttam.data.impl;
 
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.util.Log;
 
 import com.ratik.uttam.Constants;
 import com.ratik.uttam.data.DataStore;
@@ -29,9 +30,17 @@ public class DataStoreImpl implements DataStore {
 
     @Override
     public void putPhoto(Photo photo) {
+        savePhoto(photo);
+    }
+
+    private void savePhotoError(Throwable throwable) {
+        Log.e("DataStoreImpl", throwable.getMessage());
+    }
+
+    private void savePhoto(Photo photo) {
         photoSaver.setExternal(false)
-                  .setFileName(Constants.General.WALLPAPER_FILE_NAME)
-                  .save(photo.getPhoto());
+                .setFileName(Constants.General.WALLPAPER_FILE_NAME)
+                .save(photo.getPhoto());
 
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(Constants.Data.PHOTOGRAPHER_NAME, photo.getPhotographerName());
