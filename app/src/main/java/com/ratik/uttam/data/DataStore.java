@@ -2,6 +2,7 @@ package com.ratik.uttam.data;
 
 import com.ratik.uttam.model.Photo;
 
+import io.reactivex.Completable;
 import io.reactivex.Single;
 
 
@@ -10,7 +11,7 @@ import io.reactivex.Single;
  */
 
 public interface DataStore {
-    void putPhoto(Photo photo);
+    Completable putPhoto(Photo photo);
 
     Single<Photo> getPhoto();
 
