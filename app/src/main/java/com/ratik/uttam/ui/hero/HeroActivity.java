@@ -34,6 +34,8 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Ratik on 06/03/16.
@@ -92,10 +94,10 @@ public class HeroActivity extends AppCompatActivity {
         Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.uttam_hero);
         Photo photo = FetchUtils.getHeroPhoto();
         photo.setPhoto(b);
-
-        photoSaver.setFileName("wallpaper.png").save(b);
-
-        dataStore.putPhoto(photo);
+        dataStore.putPhoto(photo)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe();
     }
 
     @OnClick(R.id.getStartedButton)
@@ -156,5 +158,6 @@ public class HeroActivity extends AppCompatActivity {
         } else {
             PrefUtils.setCompressState(this, false);
         }
+        PrefUtils.setAutomaticWallpaperSet(this, true);
     }
 }

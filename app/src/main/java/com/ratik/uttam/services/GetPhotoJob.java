@@ -120,6 +120,7 @@ public class GetPhotoJob extends JobService {
                 p.setPhotoHtmlUrl(photo.getLinks().getHtmlLink());
                 p.setPhotoFullUrl(photo.getUrls().getFullUrl());
                 p.setPhoto(image);
+
                 dataStore.putPhoto(p);
 
                 // Notify User

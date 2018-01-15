@@ -12,6 +12,7 @@ import com.ratik.uttam.utils.PhotoSaver;
 
 import javax.inject.Inject;
 
+import io.reactivex.Completable;
 import io.reactivex.Single;
 
 
@@ -32,15 +33,15 @@ public class DataStoreImpl implements DataStore {
     }
 
     @Override
-    public void putPhoto(Photo photo) {
-        savePhoto(photo);
-    }
-
-    private void savePhoto(Photo photo) {
+    public Completable putPhoto(Photo photo) {
         photoSaver.setExternal(false)
                 .setFileName(Constants.General.WALLPAPER_FILE_NAME)
                 .save(photo.getPhoto());
+        storePhotoMetadata(photo);
+        return Completable.complete();
+    }
 
+    private void storePhotoMetadata(Photo photo) {
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(Constants.Data.PHOTOGRAPHER_NAME, photo.getPhotographerName());
         editor.putString(Constants.Data.PHOTOGRAPHER_USERNAME, photo.getPhotographerUserName());

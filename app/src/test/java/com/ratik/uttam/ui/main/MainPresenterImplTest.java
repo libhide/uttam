@@ -11,6 +11,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.io.IOException;
 
+import io.reactivex.Completable;
 import io.reactivex.Single;
 
 import static org.mockito.Mockito.never;
@@ -26,7 +27,8 @@ public class MainPresenterImplTest {
     public RxSchedulerRule rule = new RxSchedulerRule();
 
     @Mock
-    private MainContract.View view;
+    private
+    MainContract.View view;
 
     @Mock
     private
@@ -73,7 +75,10 @@ public class MainPresenterImplTest {
     }
 
     @Test
-    public void shouldBeAbleToStoreAPhotoInTheRepository() {
+    public void shouldSavePhotoSuccessfully() {
+        // given
+        when(dataStore.putPhoto(testPhoto)).thenReturn(Completable.complete());
+
         // when
         presenter.putPhoto(testPhoto);
 

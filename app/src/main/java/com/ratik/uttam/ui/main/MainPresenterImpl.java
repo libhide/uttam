@@ -37,6 +37,9 @@ public class MainPresenterImpl implements MainContract.Presenter {
 
     @Override
     public void putPhoto(Photo photo) {
-        dataStore.putPhoto(photo);
+        dataStore.putPhoto(photo)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe();
     }
 }
