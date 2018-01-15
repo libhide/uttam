@@ -24,9 +24,9 @@ public class MainPresenterImplTest {
 
     @Rule
     public RxSchedulerRule rule = new RxSchedulerRule();
+
     @Mock
-    private
-    MainContract.View view;
+    private MainContract.View view;
 
     @Mock
     private
