@@ -2,6 +2,7 @@ package com.ratik.uttam.data.impl;
 
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.ratik.uttam.Constants;
@@ -11,6 +12,9 @@ import com.ratik.uttam.model.Photo;
 import com.ratik.uttam.utils.PhotoSaver;
 
 import javax.inject.Inject;
+
+import io.reactivex.Single;
+
 
 /**
  * Created by Ratik on 09/01/18.
@@ -52,9 +56,16 @@ public class DataStoreImpl implements DataStore {
     }
 
     @Override
-    public Photo getPhoto() {
-        Bitmap wallpaper = photoSaver.load();
+    public Single<Photo> getPhoto() {
 
+        return Single.fromCallable(() -> {
+            Bitmap wallpaper = photoSaver.load();
+            return getPhoto(wallpaper);
+        });
+    }
+
+    @NonNull
+    private Photo getPhoto(Bitmap wallpaper) {
         Photo photo = new Photo();
         photo.setPhoto(wallpaper);
         photo.setPhotographerName(prefs.getString(Constants.Data.PHOTOGRAPHER_NAME, ""));

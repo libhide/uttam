@@ -3,6 +3,9 @@ package com.ratik.uttam.ui.main;
 import com.ratik.uttam.data.DataStore;
 import com.ratik.uttam.model.Photo;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+
 /**
  * Created by Ratik on 17/10/17.
  */
@@ -23,8 +26,13 @@ public class MainPresenterImpl implements MainContract.Presenter {
 
     @Override
     public void getPhoto() {
-        Photo photo = dataStore.getPhoto();
-        view.showPhoto(photo);
+        dataStore.getPhoto()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        photo -> view.showPhoto(photo),
+                        throwable -> view.onGetPhotoFailed()
+                );
     }
 
     @Override

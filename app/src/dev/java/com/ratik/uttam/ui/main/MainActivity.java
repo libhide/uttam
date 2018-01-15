@@ -179,6 +179,11 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         }
     }
 
+    @Override
+    public void onGetPhotoFailed() {
+        //todo show error
+    }
+
     // endregion
 
     // region ACTIVITY OVERRIDES

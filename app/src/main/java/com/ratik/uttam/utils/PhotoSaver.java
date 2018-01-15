@@ -101,20 +101,10 @@ public class PhotoSaver {
     }
 
     public Bitmap load() {
-        FileInputStream inputStream = null;
-        try {
-            inputStream = new FileInputStream(createFile());
+        try (FileInputStream inputStream = new FileInputStream(createFile())) {
             return BitmapFactory.decodeStream(inputStream);
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                if (inputStream != null) {
-                    inputStream.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
         return null;
     }
