@@ -3,7 +3,6 @@ package com.ratik.uttam.data.impl;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.ratik.uttam.Constants;
 import com.ratik.uttam.data.DataStore;
@@ -37,10 +36,6 @@ public class DataStoreImpl implements DataStore {
         savePhoto(photo);
     }
 
-    private void savePhotoError(Throwable throwable) {
-        Log.e("DataStoreImpl", throwable.getMessage());
-    }
-
     private void savePhoto(Photo photo) {
         photoSaver.setExternal(false)
                 .setFileName(Constants.General.WALLPAPER_FILE_NAME)
@@ -57,7 +52,6 @@ public class DataStoreImpl implements DataStore {
 
     @Override
     public Single<Photo> getPhoto() {
-
         return Single.fromCallable(() -> {
             Bitmap wallpaper = photoSaver.load();
             return getPhoto(wallpaper);
@@ -73,7 +67,6 @@ public class DataStoreImpl implements DataStore {
         photo.setPhotoFullUrl(prefs.getString(Constants.Data.FULL_URL, ""));
         photo.setPhotoDownloadUrl(prefs.getString(Constants.Data.DOWNLOAD_URL, ""));
         photo.setPhotoHtmlUrl(prefs.getString(Constants.Data.HTML_URL, ""));
-
         return photo;
     }
 
