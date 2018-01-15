@@ -10,6 +10,8 @@ public interface MainContract {
 
     interface View {
         void showPhoto(Photo photo);
+
+        void onGetPhotoFailed();
     }
 
     interface Presenter {
