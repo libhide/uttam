@@ -24,6 +24,7 @@ public class MainPresenterImplTest {
 
     @Rule
     public RxSchedulerRule rule = new RxSchedulerRule();
+
     @Mock
     private
     MainContract.View view;
@@ -70,14 +71,5 @@ public class MainPresenterImplTest {
         // then
         verify(view).onGetPhotoFailed();
         verify(view, never()).showPhoto(testPhoto);
-    }
-
-    @Test
-    public void shouldBeAbleToStoreAPhotoInTheRepository() {
-        // when
-        presenter.putPhoto(testPhoto);
-
-        // then
-        verify(dataStore).putPhoto(testPhoto);
     }
 }

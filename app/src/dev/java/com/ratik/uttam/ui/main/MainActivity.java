@@ -181,7 +181,8 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     @Override
     public void onGetPhotoFailed() {
-        //todo show error
+        // TODO: use a better error message
+        Toast.makeText(this, getString(R.string.generic_error), Toast.LENGTH_SHORT).show();
     }
 
     // endregion
