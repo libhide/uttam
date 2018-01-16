@@ -3,7 +3,6 @@ package com.ratik.uttam.data.impl;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.ratik.uttam.Constants;
 import com.ratik.uttam.data.DataStore;
@@ -13,6 +12,7 @@ import com.ratik.uttam.utils.PhotoSaver;
 
 import javax.inject.Inject;
 
+import io.reactivex.Completable;
 import io.reactivex.Single;
 
 
@@ -33,19 +33,16 @@ public class DataStoreImpl implements DataStore {
     }
 
     @Override
-    public void putPhoto(Photo photo) {
-        savePhoto(photo);
+    public Completable putPhoto(Photo photo) {
+        return Completable.fromAction(() -> {
+            photoSaver.setExternal(false)
+                    .setFileName(Constants.General.WALLPAPER_FILE_NAME)
+                    .save(photo.getPhoto());
+            storePhotoMetadata(photo);
+        });
     }
 
-    private void savePhotoError(Throwable throwable) {
-        Log.e("DataStoreImpl", throwable.getMessage());
-    }
-
-    private void savePhoto(Photo photo) {
-        photoSaver.setExternal(false)
-                .setFileName(Constants.General.WALLPAPER_FILE_NAME)
-                .save(photo.getPhoto());
-
+    private void storePhotoMetadata(Photo photo) {
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(Constants.Data.PHOTOGRAPHER_NAME, photo.getPhotographerName());
         editor.putString(Constants.Data.PHOTOGRAPHER_USERNAME, photo.getPhotographerUserName());
@@ -57,7 +54,6 @@ public class DataStoreImpl implements DataStore {
 
     @Override
     public Single<Photo> getPhoto() {
-
         return Single.fromCallable(() -> {
             Bitmap wallpaper = photoSaver.load();
             return getPhoto(wallpaper);
@@ -73,7 +69,6 @@ public class DataStoreImpl implements DataStore {
         photo.setPhotoFullUrl(prefs.getString(Constants.Data.FULL_URL, ""));
         photo.setPhotoDownloadUrl(prefs.getString(Constants.Data.DOWNLOAD_URL, ""));
         photo.setPhotoHtmlUrl(prefs.getString(Constants.Data.HTML_URL, ""));
-
         return photo;
     }
 

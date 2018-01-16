@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.transition.Fade;
+import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -34,11 +35,15 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Ratik on 06/03/16.
  */
 public class HeroActivity extends AppCompatActivity {
+
+    private static final String TAG = HeroActivity.class.getSimpleName();
 
     @Inject
     DataStore dataStore;
@@ -92,10 +97,21 @@ public class HeroActivity extends AppCompatActivity {
         Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.uttam_hero);
         Photo photo = FetchUtils.getHeroPhoto();
         photo.setPhoto(b);
+        dataStore.putPhoto(photo)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        this::onSuccessfulFirstSave,
+                        this::onFirstSaveFail
+                );
+    }
 
-        photoSaver.setFileName("wallpaper.png").save(b);
+    private void onFirstSaveFail(Throwable throwable) {
+        Log.e(TAG, throwable.getMessage());
+    }
 
-        dataStore.putPhoto(photo);
+    private void onSuccessfulFirstSave() {
+        Log.i(TAG, "First save successful");
     }
 
     @OnClick(R.id.getStartedButton)
@@ -156,5 +172,6 @@ public class HeroActivity extends AppCompatActivity {
         } else {
             PrefUtils.setCompressState(this, false);
         }
+        PrefUtils.setAutomaticWallpaperSet(this, true);
     }
 }
