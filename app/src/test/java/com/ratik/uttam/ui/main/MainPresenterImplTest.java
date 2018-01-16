@@ -11,7 +11,6 @@ import org.mockito.MockitoAnnotations;
 
 import java.io.IOException;
 
-import io.reactivex.Completable;
 import io.reactivex.Single;
 
 import static org.mockito.Mockito.never;
@@ -72,17 +71,5 @@ public class MainPresenterImplTest {
         // then
         verify(view).onGetPhotoFailed();
         verify(view, never()).showPhoto(testPhoto);
-    }
-
-    @Test
-    public void shouldSavePhotoSuccessfully() {
-        // given
-        when(dataStore.putPhoto(testPhoto)).thenReturn(Completable.complete());
-
-        // when
-        presenter.putPhoto(testPhoto);
-
-        // then
-        verify(dataStore).putPhoto(testPhoto);
     }
 }

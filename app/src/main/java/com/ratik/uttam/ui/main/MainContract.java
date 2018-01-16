@@ -18,7 +18,5 @@ public interface MainContract {
         void setView(MainContract.View view);
 
         void getPhoto();
-
-        void putPhoto(Photo photo);
     }
 }
