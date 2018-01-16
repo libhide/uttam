@@ -34,11 +34,12 @@ public class DataStoreImpl implements DataStore {
 
     @Override
     public Completable putPhoto(Photo photo) {
-        photoSaver.setExternal(false)
-                .setFileName(Constants.General.WALLPAPER_FILE_NAME)
-                .save(photo.getPhoto());
-        storePhotoMetadata(photo);
-        return Completable.complete();
+        return Completable.fromAction(() -> {
+            photoSaver.setExternal(false)
+                    .setFileName(Constants.General.WALLPAPER_FILE_NAME)
+                    .save(photo.getPhoto());
+            storePhotoMetadata(photo);
+        });
     }
 
     private void storePhotoMetadata(Photo photo) {
