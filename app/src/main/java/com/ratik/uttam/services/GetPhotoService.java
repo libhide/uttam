@@ -9,7 +9,7 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.ratik.uttam.Keys;
+import com.ratik.uttam.BuildConfig;
 import com.ratik.uttam.api.UnsplashService;
 import com.ratik.uttam.data.DataStore;
 import com.ratik.uttam.di.Injector;
@@ -76,7 +76,7 @@ public class GetPhotoService extends Service {
 
     private void getRandomPhoto() {
         Log.i(TAG, "Getting random photo...");
-        service.getRandomPhoto(Keys.CLIENT_ID, FetchUtils.getRandomCategory())
+        service.getRandomPhoto(BuildConfig.CLIENT_ID, FetchUtils.getRandomCategory())
                 .enqueue(new Callback<_Photo>() {
                     @Override
                     public void onResponse(Call<_Photo> call, Response<_Photo> response) {

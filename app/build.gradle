@@ -1,6 +1,21 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 
+def getProperty(String filename, String propName) {
+    def propsFile = rootProject.file(filename)
+    if (propsFile.exists()) {
+        def props = new Properties()
+        props.load(new FileInputStream(propsFile))
+        if (props[propName] != null) {
+            return props[propName]
+        } else {
+            print("No such property " + propName + " in file " + filename);
+        }
+    } else {
+        print(filename + " does not exist!")
+    }
+}
+
 android {
     signingConfigs {
         config {
@@ -19,6 +34,8 @@ android {
         targetSdkVersion 26
         versionCode 16
         versionName "3.1"
+
+        buildConfigField "String", "CLIENT_ID", "\"${getProperty("local.properties", "client_id")}\""
     }
 
     buildTypes {
