@@ -73,24 +73,6 @@ public class GetPhotoJob extends JobService {
 
     private void fetchPhoto(JobParameters parameters) {
         Log.i(TAG, "Fetching photo...");
-//        service.getRandomPhoto(Keys.CLIENT_ID, FetchUtils.getRandomCategory())
-//                .enqueue(new Callback<_Photo>() {
-//                    @Override
-//                    public void onResponse(Call<_Photo> call, Response<_Photo> response) {
-//                        if (response.isSuccessful()) {
-//                            Log.i(TAG, "Photo fetched successfully!");
-//                            _Photo photo = response.body();
-//                            savePhoto(photo, parameters);
-//                        } else {
-//                            Log.i(TAG, "Photo fetch unsuccessful.");
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Call<_Photo> call, Throwable t) {
-//                        Log.e(TAG, t.getMessage());
-//                    }
-//                });
         service.getRandomPhoto2(Keys.CLIENT_ID, FetchUtils.getRandomCategory())
                 .map(photoResponse -> photoResponse.body())
                 .map(photo -> makePhotoObject(photo))
@@ -150,38 +132,6 @@ public class GetPhotoJob extends JobService {
             return null;
         }
     }
-
-
-//    private void savePhoto(_Photo photo, JobParameters parameters) {
-//        Observable.fromCallable(() -> {
-//            Log.i(TAG, "Url: " + url.toString());
-//
-//        })
-//                .map(bitmap -> BitmapUtils.scaleBitmap(context, bitmap))
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe((image) -> {
-//                    if (image != null) {
-//
-//                        dataStore.putPhoto(p);
-//
-//                        // Notify User
-//                        notificationUtils.pushNewWallpaperNotif(p);
-//
-//                        // If user wants auto-magical setting, set the wallpaper
-//                        if (PrefUtils.shouldSetWallpaperAutomatically(context)) {
-//                            WallpaperManager.getInstance(context).setBitmap(image);
-//                        }
-//
-//                        Log.i(TAG, "Photo saved successfully!");
-//
-//                        // job is done
-//                        jobFinished(parameters, false);
-//                    } else {
-//                        Log.i(TAG, "Saving isn't working for some reason.");
-//                    }
-//                });
-//    }
 
     @Override
     public boolean onStopJob(JobParameters jobParameters) {
