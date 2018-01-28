@@ -1,6 +1,5 @@
 package com.ratik.uttam.services;
 
-import android.app.WallpaperManager;
 import android.app.job.JobParameters;
 import android.app.job.JobService;
 import android.content.Context;
@@ -8,13 +7,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
-import com.ratik.uttam.Keys;
+import com.ratik.uttam.BuildConfig;
 import com.ratik.uttam.api.UnsplashService;
 import com.ratik.uttam.data.DataStore;
 import com.ratik.uttam.di.Injector;
 import com.ratik.uttam.model.Photo;
 import com.ratik.uttam.model._Photo;
-import com.ratik.uttam.utils.BitmapUtils;
 import com.ratik.uttam.utils.FetchUtils;
 import com.ratik.uttam.utils.NotificationUtils;
 import com.ratik.uttam.utils.PrefUtils;
@@ -25,17 +23,11 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.security.Key;
 
 import javax.inject.Inject;
 
-import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.http.Url;
 
 /**
  * Created by Ratik on 23/10/17.
@@ -73,7 +65,7 @@ public class GetPhotoJob extends JobService {
 
     private void fetchPhoto(JobParameters parameters) {
         Log.i(TAG, "Fetching photo...");
-        service.getRandomPhoto2(Keys.CLIENT_ID, FetchUtils.getRandomCategory())
+        service.getRandomPhoto2(BuildConfig.CLIENT_ID, FetchUtils.getRandomCategory())
                 .map(photoResponse -> photoResponse.body())
                 .map(photo -> makePhotoObject(photo))
                 .map(photo -> dataStore.putPhoto(photo))
@@ -82,11 +74,11 @@ public class GetPhotoJob extends JobService {
                 .subscribe(
                         (completable) -> {
                             // Notify User
-                            notificationUtils.pushNewWallpaperNotif(p);
+                            // notificationUtils.pushNewWallpaperNotif(p);
 
                             // If user wants auto-magical setting, set the wallpaper
                             if (PrefUtils.shouldSetWallpaperAutomatically(context)) {
-                                WallpaperManager.getInstance(context).setBitmap(image);
+                                // WallpaperManager.getInstance(context).setBitmap(image);
                             }
 
                             Log.i(TAG, "Photo saved successfully!");
