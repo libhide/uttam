@@ -1,9 +1,9 @@
 package com.ratik.uttam.services;
 
 import android.app.Service;
-import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
@@ -16,7 +16,6 @@ import com.ratik.uttam.data.DataStore;
 import com.ratik.uttam.di.Injector;
 import com.ratik.uttam.model.Photo;
 import com.ratik.uttam.model._Photo;
-import com.ratik.uttam.utils.BitmapUtils;
 import com.ratik.uttam.utils.NotificationUtils;
 import com.ratik.uttam.utils.PrefUtils;
 import com.ratik.uttam.utils.Utils;
@@ -24,16 +23,13 @@ import com.ratik.uttam.utils.Utils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.inject.Inject;
 
-import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by Ratik on 04/03/16.
@@ -64,7 +60,7 @@ public class GetPhotoService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        getRandomPhoto();
+        fetchPhoto();
         return START_STICKY;
     }
 
@@ -74,70 +70,66 @@ public class GetPhotoService extends Service {
         return null;
     }
 
-    private void getRandomPhoto() {
+    private void fetchPhoto() {
         Log.i(TAG, "Getting random photo...");
         service.getRandomPhoto(BuildConfig.CLIENT_ID, Constants.API.COLLECTIONS)
-                .enqueue(new Callback<_Photo>() {
-                    @Override
-                    public void onResponse(Call<_Photo> call, Response<_Photo> response) {
-                        if (response.isSuccessful()) {
-                            Log.i(TAG, "Photo fetched successfully!");
-                            _Photo photo = response.body();
-                            savePhoto(photo);
-                        }
-                    }
+                .map(photoResponse -> photoResponse.body())
+                .map(photo -> makePhotoObject(photo))
+                .doOnNext(photo -> dataStore.putPhoto(photo))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        (completable) -> {
+                            // Notify User
+                            notificationUtils.pushNewWallpaperNotification();
 
-                    @Override
-                    public void onFailure(Call<_Photo> call, Throwable t) {
-                        Log.e(TAG, "onFailure: " + t.getMessage());
-                    }
-                });
+                            // If user wants auto-magical setting, set the wallpaper
+                            if (PrefUtils.shouldSetWallpaperAutomatically(context)) {
+                                // todo: figure out automagical setting
+                                // WallpaperManager.getInstance(context).setBitmap(image);
+                            }
+
+                            Log.i(TAG, "Photo saved successfully!");
+
+                            // job is done
+                            stopSelf();
+                        },
+                        (throwable -> {
+                            Log.e(TAG, throwable.getMessage());
+                        })
+                );
     }
 
-    private void savePhoto(_Photo photo) {
-        Observable.fromCallable(() -> {
+    private Bitmap downloadWallpaperImage(_Photo photo) throws IOException {
+        try {
             URL url = new URL(photo.getUrls().getFullUrl());
-            Log.i(TAG, "Url: " + url.toString());
-            try {
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setDoInput(true);
-                connection.connect();
-                InputStream input = connection.getInputStream();
-                return BitmapFactory.decodeStream(input);
-            } catch (IOException e) {
-                Log.e(TAG, e.getMessage());
-                return null;
-            }
-        })
-        .map(bitmap -> BitmapUtils.scaleBitmap(context, bitmap))
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe((image) -> {
-            if (image != null) {
-                Photo p = new Photo();
-                p.setPhotographerName(Utils.toTitleCase(photo.getPhotographer().getName()));
-                p.setPhotographerUserName(photo.getPhotographer().getUsername());
-                p.setPhotoDownloadUrl(photo.getLinks().getDownloadLink());
-                p.setPhotoHtmlUrl(photo.getLinks().getHtmlLink());
-                p.setPhotoFullUrl(photo.getUrls().getFullUrl());
-                p.setPhoto(image);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            return BitmapFactory.decodeStream(input);
+        } catch (MalformedURLException e) {
+            throw new IOException("Malformed URL for wallpaper image");
+        } catch (IOException e) {
+            throw new IOException("Error downloading wallpaper image");
+        }
+    }
 
-                dataStore.putPhoto(p);
-
-                // Notify User
-                notificationUtils.pushNewWallpaperNotif(p);
-
-                // If user wants auto-magical setting, set the wallpaper
-                if (PrefUtils.shouldSetWallpaperAutomatically(context)) {
-                    WallpaperManager.getInstance(context).setBitmap(image);
-                }
-
-                Log.i(TAG, "Photo saved successfully!");
-
-                stopSelf();
-            } else {
-                Log.i(TAG, "Saving isn't working for some reason.");
-            }
-        });
+    private Photo makePhotoObject(_Photo photo) throws IOException {
+        Bitmap wallpaperImage = downloadWallpaperImage(photo);
+        if (wallpaperImage != null) {
+            // todo: implement builder pattern for Photo.class
+            Photo p = new Photo();
+            p.setPhotographerName(Utils.toTitleCase(photo.getPhotographer().getName()));
+            p.setPhotographerUserName(photo.getPhotographer().getUsername());
+            p.setPhotoDownloadUrl(photo.getLinks().getDownloadLink());
+            p.setPhotoHtmlUrl(photo.getLinks().getHtmlLink());
+            p.setPhotoFullUrl(photo.getUrls().getFullUrl());
+            p.setPhoto(wallpaperImage);
+            return p;
+        } else {
+            // todo: do something here
+            return null;
+        }
     }
 }
