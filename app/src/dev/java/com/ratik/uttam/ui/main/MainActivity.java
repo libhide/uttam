@@ -172,7 +172,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
             }
 
             // cast first notification
-            notificationUtils.pushFirstNotification(photo);
+            notificationUtils.pushNewWallpaperNotification();
 
             // update first run state
             Utils.setFirstRun(this, false);
