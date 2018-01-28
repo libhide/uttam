@@ -65,16 +65,16 @@ public class GetPhotoJob extends JobService {
 
     private void fetchPhoto(JobParameters parameters) {
         Log.i(TAG, "Fetching photo...");
-        service.getRandomPhoto2(BuildConfig.CLIENT_ID, Constants.API.COLLECTIONS)
+        service.getRandomPhoto(BuildConfig.CLIENT_ID, Constants.API.COLLECTIONS)
                 .map(photoResponse -> photoResponse.body())
                 .map(photo -> makePhotoObject(photo))
                 .map(photo -> dataStore.putPhoto(photo))
-                .observeOn(Schedulers.io())
-                .subscribeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         (completable) -> {
                             // Notify User
-                            // notificationUtils.pushNewWallpaperNotif(p);
+                            notificationUtils.pushNewWallpaperNotification();
 
                             // If user wants auto-magical setting, set the wallpaper
                             if (PrefUtils.shouldSetWallpaperAutomatically(context)) {
