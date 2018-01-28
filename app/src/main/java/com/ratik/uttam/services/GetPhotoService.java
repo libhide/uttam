@@ -10,13 +10,13 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.ratik.uttam.BuildConfig;
+import com.ratik.uttam.Constants;
 import com.ratik.uttam.api.UnsplashService;
 import com.ratik.uttam.data.DataStore;
 import com.ratik.uttam.di.Injector;
 import com.ratik.uttam.model.Photo;
 import com.ratik.uttam.model._Photo;
 import com.ratik.uttam.utils.BitmapUtils;
-import com.ratik.uttam.utils.FetchUtils;
 import com.ratik.uttam.utils.NotificationUtils;
 import com.ratik.uttam.utils.PrefUtils;
 import com.ratik.uttam.utils.Utils;
@@ -76,7 +76,7 @@ public class GetPhotoService extends Service {
 
     private void getRandomPhoto() {
         Log.i(TAG, "Getting random photo...");
-        service.getRandomPhoto(BuildConfig.CLIENT_ID, FetchUtils.getRandomCategory())
+        service.getRandomPhoto(BuildConfig.CLIENT_ID, Constants.API.COLLECTIONS)
                 .enqueue(new Callback<_Photo>() {
                     @Override
                     public void onResponse(Call<_Photo> call, Response<_Photo> response) {
