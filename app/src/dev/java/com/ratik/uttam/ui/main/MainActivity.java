@@ -239,7 +239,13 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     }
 
     public void showWallpaperCredits() {
-        String url = Constants.General.BASE_URL + photo.getPhotographerUserName();
+        Uri.Builder builder = new Uri.Builder();
+        builder.scheme("https")
+                .authority(Constants.General.BASE_DOMAIN)
+                .appendEncodedPath(photo.getPhotographerUserName())
+                .appendQueryParameter("utm_source", "uttam")
+                .appendQueryParameter("utm_medium", "referral");
+        String url = builder.build().toString();
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         startActivity(browserIntent);
     }
