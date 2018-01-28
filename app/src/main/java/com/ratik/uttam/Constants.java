@@ -7,10 +7,11 @@ public class Constants {
 
     public class API {
         public static final String BASE_URL = "https://api.unsplash.com/";
+        public static final String COLLECTIONS = "420324,935527,881815,589374,1113375,791207";
     }
 
     public class General {
-        public static final String BASE_URL = "https://unsplash.com/";
+        public static final String BASE_DOMAIN = "unsplash.com";
         public static final String WALLPAPER_FILE_NAME = "wallpaper.png";
     }
 

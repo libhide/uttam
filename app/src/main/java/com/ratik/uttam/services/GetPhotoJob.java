@@ -8,12 +8,12 @@ import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.ratik.uttam.BuildConfig;
+import com.ratik.uttam.Constants;
 import com.ratik.uttam.api.UnsplashService;
 import com.ratik.uttam.data.DataStore;
 import com.ratik.uttam.di.Injector;
 import com.ratik.uttam.model.Photo;
 import com.ratik.uttam.model._Photo;
-import com.ratik.uttam.utils.FetchUtils;
 import com.ratik.uttam.utils.NotificationUtils;
 import com.ratik.uttam.utils.PrefUtils;
 import com.ratik.uttam.utils.Utils;
@@ -65,7 +65,7 @@ public class GetPhotoJob extends JobService {
 
     private void fetchPhoto(JobParameters parameters) {
         Log.i(TAG, "Fetching photo...");
-        service.getRandomPhoto2(BuildConfig.CLIENT_ID, FetchUtils.getRandomCategory())
+        service.getRandomPhoto2(BuildConfig.CLIENT_ID, Constants.API.COLLECTIONS)
                 .map(photoResponse -> photoResponse.body())
                 .map(photo -> makePhotoObject(photo))
                 .map(photo -> dataStore.putPhoto(photo))

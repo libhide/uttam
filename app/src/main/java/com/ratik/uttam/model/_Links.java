@@ -11,7 +11,7 @@ public class _Links {
     @SerializedName("html")
     private String htmlLink;
 
-    @SerializedName("download")
+    @SerializedName("download_location")
     private String downloadLink;
 
     public String getHtmlLink() {

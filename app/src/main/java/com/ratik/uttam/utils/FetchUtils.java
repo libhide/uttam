@@ -2,22 +2,12 @@ package com.ratik.uttam.utils;
 
 import com.ratik.uttam.model.Photo;
 
-import java.util.Random;
-
 /**
  * Created by Ratik on 08/09/17.
  */
 
 public class FetchUtils {
     private static final String TAG = FetchUtils.class.getSimpleName();
-
-    public static String getRandomCategory() {
-        // 2 == Buildings, 4 == Nature
-        int[] categories = {2, 4};
-        Random random = new Random();
-        int index = random.nextInt(categories.length);
-        return "" + categories[index];
-    }
 
     public static Photo getHeroPhoto() {
         Photo photo = new Photo();
