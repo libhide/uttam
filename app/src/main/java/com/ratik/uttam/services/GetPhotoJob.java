@@ -66,7 +66,6 @@ public class GetPhotoJob extends JobService {
     private void fetchPhoto(JobParameters parameters) {
         Log.i(TAG, "Fetching photo...");
         service.getRandomPhoto(BuildConfig.CLIENT_ID, Constants.Api.COLLECTIONS)
-                .map(photoResponse -> photoResponse.body())
                 .map(photo -> makePhotoObject(photo))
                 .map(photo -> dataStore.putPhoto(photo))
                 .subscribeOn(Schedulers.io())
