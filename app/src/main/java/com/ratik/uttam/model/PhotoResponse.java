@@ -5,26 +5,26 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by Ratik on 26/02/16.
  */
-public class _Photo {
+public class PhotoResponse {
 
     @SerializedName("urls")
-    private _Urls urls;
+    private UrlsResponse urls;
 
     @SerializedName("links")
-    private _Links links;
+    private LinksResponse links;
 
     @SerializedName("user")
-    private _Photographer photographer;
+    private PhotographerResponse photographer;
 
-    public _Urls getUrls() {
+    public UrlsResponse getUrls() {
         return urls;
     }
 
-    public _Links getLinks() {
+    public LinksResponse getLinks() {
         return links;
     }
 
-    public _Photographer getPhotographer() {
+    public PhotographerResponse getPhotographer() {
         return photographer;
     }
 }

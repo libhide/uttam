@@ -1,5 +1,6 @@
 package com.ratik.uttam.utils;
 
+import com.ratik.uttam.Constants;
 import com.ratik.uttam.model.Photo;
 
 /**
@@ -10,13 +11,13 @@ public class FetchUtils {
     private static final String TAG = FetchUtils.class.getSimpleName();
 
     public static Photo getHeroPhoto() {
-        Photo photo = new Photo();
-        photo.setPhotographerName("Efe Kurnaz");
-        photo.setPhotographerUserName("@efekurnaz");
-        photo.setPhotoFullUrl("https://images.unsplash.com/photo-1500462918059-b1a0cb512f1d?dpr=1&auto=format&fit=crop&w=1534&h=&q=60&cs=tinysrgb&crop=");
-        photo.setPhoto(null);
-        photo.setPhotoHtmlUrl("https://unsplash.com/photos/RnCPiXixooY");
-        photo.setPhotoDownloadUrl("https://unsplash.com/photos/RnCPiXixooY/download");
-        return photo;
+        return new Photo.Builder()
+                .setPhoto(null)
+                .setPhotographerName(Constants.Fetch.FIRST_WALLPAPER_PHOTOGRAPHER_NAME)
+                .setPhotographerUserName(Constants.Fetch.FIRST_WALLPAPER_PHOTOGRAPHER_USERNAME)
+                .setPhotoFullUrl(Constants.Fetch.FIRST_WALLPAPER_FULL_URL)
+                .setPhotoHtmlUrl(Constants.Fetch.FIRST_WALLPAPER_HTML_URL)
+                .setPhotoDownloadUrl(Constants.Fetch.FIRST_WALLPAPER_DOWNLOAD_URL)
+                .build();
     }
 }

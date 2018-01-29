@@ -17,6 +17,16 @@ public class Photo {
     private String photoDownloadUrl;
     private String photoHtmlUrl;
 
+    private Photo(Bitmap photo, String photographerName, String photographerUserName,
+                 String photoFullUrl, String photoDownloadUrl, String photoHtmlUrl) {
+        this.photo = photo;
+        this.photographerName = photographerName;
+        this.photographerUserName = photographerUserName;
+        this.photoFullUrl = photoFullUrl;
+        this.photoDownloadUrl = photoDownloadUrl;
+        this.photoHtmlUrl = photoHtmlUrl;
+    }
+
     public Bitmap getPhoto() {
         return photo;
     }
@@ -29,39 +39,66 @@ public class Photo {
         return photographerName;
     }
 
-    public void setPhotographerName(String photographerName) {
-        this.photographerName = photographerName;
-    }
-
     public String getPhotographerUserName() {
         return photographerUserName;
-    }
-
-    public void setPhotographerUserName(String photographerUserName) {
-        this.photographerUserName = photographerUserName;
     }
 
     public String getPhotoFullUrl() {
         return photoFullUrl;
     }
 
-    public void setPhotoFullUrl(String photoFullUrl) {
-        this.photoFullUrl = photoFullUrl;
-    }
-
     public String getPhotoDownloadUrl() {
         return photoDownloadUrl;
-    }
-
-    public void setPhotoDownloadUrl(String photoDownloadUrl) {
-        this.photoDownloadUrl = photoDownloadUrl;
     }
 
     public String getPhotoHtmlUrl() {
         return photoHtmlUrl;
     }
 
-    public void setPhotoHtmlUrl(String photoHtmlUrl) {
-        this.photoHtmlUrl = photoHtmlUrl;
+    public static class Builder {
+        // Wallpaper
+        private Bitmap photo;
+
+        // Meta data
+        private String photographerName;
+        private String photographerUserName;
+        private String photoFullUrl;
+        private String photoDownloadUrl;
+        private String photoHtmlUrl;
+
+        public Builder setPhoto(Bitmap bitmap) {
+            this.photo = bitmap;
+            return this;
+        }
+
+        public Builder setPhotographerName(String photographerName) {
+            this.photographerName = photographerName;
+            return this;
+        }
+
+        public Builder setPhotographerUserName(String photographerUserName) {
+            this.photographerUserName = photographerUserName;
+            return this;
+        }
+
+        public Builder setPhotoFullUrl(String photoFullUrl) {
+            this.photoFullUrl = photoFullUrl;
+            return this;
+        }
+
+        public Builder setPhotoDownloadUrl(String photoDownloadUrl) {
+            this.photoDownloadUrl = photoDownloadUrl;
+            return this;
+        }
+
+        public Builder setPhotoHtmlUrl(String photoHtmlUrl) {
+            this.photoHtmlUrl = photoHtmlUrl;
+            return this;
+        }
+
+        public Photo build() {
+            return new Photo(photo, photographerName, photographerUserName,
+                    photoFullUrl, photoDownloadUrl, photoHtmlUrl);
+        }
     }
 }
