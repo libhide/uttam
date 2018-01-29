@@ -5,7 +5,7 @@ package com.ratik.uttam;
  */
 public class Constants {
 
-    public class API {
+    public class Api {
         public static final String BASE_URL = "https://api.unsplash.com/";
         public static final String COLLECTIONS = "420324,935527,881815,589374,1113375,791207";
     }
@@ -17,6 +17,12 @@ public class Constants {
 
     public class Fetch {
         public static final int WALLPAPER_FETCH_JOB_ID = 1;
+
+        public static final String FIRST_WALLPAPER_PHOTOGRAPHER_NAME = "Efe Kurnaz";
+        public static final String FIRST_WALLPAPER_PHOTOGRAPHER_USERNAME = "@efekurnaz";
+        public static final String FIRST_WALLPAPER_FULL_URL = "https://images.unsplash.com/photo-1500462918059-b1a0cb512f1d";
+        public static final String FIRST_WALLPAPER_HTML_URL = "https://unsplash.com/photos/RnCPiXixooY";
+        public static final String FIRST_WALLPAPER_DOWNLOAD_URL = "https://unsplash.com/photos/RnCPiXixooY/download";
     }
 
     public class Data {

@@ -13,7 +13,7 @@ import com.ratik.uttam.api.UnsplashService;
 import com.ratik.uttam.data.DataStore;
 import com.ratik.uttam.di.Injector;
 import com.ratik.uttam.model.Photo;
-import com.ratik.uttam.model._Photo;
+import com.ratik.uttam.model.PhotoResponse;
 import com.ratik.uttam.utils.NotificationUtils;
 import com.ratik.uttam.utils.PrefUtils;
 import com.ratik.uttam.utils.Utils;
@@ -65,7 +65,7 @@ public class GetPhotoJob extends JobService {
 
     private void fetchPhoto(JobParameters parameters) {
         Log.i(TAG, "Fetching photo...");
-        service.getRandomPhoto(BuildConfig.CLIENT_ID, Constants.API.COLLECTIONS)
+        service.getRandomPhoto(BuildConfig.CLIENT_ID, Constants.Api.COLLECTIONS)
                 .map(photoResponse -> photoResponse.body())
                 .map(photo -> makePhotoObject(photo))
                 .map(photo -> dataStore.putPhoto(photo))
@@ -92,7 +92,7 @@ public class GetPhotoJob extends JobService {
                 );
     }
 
-    private Bitmap downloadWallpaperImage(_Photo photo) throws IOException {
+    private Bitmap downloadWallpaperImage(PhotoResponse photo) throws IOException {
         try {
             URL url = new URL(photo.getUrls().getFullUrl());
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -107,18 +107,17 @@ public class GetPhotoJob extends JobService {
         }
     }
 
-    private Photo makePhotoObject(_Photo photo) throws IOException {
+    private Photo makePhotoObject(PhotoResponse photo) throws IOException {
         Bitmap wallpaperImage = downloadWallpaperImage(photo);
         if (wallpaperImage != null) {
-            // todo: implement builder pattern for Photo.class
-            Photo p = new Photo();
-            p.setPhotographerName(Utils.toTitleCase(photo.getPhotographer().getName()));
-            p.setPhotographerUserName(photo.getPhotographer().getUsername());
-            p.setPhotoDownloadUrl(photo.getLinks().getDownloadLink());
-            p.setPhotoHtmlUrl(photo.getLinks().getHtmlLink());
-            p.setPhotoFullUrl(photo.getUrls().getFullUrl());
-            p.setPhoto(wallpaperImage);
-            return p;
+            return new Photo.Builder()
+                    .setPhoto(wallpaperImage)
+                    .setPhotoFullUrl(photo.getUrls().getFullUrl())
+                    .setPhotoHtmlUrl(photo.getLinks().getHtmlLink())
+                    .setPhotoDownloadUrl(photo.getLinks().getDownloadLink())
+                    .setPhotographerUserName(photo.getPhotographer().getUsername())
+                    .setPhotographerName(Utils.toTitleCase(photo.getPhotographer().getName()))
+                    .build();
         } else {
             // todo: do something here
             return null;

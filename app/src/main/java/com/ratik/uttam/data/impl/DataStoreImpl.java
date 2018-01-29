@@ -62,14 +62,14 @@ public class DataStoreImpl implements DataStore {
 
     @NonNull
     private Photo getPhoto(Bitmap wallpaper) {
-        Photo photo = new Photo();
-        photo.setPhoto(wallpaper);
-        photo.setPhotographerName(prefs.getString(Constants.Data.PHOTOGRAPHER_NAME, ""));
-        photo.setPhotographerUserName(prefs.getString(Constants.Data.PHOTOGRAPHER_USERNAME, ""));
-        photo.setPhotoFullUrl(prefs.getString(Constants.Data.FULL_URL, ""));
-        photo.setPhotoDownloadUrl(prefs.getString(Constants.Data.DOWNLOAD_URL, ""));
-        photo.setPhotoHtmlUrl(prefs.getString(Constants.Data.HTML_URL, ""));
-        return photo;
+        return new Photo.Builder()
+                .setPhoto(wallpaper)
+                .setPhotographerName(prefs.getString(Constants.Data.PHOTOGRAPHER_NAME, ""))
+                .setPhotographerUserName(prefs.getString(Constants.Data.PHOTOGRAPHER_USERNAME, ""))
+                .setPhotoFullUrl(prefs.getString(Constants.Data.FULL_URL, ""))
+                .setPhotoDownloadUrl(prefs.getString(Constants.Data.DOWNLOAD_URL, ""))
+                .setPhotoHtmlUrl(prefs.getString(Constants.Data.HTML_URL, ""))
+                .build();
     }
 
     @Override
