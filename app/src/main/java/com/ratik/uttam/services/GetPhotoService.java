@@ -73,9 +73,8 @@ public class GetPhotoService extends Service {
     private void fetchPhoto() {
         Log.i(TAG, "Getting random photo...");
         service.getRandomPhoto(BuildConfig.CLIENT_ID, Constants.Api.COLLECTIONS)
-                .map(photoResponse -> photoResponse.body())
                 .map(photo -> makePhotoObject(photo))
-                .doOnNext(photo -> dataStore.putPhoto(photo))
+                .map(photo -> dataStore.putPhoto(photo))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
