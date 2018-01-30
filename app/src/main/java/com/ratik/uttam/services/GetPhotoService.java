@@ -16,14 +16,16 @@ import com.ratik.uttam.data.DataStore;
 import com.ratik.uttam.di.Injector;
 import com.ratik.uttam.model.Photo;
 import com.ratik.uttam.model.PhotoResponse;
+import com.ratik.uttam.utils.BitmapUtils;
 import com.ratik.uttam.utils.NotificationUtils;
 import com.ratik.uttam.utils.PrefUtils;
 import com.ratik.uttam.utils.Utils;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.inject.Inject;
@@ -73,7 +75,8 @@ public class GetPhotoService extends Service {
     private void fetchPhoto() {
         Log.i(TAG, "Getting random photo...");
         service.getRandomPhoto(BuildConfig.CLIENT_ID, Constants.Api.COLLECTIONS)
-                .map(photo -> makePhotoObject(photo))
+                .map(photoResponse -> makePhotoObject(photoResponse))
+                .map(photo -> BitmapUtils.scaleBitmap(this, photo))
                 .map(photo -> dataStore.putPhoto(photo))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -99,35 +102,47 @@ public class GetPhotoService extends Service {
                 );
     }
 
-    private Bitmap downloadWallpaperImage(PhotoResponse photo) throws IOException {
+    private Bitmap downloadAndSaveWallpaperImage(PhotoResponse photoResponse) throws IOException {
         try {
-            URL url = new URL(photo.getUrls().getFullUrl());
+            URL url = new URL(photoResponse.getUrls().getFullUrl());
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setDoInput(true);
             connection.connect();
-            InputStream input = connection.getInputStream();
-            return BitmapFactory.decodeStream(input);
-        } catch (MalformedURLException e) {
-            throw new IOException("Malformed URL for wallpaper image");
+            InputStream inputStream = connection.getInputStream();
+
+            File imageFile = createFile();
+            FileOutputStream output = new FileOutputStream(imageFile);
+            int bufferSize = 1024;
+            byte[] buffer = new byte[bufferSize];
+            int len = 0;
+            while ((len = inputStream.read(buffer)) != -1) {
+                output.write(buffer, 0, len);
+            }
+            return BitmapFactory.decodeFile(imageFile.getAbsolutePath());
         } catch (IOException e) {
             throw new IOException("Error downloading wallpaper image");
         }
     }
 
-    private Photo makePhotoObject(PhotoResponse photo) throws IOException {
-        Bitmap wallpaperImage = downloadWallpaperImage(photo);
-        if (wallpaperImage != null) {
-            return new Photo.Builder()
-                    .setPhoto(wallpaperImage)
-                    .setPhotoFullUrl(photo.getUrls().getFullUrl())
-                    .setPhotoHtmlUrl(photo.getLinks().getHtmlLink())
-                    .setPhotoDownloadUrl(photo.getLinks().getDownloadLink())
-                    .setPhotographerUserName(photo.getPhotographer().getUsername())
-                    .setPhotographerName(Utils.toTitleCase(photo.getPhotographer().getName()))
-                    .build();
-        } else {
-            // todo: do something here
-            return null;
+    private File createFile() {
+        File directory;
+        directory = context.getDir("Uttam", Context.MODE_PRIVATE);
+        if (!directory.exists() && !directory.mkdirs()) {
+            Log.e("PhotoSaver", "Error creating directory " + directory);
         }
+
+        return new File(directory, Constants.General.WALLPAPER_FILE_NAME);
+    }
+
+    private Photo makePhotoObject(PhotoResponse photoResponse) throws IOException {
+        Bitmap wallpaperImage = downloadAndSaveWallpaperImage(photoResponse);
+        return new Photo.Builder()
+                .setPhoto(wallpaperImage)
+                .setPhotoFullUrl(photoResponse.getUrls().getFullUrl())
+                .setPhotoHtmlUrl(photoResponse.getLinks().getHtmlLink())
+                .setPhotoDownloadUrl(photoResponse.getLinks().getDownloadLink())
+                .setPhotographerUserName(photoResponse.getPhotographer().getUsername())
+                .setPhotographerName(Utils.toTitleCase(photoResponse.getPhotographer().getName()))
+                .build();
     }
 }

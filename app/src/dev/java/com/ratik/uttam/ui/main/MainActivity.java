@@ -128,6 +128,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
                 .compose(rxPermissions.ensure(Manifest.permission.WRITE_EXTERNAL_STORAGE))
                 .subscribe(granted -> {
                     if (granted) {
+                        Toast.makeText(MainActivity.this, R.string.wallpaper_saving_message, Toast.LENGTH_SHORT).show();
                         saveWallpaperToExternalStorage();
                         Toast.makeText(MainActivity.this, R.string.wallpaper_saved_message, Toast.LENGTH_SHORT).show();
                         sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(photoSaver.getPhotoFile())));
