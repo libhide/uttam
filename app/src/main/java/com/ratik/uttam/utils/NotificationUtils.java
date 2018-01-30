@@ -90,7 +90,7 @@ public class NotificationUtils {
                         .setContentTitle(context.getString(R.string.wallpaper_notif_title))
                         .setContentText(context.getString(R.string.wallpaper_notif_photo_by) + photo.getPhotographerName())
                         .setStyle(new NotificationCompat.BigPictureStyle()
-                                .bigPicture(photo.getPhoto())
+                                .bigPicture(BitmapUtils.cropToSquare(photo.getPhoto()))
                                 .setBigContentTitle(context.getString(R.string.wallpaper_notif_title)))
                         .setContentIntent(showWallpaperIntent);
 
