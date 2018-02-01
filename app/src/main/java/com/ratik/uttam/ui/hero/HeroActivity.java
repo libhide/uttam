@@ -30,6 +30,11 @@ import com.ratik.uttam.utils.PhotoSaver;
 import com.ratik.uttam.utils.PrefUtils;
 import com.ratik.uttam.utils.Utils;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 import javax.inject.Inject;
 
 import butterknife.BindView;
@@ -47,9 +52,6 @@ public class HeroActivity extends AppCompatActivity {
 
     @Inject
     DataStore dataStore;
-
-    @Inject
-    PhotoSaver photoSaver;
 
     @Nullable
     @BindView(R.id.uttam)
@@ -94,9 +96,20 @@ public class HeroActivity extends AppCompatActivity {
         setupDefaultPrefs();
 
         // Save first photo for user
-        Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.uttam_hero);
+        Bitmap firstFull = BitmapFactory.decodeResource(getResources(), R.drawable.uttam_hero);
+        Bitmap firstRegular = BitmapFactory.decodeResource(getResources(), R.drawable.uttam_hero_regular);
+        Bitmap firstThumb = BitmapFactory.decodeResource(getResources(), R.drawable.uttam_hero_thumb);
+
+        String firstFullUri = storeImage(firstFull, "FULL");
+        String firstRegularUri = storeImage(firstRegular, "REGULAR");
+        String firstThumbUri = storeImage(firstThumb, "THUMB");
+
         Photo photo = FetchUtils.getHeroPhoto();
-        photo.setPhoto(b);
+
+        photo.setPhotoUri(firstFullUri);
+        photo.setRegularPhotoUri(firstRegularUri);
+        photo.setThumbPhotoUri(firstThumbUri);
+
         dataStore.putPhoto(photo)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -173,5 +186,19 @@ public class HeroActivity extends AppCompatActivity {
             PrefUtils.setCompressState(this, false);
         }
         PrefUtils.setAutomaticWallpaperSet(this, true);
+    }
+
+    private String storeImage(Bitmap image, String photoType) {
+        File pictureFile = FetchUtils.createFile(this, photoType);
+        try {
+            FileOutputStream fos = new FileOutputStream(pictureFile);
+            image.compress(Bitmap.CompressFormat.PNG, 90, fos);
+            fos.close();
+        } catch (FileNotFoundException e) {
+            Log.d(TAG, "File not found: " + e.getMessage());
+        } catch (IOException e) {
+            Log.d(TAG, "Error accessing file: " + e.getMessage());
+        }
+        return pictureFile.getAbsolutePath();
     }
 }

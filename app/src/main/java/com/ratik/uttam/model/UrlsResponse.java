@@ -11,7 +11,21 @@ public class UrlsResponse {
     @SerializedName("full")
     private String fullUrl;
 
+    @SerializedName("regular")
+    private String regularUrl;
+
+    @SerializedName("thumb")
+    private String thumbUrl;
+
     public String getFullUrl() {
         return fullUrl;
+    }
+
+    public String getRegularUrl() {
+        return regularUrl;
+    }
+
+    public String getThumbUrl() {
+        return thumbUrl;
     }
 }

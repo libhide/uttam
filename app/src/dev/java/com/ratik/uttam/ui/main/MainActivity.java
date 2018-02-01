@@ -3,6 +3,8 @@ package com.ratik.uttam.ui.main;
 import android.Manifest;
 import android.app.WallpaperManager;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -62,6 +64,8 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     private RxPermissions rxPermissions;
     private Photo photo;
+    private Bitmap wallpaper;
+    private Bitmap wallpaperRegular;
 
     // Views
     @BindView(R.id.wallpaper)
@@ -159,15 +163,19 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     public void showPhoto(Photo p) {
         // save the returned photo
         this.photo = p;
+        this.wallpaper = BitmapFactory.decodeFile(photo.getPhotoUri());
+        this.wallpaperRegular = BitmapFactory.decodeFile(photo.getRegularPhotoUri());
 
         // set views
-        wallpaperImageView.setImageBitmap(photo.getPhoto());
+        // Uri photoUri = Uri.parse(photo.getPhotoUri());
+        // Picasso.with(this).load(photoUri).into(wallpaperImageView);
+        wallpaperImageView.setImageBitmap(wallpaperRegular);
         photographerTextView.setText(photo.getPhotographerName());
 
         if (Utils.isFirstRun(this)) {
             // Set it as the wallpaper
             try {
-                WallpaperManager.getInstance(this).setBitmap(photo.getPhoto());
+                WallpaperManager.getInstance(this).setBitmap(wallpaper);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -277,7 +285,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         if (!photoSaver.isExternal()) {
             photoSaver.setExternal(true)
                     .setFileName(String.format("wallpaper_%s.png", timestamp))
-                    .save(photo.getPhoto());
+                    .save(wallpaper);
         }
         return photoSaver.getPhotoFile();
     }

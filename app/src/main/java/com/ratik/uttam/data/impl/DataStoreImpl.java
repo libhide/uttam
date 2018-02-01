@@ -1,14 +1,11 @@
 package com.ratik.uttam.data.impl;
 
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.support.annotation.NonNull;
 
 import com.ratik.uttam.Constants;
 import com.ratik.uttam.data.DataStore;
 import com.ratik.uttam.di.Injector;
 import com.ratik.uttam.model.Photo;
-import com.ratik.uttam.utils.PhotoSaver;
 
 import javax.inject.Inject;
 
@@ -25,25 +22,20 @@ public class DataStoreImpl implements DataStore {
     @Inject
     SharedPreferences prefs;
 
-    @Inject
-    PhotoSaver photoSaver;
-
     public DataStoreImpl() {
         Injector.getAppComponent().inject(this);
     }
 
     @Override
     public Completable putPhoto(Photo photo) {
-        return Completable.fromAction(() -> {
-            photoSaver.setExternal(false)
-                    .setFileName(Constants.General.WALLPAPER_FILE_NAME)
-                    .save(photo.getPhoto());
-            storePhotoMetadata(photo);
-        });
+        return Completable.fromAction(() -> storePhoto(photo));
     }
 
-    private void storePhotoMetadata(Photo photo) {
+    private void storePhoto(Photo photo) {
         SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(Constants.Data.PHOTO_URI, photo.getPhotoUri());
+        editor.putString(Constants.Data.PHOTO_REGULAR_URI, photo.getRegularPhotoUri());
+        editor.putString(Constants.Data.PHOTO_THUMB_URI, photo.getThumbPhotoUri());
         editor.putString(Constants.Data.PHOTOGRAPHER_NAME, photo.getPhotographerName());
         editor.putString(Constants.Data.PHOTOGRAPHER_USERNAME, photo.getPhotographerUserName());
         editor.putString(Constants.Data.FULL_URL, photo.getPhotoFullUrl());
@@ -54,26 +46,15 @@ public class DataStoreImpl implements DataStore {
 
     @Override
     public Single<Photo> getPhoto() {
-        return Single.fromCallable(() -> {
-            Bitmap wallpaper = photoSaver.load();
-            return getPhoto(wallpaper);
-        });
-    }
-
-    @NonNull
-    private Photo getPhoto(Bitmap wallpaper) {
-        return new Photo.Builder()
-                .setPhoto(wallpaper)
+        return Single.fromCallable(() -> new Photo.Builder()
+                .setPhotoUri(prefs.getString(Constants.Data.PHOTO_URI, ""))
+                .setRegularPhotoUri(prefs.getString(Constants.Data.PHOTO_REGULAR_URI, ""))
+                .setThumbPhotoUri(prefs.getString(Constants.Data.PHOTO_THUMB_URI, ""))
                 .setPhotographerName(prefs.getString(Constants.Data.PHOTOGRAPHER_NAME, ""))
                 .setPhotographerUserName(prefs.getString(Constants.Data.PHOTOGRAPHER_USERNAME, ""))
                 .setPhotoFullUrl(prefs.getString(Constants.Data.FULL_URL, ""))
                 .setPhotoDownloadUrl(prefs.getString(Constants.Data.DOWNLOAD_URL, ""))
                 .setPhotoHtmlUrl(prefs.getString(Constants.Data.HTML_URL, ""))
-                .build();
-    }
-
-    @Override
-    public void clear() {
-        // unimplemented
+                .build());
     }
 }
