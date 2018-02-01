@@ -14,6 +14,4 @@ public interface DataStore {
     Completable putPhoto(Photo photo);
 
     Single<Photo> getPhoto();
-
-    void clear();
 }

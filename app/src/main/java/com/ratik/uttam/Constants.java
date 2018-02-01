@@ -13,6 +13,8 @@ public class Constants {
     public class General {
         public static final String BASE_DOMAIN = "unsplash.com";
         public static final String WALLPAPER_FILE_NAME = "wallpaper.png";
+        public static final String WALLPAPER_REGULAR_FILE_NAME = "wallpaper_reg.png";
+        public static final String WALLPAPER_THUMB_FILE_NAME = "wallpaper_thumb.png";
     }
 
     public class Fetch {
@@ -26,6 +28,9 @@ public class Constants {
     }
 
     public class Data {
+        public static final String PHOTO_URI = "photo_uri";
+        public static final String PHOTO_REGULAR_URI = "photo_regular_uri";
+        public static final String PHOTO_THUMB_URI = "photo_thumb_uri";
         public static final String PHOTOGRAPHER_NAME = "photographer_name";
         public static final String PHOTOGRAPHER_USERNAME = "photographer_username";
         public static final String FULL_URL = "full_url";

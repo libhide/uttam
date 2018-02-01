@@ -1,14 +1,14 @@
 package com.ratik.uttam.model;
 
-import android.graphics.Bitmap;
-
 /**
  * Created by Ratik on 17/10/17.
  */
 
 public class Photo {
     // Wallpaper
-    private Bitmap photo;
+    private String photoUri;
+    private String regularPhotoUri;
+    private String thumbPhotoUri;
 
     // Meta data
     private String photographerName;
@@ -17,9 +17,12 @@ public class Photo {
     private String photoDownloadUrl;
     private String photoHtmlUrl;
 
-    private Photo(Bitmap photo, String photographerName, String photographerUserName,
-                 String photoFullUrl, String photoDownloadUrl, String photoHtmlUrl) {
-        this.photo = photo;
+    private Photo(String photoUri, String regularPhotoUri, String thumbPhotoUri,
+                  String photographerName, String photographerUserName, String photoFullUrl,
+                  String photoDownloadUrl, String photoHtmlUrl) {
+        this.photoUri = photoUri;
+        this.regularPhotoUri = regularPhotoUri;
+        this.thumbPhotoUri = thumbPhotoUri;
         this.photographerName = photographerName;
         this.photographerUserName = photographerUserName;
         this.photoFullUrl = photoFullUrl;
@@ -27,12 +30,28 @@ public class Photo {
         this.photoHtmlUrl = photoHtmlUrl;
     }
 
-    public Bitmap getPhoto() {
-        return photo;
+    public String getPhotoUri() {
+        return photoUri;
     }
 
-    public void setPhoto(Bitmap photo) {
-        this.photo = photo;
+    public void setPhotoUri(String photoUri) {
+        this.photoUri = photoUri;
+    }
+
+    public String getRegularPhotoUri() {
+        return regularPhotoUri;
+    }
+
+    public void setRegularPhotoUri(String regularPhotoUri) {
+        this.regularPhotoUri = regularPhotoUri;
+    }
+
+    public String getThumbPhotoUri() {
+        return thumbPhotoUri;
+    }
+
+    public void setThumbPhotoUri(String thumbPhotoUri) {
+        this.thumbPhotoUri = thumbPhotoUri;
     }
 
     public String getPhotographerName() {
@@ -57,7 +76,9 @@ public class Photo {
 
     public static class Builder {
         // Wallpaper
-        private Bitmap photo;
+        private String photoUri;
+        private String regularPhotoUri;
+        private String thumbPhotoUri;
 
         // Meta data
         private String photographerName;
@@ -66,8 +87,18 @@ public class Photo {
         private String photoDownloadUrl;
         private String photoHtmlUrl;
 
-        public Builder setPhoto(Bitmap bitmap) {
-            this.photo = bitmap;
+        public Builder setPhotoUri(String photoUri) {
+            this.photoUri = photoUri;
+            return this;
+        }
+
+        public Builder setRegularPhotoUri(String regularPhotoUri) {
+            this.regularPhotoUri = regularPhotoUri;
+            return this;
+        }
+
+        public Builder setThumbPhotoUri(String thumbPhotoUri) {
+            this.thumbPhotoUri = thumbPhotoUri;
             return this;
         }
 
@@ -97,8 +128,8 @@ public class Photo {
         }
 
         public Photo build() {
-            return new Photo(photo, photographerName, photographerUserName,
-                    photoFullUrl, photoDownloadUrl, photoHtmlUrl);
+            return new Photo(photoUri, regularPhotoUri, thumbPhotoUri, photographerName,
+                    photographerUserName, photoFullUrl, photoDownloadUrl, photoHtmlUrl);
         }
     }
 }

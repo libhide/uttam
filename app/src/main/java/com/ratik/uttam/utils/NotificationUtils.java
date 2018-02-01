@@ -5,6 +5,8 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 
@@ -82,15 +84,18 @@ public class NotificationUtils {
             notificationManager.createNotificationChannel(notificationChannel);
         }
 
+        Bitmap bigBitmap = BitmapFactory.decodeFile(photo.getRegularPhotoUri());
+        Bitmap thumbBitmap = BitmapFactory.decodeFile(photo.getThumbPhotoUri());
+
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(context, channelId)
                         .setSmallIcon(R.drawable.ic_stat_uttam)
-                        .setLargeIcon(BitmapUtils.cropToSquare(photo.getPhoto()))
+                        .setLargeIcon(thumbBitmap)
                         .setAutoCancel(true)
                         .setContentTitle(context.getString(R.string.wallpaper_notif_title))
                         .setContentText(context.getString(R.string.wallpaper_notif_photo_by) + photo.getPhotographerName())
                         .setStyle(new NotificationCompat.BigPictureStyle()
-                                .bigPicture(BitmapUtils.cropToSquare(photo.getPhoto()))
+                                .bigPicture(bigBitmap)
                                 .setBigContentTitle(context.getString(R.string.wallpaper_notif_title)))
                         .setContentIntent(showWallpaperIntent);
 
