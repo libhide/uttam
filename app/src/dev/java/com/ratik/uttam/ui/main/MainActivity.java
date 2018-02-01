@@ -145,6 +145,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
                 .compose(rxPermissions.ensure(Manifest.permission.WRITE_EXTERNAL_STORAGE))
                 .subscribe(granted -> {
                     if (granted) {
+                        Toast.makeText(MainActivity.this, R.string.wallpaper_setting_message, Toast.LENGTH_SHORT).show();
                         doWallpaperSetting();
                     } else {
                         Toast.makeText(this, "Fine, okay. :(", Toast.LENGTH_SHORT).show();
@@ -167,8 +168,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         this.wallpaperRegular = BitmapFactory.decodeFile(photo.getRegularPhotoUri());
 
         // set views
-        // Uri photoUri = Uri.parse(photo.getPhotoUri());
-        // Picasso.with(this).load(photoUri).into(wallpaperImageView);
         wallpaperImageView.setImageBitmap(wallpaperRegular);
         photographerTextView.setText(photo.getPhotographerName());
 

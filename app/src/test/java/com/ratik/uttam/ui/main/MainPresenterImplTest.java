@@ -44,7 +44,7 @@ public class MainPresenterImplTest {
         presenter = new MainPresenterImpl(dataStore);
         presenter.setView(view);
 
-        testPhoto = new Photo();
+        testPhoto = new Photo.Builder().build();
     }
 
     @Test
