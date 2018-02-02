@@ -66,12 +66,15 @@ public class GetPhotoJob extends JobService {
         Log.i(TAG, "Getting random photo...");
         service.getRandomPhoto(BuildConfig.CLIENT_ID, Constants.Api.COLLECTIONS)
                 .flatMapSingle(response -> {
-                    Single<String> full = FetchUtils.downloadWallpaperFull(context, response);
-                    Single<String> regular = FetchUtils.downloadWallpaperRegular(context, response);
-                    Single<String> thumb = FetchUtils.downloadWallpaperThumb(context, response);
+                    Single<String> fullSingle = FetchUtils.downloadWallpaperFull(context, response);
+                    Single<String> regularSingle = FetchUtils.downloadWallpaperRegular(context, response);
+                    Single<String> thumbSingle = FetchUtils.downloadWallpaperThumb(context, response);
 
-                    return Single.zip(full, regular, thumb,
-                            (s, s2, s3) -> getPhoto(response, s, s2, s3));
+                    return Single.zip(fullSingle, regularSingle, thumbSingle,
+                            (fullUri, regularUri, thumbUri) -> {
+                                Log.d(TAG, "Downloaded images");
+                                return getPhoto(response, fullUri, regularUri, thumbUri);
+                            });
                 })
                 .flatMapCompletable(photo -> dataStore.putPhoto(photo))
                 .subscribeOn(Schedulers.io())
@@ -99,11 +102,11 @@ public class GetPhotoJob extends JobService {
         Log.e(TAG, throwable.getMessage());
     }
 
-    private Photo getPhoto(PhotoResponse response, String s, String s2, String s3) {
+    private Photo getPhoto(PhotoResponse response, String fullUri, String regularUri, String thumbUri) {
         return new Photo.Builder()
-                .setPhotoUri(s)
-                .setRegularPhotoUri(s2)
-                .setThumbPhotoUri(s3)
+                .setPhotoUri(fullUri)
+                .setRegularPhotoUri(regularUri)
+                .setThumbPhotoUri(thumbUri)
                 .setPhotoFullUrl(response.getUrls().getFullUrl())
                 .setPhotoHtmlUrl(response.getLinks().getHtmlLink())
                 .setPhotoDownloadUrl(response.getLinks().getDownloadLink())
