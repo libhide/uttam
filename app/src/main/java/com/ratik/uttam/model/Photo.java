@@ -11,15 +11,17 @@ public class Photo {
     private String thumbPhotoUri;
 
     // Meta data
+    private String id;
     private String photographerName;
     private String photographerUserName;
     private String photoFullUrl;
     private String photoDownloadUrl;
     private String photoHtmlUrl;
 
-    private Photo(String photoUri, String regularPhotoUri, String thumbPhotoUri,
+    private Photo(String id, String photoUri, String regularPhotoUri, String thumbPhotoUri,
                   String photographerName, String photographerUserName, String photoFullUrl,
                   String photoDownloadUrl, String photoHtmlUrl) {
+        this.id = id;
         this.photoUri = photoUri;
         this.regularPhotoUri = regularPhotoUri;
         this.thumbPhotoUri = thumbPhotoUri;
@@ -28,6 +30,10 @@ public class Photo {
         this.photoFullUrl = photoFullUrl;
         this.photoDownloadUrl = photoDownloadUrl;
         this.photoHtmlUrl = photoHtmlUrl;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getPhotoUri() {
@@ -81,11 +87,17 @@ public class Photo {
         private String thumbPhotoUri;
 
         // Meta data
+        private String id;
         private String photographerName;
         private String photographerUserName;
         private String photoFullUrl;
         private String photoDownloadUrl;
         private String photoHtmlUrl;
+
+        public Builder setId(String id) {
+            this.id = id;
+            return this;
+        }
 
         public Builder setPhotoUri(String photoUri) {
             this.photoUri = photoUri;
@@ -128,7 +140,7 @@ public class Photo {
         }
 
         public Photo build() {
-            return new Photo(photoUri, regularPhotoUri, thumbPhotoUri, photographerName,
+            return new Photo(id, photoUri, regularPhotoUri, thumbPhotoUri, photographerName,
                     photographerUserName, photoFullUrl, photoDownloadUrl, photoHtmlUrl);
         }
     }

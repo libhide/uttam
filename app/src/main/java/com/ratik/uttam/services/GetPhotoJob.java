@@ -104,6 +104,7 @@ public class GetPhotoJob extends JobService {
 
     private Photo getPhoto(PhotoResponse response, String fullUri, String regularUri, String thumbUri) {
         return new Photo.Builder()
+                .setId(response.getId())
                 .setPhotoUri(fullUri)
                 .setRegularPhotoUri(regularUri)
                 .setThumbPhotoUri(thumbUri)

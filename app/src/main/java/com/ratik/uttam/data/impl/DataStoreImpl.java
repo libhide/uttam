@@ -34,6 +34,7 @@ public class DataStoreImpl implements DataStore {
 
     private void storePhoto(Photo photo) {
         SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(Constants.Data.PHOTO_ID, photo.getId());
         editor.putString(Constants.Data.PHOTO_URI, photo.getPhotoUri());
         editor.putString(Constants.Data.PHOTO_REGULAR_URI, photo.getRegularPhotoUri());
         editor.putString(Constants.Data.PHOTO_THUMB_URI, photo.getThumbPhotoUri());
@@ -49,6 +50,7 @@ public class DataStoreImpl implements DataStore {
     @Override
     public Single<Photo> getPhoto() {
         return Single.fromCallable(() -> new Photo.Builder()
+                .setId(prefs.getString(Constants.Data.PHOTO_ID, ""))
                 .setPhotoUri(prefs.getString(Constants.Data.PHOTO_URI, ""))
                 .setRegularPhotoUri(prefs.getString(Constants.Data.PHOTO_REGULAR_URI, ""))
                 .setThumbPhotoUri(prefs.getString(Constants.Data.PHOTO_THUMB_URI, ""))
