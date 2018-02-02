@@ -7,6 +7,9 @@ import com.google.gson.annotations.SerializedName;
  */
 public class PhotoResponse {
 
+    @SerializedName("id")
+    private String id;
+
     @SerializedName("urls")
     private UrlsResponse urls;
 
@@ -15,6 +18,10 @@ public class PhotoResponse {
 
     @SerializedName("user")
     private PhotographerResponse photographer;
+
+    public String getId() {
+        return id;
+    }
 
     public UrlsResponse getUrls() {
         return urls;
