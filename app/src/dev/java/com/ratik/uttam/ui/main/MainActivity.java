@@ -38,9 +38,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -115,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         // Adjust theme
         // Do cool stuff for L+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setEnterTransition(new Slide(Gravity.RIGHT));
+            getWindow().setEnterTransition(new Slide(Gravity.END));
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         } else {
             setTheme(R.style.AppTheme_Fullscreen);
