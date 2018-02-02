@@ -20,6 +20,7 @@ public class Constants {
     public class Fetch {
         public static final int WALLPAPER_FETCH_JOB_ID = 1;
 
+        public static final String FIRST_WALLPAPER_ID = "RnCPiXixooY";
         public static final String FIRST_WALLPAPER_PHOTOGRAPHER_NAME = "Efe Kurnaz";
         public static final String FIRST_WALLPAPER_PHOTOGRAPHER_USERNAME = "@efekurnaz";
         public static final String FIRST_WALLPAPER_FULL_URL = "https://images.unsplash.com/photo-1500462918059-b1a0cb512f1d";
@@ -28,6 +29,7 @@ public class Constants {
     }
 
     public class Data {
+        public static final String PHOTO_ID = "photo_id";
         public static final String PHOTO_URI = "photo_uri";
         public static final String PHOTO_REGULAR_URI = "photo_regular_uri";
         public static final String PHOTO_THUMB_URI = "photo_thumb_uri";

@@ -14,7 +14,6 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import io.reactivex.Completable;
 import io.reactivex.Single;
 
 /**
@@ -26,6 +25,7 @@ public class FetchUtils {
 
     public static Photo getHeroPhoto() {
         return new Photo.Builder()
+                .setId(Constants.Fetch.FIRST_WALLPAPER_ID)
                 .setPhotoUri(null)
                 .setRegularPhotoUri(null)
                 .setThumbPhotoUri(null)
