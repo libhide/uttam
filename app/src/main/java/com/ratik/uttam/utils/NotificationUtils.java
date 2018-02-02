@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import com.ratik.uttam.Constants;
 import com.ratik.uttam.R;
@@ -27,6 +28,8 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class NotificationUtils {
+
+    private static final String TAG = NotificationUtils.class.getSimpleName();
 
     private static final int SHOW_WALLPAPER = 1;
     private static int WALLPAPER_NOTIF_ID = 001;
@@ -58,7 +61,7 @@ public class NotificationUtils {
     }
 
     private void pushErrorNotification() {
-        // todo: what does one do here?
+        Log.e(TAG, "Error getting Photo from the DataStore. Notification FAILED.");
     }
 
     private NotificationCompat.Builder getWallpaperNotification(Photo photo) {
@@ -87,18 +90,15 @@ public class NotificationUtils {
         Bitmap bigBitmap = BitmapFactory.decodeFile(photo.getRegularPhotoUri());
         Bitmap thumbBitmap = BitmapFactory.decodeFile(photo.getThumbPhotoUri());
 
-        NotificationCompat.Builder builder =
-                new NotificationCompat.Builder(context, channelId)
-                        .setSmallIcon(R.drawable.ic_stat_uttam)
-                        .setLargeIcon(thumbBitmap)
-                        .setAutoCancel(true)
-                        .setContentTitle(context.getString(R.string.wallpaper_notif_title))
-                        .setContentText(context.getString(R.string.wallpaper_notif_photo_by) + photo.getPhotographerName())
-                        .setStyle(new NotificationCompat.BigPictureStyle()
-                                .bigPicture(bigBitmap)
-                                .setBigContentTitle(context.getString(R.string.wallpaper_notif_title)))
-                        .setContentIntent(showWallpaperIntent);
-
-        return builder;
+        return new NotificationCompat.Builder(context, channelId)
+                .setSmallIcon(R.drawable.ic_stat_uttam)
+                .setLargeIcon(thumbBitmap)
+                .setAutoCancel(true)
+                .setContentTitle(context.getString(R.string.wallpaper_notif_title))
+                .setContentText(context.getString(R.string.wallpaper_notif_photo_by) + photo.getPhotographerName())
+                .setStyle(new NotificationCompat.BigPictureStyle()
+                        .bigPicture(bigBitmap)
+                        .setBigContentTitle(context.getString(R.string.wallpaper_notif_title)))
+                .setContentIntent(showWallpaperIntent);
     }
 }
