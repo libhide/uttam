@@ -1,6 +1,7 @@
 package com.ratik.uttam.data.impl;
 
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.ratik.uttam.Constants;
 import com.ratik.uttam.data.DataStore;
@@ -42,6 +43,7 @@ public class DataStoreImpl implements DataStore {
         editor.putString(Constants.Data.DOWNLOAD_URL, photo.getPhotoDownloadUrl());
         editor.putString(Constants.Data.HTML_URL, photo.getPhotoHtmlUrl());
         editor.apply();
+        Log.d(DataStore.class.getSimpleName(), "Stored to prefs");
     }
 
     @Override

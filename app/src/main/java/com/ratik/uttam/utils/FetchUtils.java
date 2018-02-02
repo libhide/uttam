@@ -14,6 +14,9 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import io.reactivex.Completable;
+import io.reactivex.Single;
+
 /**
  * Created by Ratik on 08/09/17.
  */
@@ -86,41 +89,25 @@ public class FetchUtils {
         }
     }
 
-    private static String downloadWallpaperFull(Context context, PhotoResponse photoResponse) throws IOException {
-        URL url = new URL(photoResponse.getUrls().getFullUrl());
-        return downloadImage(context, url, "FULL");
+    public static Single<String> downloadWallpaperFull(Context context, PhotoResponse photoResponse) throws IOException {
+        return Single.fromCallable(() -> {
+            URL url = new URL(photoResponse.getUrls().getFullUrl());
+            return downloadImage(context, url, "FULL");
+        });
     }
 
-    private static String downloadWallpaperRegular(Context context, PhotoResponse photoResponse) throws IOException {
-        URL url = new URL(photoResponse.getUrls().getRegularUrl());
-        return downloadImage(context, url, "REGULAR");
+    public static Single<String> downloadWallpaperRegular(Context context, PhotoResponse photoResponse) throws IOException {
+        return Single.fromCallable(() -> {
+            URL url = new URL(photoResponse.getUrls().getRegularUrl());
+            return downloadImage(context, url, "REGULAR");
+        });
     }
 
-    private static String downloadWallpaperThumb(Context context, PhotoResponse photoResponse) throws IOException {
-        URL url = new URL(photoResponse.getUrls().getThumbUrl());
-        return downloadImage(context, url, "THUMB");
+    public static Single<String> downloadWallpaperThumb(Context context, PhotoResponse photoResponse) throws IOException {
+        return Single.fromCallable(() -> {
+            URL url = new URL(photoResponse.getUrls().getThumbUrl());
+            return downloadImage(context, url, "THUMB");
+        });
     }
 
-    /**
-     * @param context       Android Context
-     * @param photoResponse PhotoResponse object from Unsplash's API
-     * @return populated Photo object
-     * @throws IOException if something goes wrong
-     */
-    public static Photo makePhotoObject(Context context, PhotoResponse photoResponse) throws IOException {
-        String photoUri = downloadWallpaperFull(context, photoResponse);
-        String regularPhotoUri = downloadWallpaperRegular(context, photoResponse);
-        String thumbPhotoUri = downloadWallpaperThumb(context, photoResponse);
-
-        return new Photo.Builder()
-                .setPhotoUri(photoUri)
-                .setRegularPhotoUri(regularPhotoUri)
-                .setThumbPhotoUri(thumbPhotoUri)
-                .setPhotoFullUrl(photoResponse.getUrls().getFullUrl())
-                .setPhotoHtmlUrl(photoResponse.getLinks().getHtmlLink())
-                .setPhotoDownloadUrl(photoResponse.getLinks().getDownloadLink())
-                .setPhotographerUserName(photoResponse.getPhotographer().getUsername())
-                .setPhotographerName(Utils.toTitleCase(photoResponse.getPhotographer().getName()))
-                .build();
-    }
 }

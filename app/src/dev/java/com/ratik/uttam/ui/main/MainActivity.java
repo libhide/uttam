@@ -36,6 +36,8 @@ import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -64,8 +66,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     private RxPermissions rxPermissions;
     private Photo photo;
-    private Bitmap wallpaper;
-    private Bitmap wallpaperRegular;
 
     // Views
     @BindView(R.id.wallpaper)
@@ -163,18 +163,16 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     @Override
     public void showPhoto(Photo p) {
         // save the returned photo
-        this.photo = p;
-        this.wallpaper = BitmapFactory.decodeFile(photo.getPhotoUri());
-        this.wallpaperRegular = BitmapFactory.decodeFile(photo.getRegularPhotoUri());
-
-        // set views
+        photo = p;
+        Bitmap wallpaperRegular = BitmapFactory.decodeFile(photo.getRegularPhotoUri()); //todo bg thread
         wallpaperImageView.setImageBitmap(wallpaperRegular);
         photographerTextView.setText(photo.getPhotographerName());
 
         if (Utils.isFirstRun(this)) {
             // Set it as the wallpaper
             try {
-                WallpaperManager.getInstance(this).setBitmap(wallpaper);
+                InputStream inputStream = new URL(photo.getPhotoUri()).openStream();
+                WallpaperManager.getInstance(this).setStream(inputStream);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -279,13 +277,14 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     }
 
     private File saveWallpaperToExternalStorage() {
-        Date now = new Date();
-        String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(now);
-        if (!photoSaver.isExternal()) {
-            photoSaver.setExternal(true)
-                    .setFileName(String.format("wallpaper_%s.png", timestamp))
-                    .save(wallpaper);
-        }
+        //todo: move to background thread
+//        Date now = new Date();
+//        String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(now);
+//        if (!photoSaver.isExternal()) {
+//            photoSaver.setExternal(true)
+//                    .setFileName(String.format("wallpaper_%s.png", timestamp))
+//                    .save(wallpaper); //todo get
+//        }
         return photoSaver.getPhotoFile();
     }
 
