@@ -12,6 +12,7 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.transition.Slide;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,8 +30,8 @@ import com.ratik.uttam.di.Injector;
 import com.ratik.uttam.model.Photo;
 import com.ratik.uttam.services.GetPhotoService;
 import com.ratik.uttam.ui.settings.SettingsActivity;
+import com.ratik.uttam.utils.FileUtils;
 import com.ratik.uttam.utils.NotificationUtils;
-import com.ratik.uttam.utils.PhotoSaver;
 import com.ratik.uttam.utils.Utils;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
@@ -43,12 +44,15 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 import static com.ratik.uttam.R.id.creditsContainer;
 
 public class MainActivity extends AppCompatActivity implements MainContract.View {
 
     // Constants
+    public static final String TAG = MainActivity.class.getSimpleName();
     private static final int REQUEST_CODE_SET_WALLPAPER = 1;
 
     // Member variables
@@ -57,9 +61,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     @Inject
     NotificationUtils notificationUtils;
-
-    @Inject
-    PhotoSaver photoSaver;
 
     private RxPermissions rxPermissions;
     private Photo photo;
@@ -129,10 +130,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
                 .compose(rxPermissions.ensure(Manifest.permission.WRITE_EXTERNAL_STORAGE))
                 .subscribe(granted -> {
                     if (granted) {
-                        Toast.makeText(MainActivity.this, R.string.wallpaper_saving_message, Toast.LENGTH_SHORT).show();
                         saveWallpaperToExternalStorage();
-                        Toast.makeText(MainActivity.this, R.string.wallpaper_saved_message, Toast.LENGTH_SHORT).show();
-                        sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(photoSaver.getPhotoFile())));
                     } else {
                         Toast.makeText(this, "Fine, okay. :(", Toast.LENGTH_SHORT).show();
                     }
@@ -142,7 +140,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
                 .compose(rxPermissions.ensure(Manifest.permission.WRITE_EXTERNAL_STORAGE))
                 .subscribe(granted -> {
                     if (granted) {
-                        Toast.makeText(MainActivity.this, R.string.wallpaper_setting_message, Toast.LENGTH_SHORT).show();
                         doWallpaperSetting();
                     } else {
                         Toast.makeText(this, "Fine, okay. :(", Toast.LENGTH_SHORT).show();
@@ -161,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     public void showPhoto(Photo p) {
         // save the returned photo
         photo = p;
-        Bitmap wallpaperRegular = BitmapFactory.decodeFile(photo.getRegularPhotoUri()); //todo bg thread
+        Bitmap wallpaperRegular = BitmapFactory.decodeFile(photo.getRegularPhotoUri()); // todo bg thread
         wallpaperImageView.setImageBitmap(wallpaperRegular);
         photographerTextView.setText(photo.getPhotographerName());
 
@@ -184,7 +181,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     @Override
     public void onGetPhotoFailed() {
-        // TODO: use a better error message
         Toast.makeText(this, getString(R.string.generic_error), Toast.LENGTH_SHORT).show();
     }
 
@@ -197,8 +193,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         if (requestCode == REQUEST_CODE_SET_WALLPAPER) {
             if (resultCode == RESULT_OK) {
                 Toast.makeText(this, R.string.wallpaper_set_text, Toast.LENGTH_SHORT).show();
-            } else if (resultCode == RESULT_CANCELED) {
-                photoSaver.deleteFile();
             }
         }
     }
@@ -253,9 +247,39 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         startActivity(browserIntent);
     }
 
-    private void doWallpaperSetting() {
-        File savedFile = saveWallpaperToExternalStorage();
-        Uri uri = FileProvider.getUriForFile(this, getPackageName() + ".provider", savedFile);
+    private void saveWallpaperToExternalStorage() throws IOException {
+        File srcFile = new File(photo.getPhotoUri());
+
+        FileUtils.exportFile(srcFile, photo.getId() + ".png")
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::onSaveSuccess, this::onSaveFailure);
+    }
+
+    private void onSaveFailure(Throwable throwable) {
+        Log.e(TAG, throwable.getMessage());
+    }
+
+    private void onSaveSuccess(File file) {
+        Toast.makeText(MainActivity.this, R.string.wallpaper_saved_message, Toast.LENGTH_SHORT).show();
+        sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(file)));
+    }
+
+    private void doWallpaperSetting() throws IOException {
+        File srcFile = new File(photo.getPhotoUri());
+
+        FileUtils.exportFile(srcFile, photo.getId() + ".png")
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::onSettingSaveSuccess, this::onSettingSaveFailure);
+    }
+
+    private void onSettingSaveFailure(Throwable throwable) {
+        Log.e(TAG, throwable.getMessage());
+    }
+
+    private void onSettingSaveSuccess(File file) {
+        Uri uri = FileProvider.getUriForFile(this, getPackageName() + ".provider", file);
         if (uri != null) {
             Intent intent = WallpaperManager.getInstance(this).getCropAndSetWallpaperIntent(uri);
             startActivityForResult(intent, REQUEST_CODE_SET_WALLPAPER);
@@ -271,18 +295,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         shareIntent.setType("text/plain");
         shareIntent.putExtra(Intent.EXTRA_TEXT, shareText);
         startActivity(shareIntent);
-    }
-
-    private File saveWallpaperToExternalStorage() {
-        //todo: move to background thread
-//        Date now = new Date();
-//        String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(now);
-//        if (!photoSaver.isExternal()) {
-//            photoSaver.setExternal(true)
-//                    .setFileName(String.format("wallpaper_%s.png", timestamp))
-//                    .save(wallpaper); //todo get
-//        }
-        return photoSaver.getPhotoFile();
     }
 
     // endregion

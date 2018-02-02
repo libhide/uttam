@@ -26,7 +26,6 @@ import com.ratik.uttam.model.Photo;
 import com.ratik.uttam.ui.main.MainActivity;
 import com.ratik.uttam.ui.tour.TourActivity;
 import com.ratik.uttam.utils.FetchUtils;
-import com.ratik.uttam.utils.PhotoSaver;
 import com.ratik.uttam.utils.PrefUtils;
 import com.ratik.uttam.utils.Utils;
 
