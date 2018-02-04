@@ -14,6 +14,7 @@ import com.ratik.uttam.data.DataStore;
 import com.ratik.uttam.di.Injector;
 import com.ratik.uttam.model.Photo;
 import com.ratik.uttam.model.PhotoResponse;
+import com.ratik.uttam.model.PhotoType;
 import com.ratik.uttam.utils.FetchUtils;
 import com.ratik.uttam.utils.NotificationUtils;
 import com.ratik.uttam.utils.PrefUtils;
@@ -68,9 +69,9 @@ public class GetPhotoService extends Service {
         Log.i(TAG, "Getting random photo...");
         service.getRandomPhoto(BuildConfig.CLIENT_ID, Constants.Api.COLLECTIONS)
                 .flatMapSingle(response -> {
-                    Single<String> fullSingle = FetchUtils.downloadWallpaperFull(context, response);
-                    Single<String> regularSingle = FetchUtils.downloadWallpaperRegular(context, response);
-                    Single<String> thumbSingle = FetchUtils.downloadWallpaperThumb(context, response);
+                    Single<String> fullSingle = FetchUtils.downloadWallpaper(context, response, PhotoType.FULL);
+                    Single<String> regularSingle = FetchUtils.downloadWallpaper(context, response, PhotoType.REGULAR);
+                    Single<String> thumbSingle = FetchUtils.downloadWallpaper(context, response, PhotoType.THUMB);
 
                     return Single.zip(fullSingle, regularSingle, thumbSingle,
                             (fullUri, regularUri, thumbUri) -> {

@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.WallpaperManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -30,6 +29,7 @@ import com.ratik.uttam.di.Injector;
 import com.ratik.uttam.model.Photo;
 import com.ratik.uttam.services.GetPhotoService;
 import com.ratik.uttam.ui.settings.SettingsActivity;
+import com.ratik.uttam.utils.BitmapUtils;
 import com.ratik.uttam.utils.FileUtils;
 import com.ratik.uttam.utils.NotificationUtils;
 import com.ratik.uttam.utils.Utils;
@@ -158,8 +158,9 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     public void showPhoto(Photo p) {
         // save the returned photo
         photo = p;
-        Bitmap wallpaperRegular = BitmapFactory.decodeFile(photo.getRegularPhotoUri()); // todo bg thread
-        wallpaperImageView.setImageBitmap(wallpaperRegular);
+
+        setWallpaperImageView();
+
         photographerTextView.setText(photo.getPhotographerName());
 
         if (Utils.isFirstRun(this)) {
@@ -177,6 +178,24 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
             // update first run state
             Utils.setFirstRun(this, false);
         }
+    }
+
+    private void setWallpaperImageView() {
+        BitmapUtils.getBitmapFromFile(photo.getRegularPhotoUri())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        this::onWallpaperImageViewSetSuccess,
+                        this::onWallpaperImageViewSetFailure
+                );
+    }
+
+    private void onWallpaperImageViewSetFailure(Throwable throwable) {
+        Log.e(TAG, throwable.getMessage());
+    }
+
+    private void onWallpaperImageViewSetSuccess(Bitmap bitmap) {
+        wallpaperImageView.setImageBitmap(bitmap);
     }
 
     @Override
