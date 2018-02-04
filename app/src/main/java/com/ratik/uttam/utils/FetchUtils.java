@@ -6,6 +6,7 @@ import android.util.Log;
 import com.ratik.uttam.Constants;
 import com.ratik.uttam.model.Photo;
 import com.ratik.uttam.model.PhotoResponse;
+import com.ratik.uttam.model.PhotoType;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -23,7 +24,7 @@ import io.reactivex.Single;
 public class FetchUtils {
     private static final String TAG = FetchUtils.class.getSimpleName();
 
-    public static Photo getHeroPhoto() {
+    public static Photo getPartialHeroPhoto() {
         return new Photo.Builder()
                 .setId(Constants.Fetch.FIRST_WALLPAPER_ID)
                 .setPhotoUri(null)
@@ -42,7 +43,7 @@ public class FetchUtils {
      * @param photoType filename type ("FULL", "REGULAR" or "THUMB")
      * @return absolute path to created file
      */
-    public static File createFile(Context context, String photoType) {
+    public static File createFile(Context context, PhotoType photoType) {
         File directory;
 
         directory = context.getDir("Uttam", Context.MODE_PRIVATE);
@@ -51,13 +52,14 @@ public class FetchUtils {
         }
 
         switch (photoType) {
-            case "FULL":
+            case FULL:
                 return new File(directory, Constants.General.WALLPAPER_FILE_NAME);
-            case "REGULAR":
+            case REGULAR:
                 return new File(directory, Constants.General.WALLPAPER_REGULAR_FILE_NAME);
-            default:
-                // THUMB case
+            case THUMB:
                 return new File(directory, Constants.General.WALLPAPER_THUMB_FILE_NAME);
+            default:
+                return new File(directory, Constants.General.WALLPAPER_FILE_NAME);
         }
     }
 
@@ -68,7 +70,7 @@ public class FetchUtils {
      * @return absolute path to downloaded file
      * @throws IOException if something goes wrong
      */
-    private static String downloadImage(Context context, URL url, String photoType) throws IOException {
+    private static String downloadImage(Context context, URL url, PhotoType photoType) throws IOException {
         try {
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setDoInput(true);
@@ -89,25 +91,29 @@ public class FetchUtils {
         }
     }
 
-    public static Single<String> downloadWallpaperFull(Context context, PhotoResponse photoResponse) throws IOException {
-        return Single.fromCallable(() -> {
-            URL url = new URL(photoResponse.getUrls().getFullUrl());
-            return downloadImage(context, url, "FULL");
-        });
+    public static Single<String> downloadWallpaper(Context context, PhotoResponse photoResponse,
+                                                   PhotoType type) {
+        switch (type) {
+            case FULL:
+                return Single.fromCallable(() -> {
+                    URL url = new URL(photoResponse.getUrls().getFullUrl());
+                    return downloadImage(context, url, type);
+                });
+            case REGULAR:
+                return Single.fromCallable(() -> {
+                    URL url = new URL(photoResponse.getUrls().getRegularUrl());
+                    return downloadImage(context, url, type);
+                });
+            case THUMB:
+                return Single.fromCallable(() -> {
+                    URL url = new URL(photoResponse.getUrls().getThumbUrl());
+                    return downloadImage(context, url, type);
+                });
+            default:
+                return Single.fromCallable(() -> {
+                    URL url = new URL(photoResponse.getUrls().getFullUrl());
+                    return downloadImage(context, url, type);
+                });
+        }
     }
-
-    public static Single<String> downloadWallpaperRegular(Context context, PhotoResponse photoResponse) throws IOException {
-        return Single.fromCallable(() -> {
-            URL url = new URL(photoResponse.getUrls().getRegularUrl());
-            return downloadImage(context, url, "REGULAR");
-        });
-    }
-
-    public static Single<String> downloadWallpaperThumb(Context context, PhotoResponse photoResponse) throws IOException {
-        return Single.fromCallable(() -> {
-            URL url = new URL(photoResponse.getUrls().getThumbUrl());
-            return downloadImage(context, url, "THUMB");
-        });
-    }
-
 }
