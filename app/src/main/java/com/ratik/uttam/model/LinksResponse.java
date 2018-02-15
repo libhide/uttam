@@ -6,12 +6,12 @@ import com.google.gson.annotations.SerializedName;
  * Created by Ratik on 17/10/17.
  */
 
-public class _Links {
+public class LinksResponse {
 
     @SerializedName("html")
     private String htmlLink;
 
-    @SerializedName("download")
+    @SerializedName("download_location")
     private String downloadLink;
 
     public String getHtmlLink() {
