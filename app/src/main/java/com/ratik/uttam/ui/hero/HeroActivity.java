@@ -4,7 +4,6 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,18 +22,25 @@ import com.ratik.uttam.R;
 import com.ratik.uttam.data.DataStore;
 import com.ratik.uttam.di.Injector;
 import com.ratik.uttam.model.Photo;
+import com.ratik.uttam.model.PhotoType;
 import com.ratik.uttam.ui.main.MainActivity;
 import com.ratik.uttam.ui.tour.TourActivity;
+import com.ratik.uttam.utils.BitmapUtils;
 import com.ratik.uttam.utils.FetchUtils;
-import com.ratik.uttam.utils.PhotoSaver;
 import com.ratik.uttam.utils.PrefUtils;
 import com.ratik.uttam.utils.Utils;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
@@ -47,9 +53,6 @@ public class HeroActivity extends AppCompatActivity {
 
     @Inject
     DataStore dataStore;
-
-    @Inject
-    PhotoSaver photoSaver;
 
     @Nullable
     @BindView(R.id.uttam)
@@ -93,17 +96,26 @@ public class HeroActivity extends AppCompatActivity {
         // set default prefs for the user
         setupDefaultPrefs();
 
-        // Save first photo for user
-        Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.uttam_hero);
-        Photo photo = FetchUtils.getHeroPhoto();
-        photo.setPhoto(b);
-        dataStore.putPhoto(photo)
+        Single<String> fullPhotoSingle = Single.fromCallable(() -> {
+            Bitmap b = BitmapUtils.getBitmapFromResources(this, R.drawable.uttam_hero);
+            return storeImage(b, PhotoType.FULL);
+        });
+
+        Single<String> regularPhotoSingle = Single.fromCallable(() -> {
+            Bitmap b = BitmapUtils.getBitmapFromResources(this, R.drawable.uttam_hero_regular);
+            return storeImage(b, PhotoType.REGULAR);
+        });
+
+        Single<String> thumbPhotoSingle = Single.fromCallable(() -> {
+            Bitmap b = BitmapUtils.getBitmapFromResources(this, R.drawable.uttam_hero_thumb);
+            return storeImage(b, PhotoType.THUMB);
+        });
+
+        Single.zip(fullPhotoSingle, regularPhotoSingle, thumbPhotoSingle, this::getHeroPhoto)
+                .flatMapCompletable(photo -> dataStore.putPhoto(photo))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        this::onSuccessfulFirstSave,
-                        this::onFirstSaveFail
-                );
+                .subscribe(this::onSuccessfulFirstSave, this::onFirstSaveFail);
     }
 
     private void onFirstSaveFail(Throwable throwable) {
@@ -173,5 +185,27 @@ public class HeroActivity extends AppCompatActivity {
             PrefUtils.setCompressState(this, false);
         }
         PrefUtils.setAutomaticWallpaperSet(this, true);
+    }
+
+    private String storeImage(Bitmap image, PhotoType photoType) {
+        File pictureFile = FetchUtils.createFile(this, photoType);
+        try {
+            FileOutputStream fos = new FileOutputStream(pictureFile);
+            image.compress(Bitmap.CompressFormat.PNG, 90, fos);
+            fos.close();
+        } catch (FileNotFoundException e) {
+            Log.d(TAG, "File not found: " + e.getMessage());
+        } catch (IOException e) {
+            Log.d(TAG, "Error accessing file: " + e.getMessage());
+        }
+        return pictureFile.getAbsolutePath();
+    }
+
+    private Photo getHeroPhoto(String fullUri, String regularUri, String thumbUri) {
+        Photo partialHeroPhoto = FetchUtils.getPartialHeroPhoto();
+        partialHeroPhoto.setPhotoUri(fullUri);
+        partialHeroPhoto.setRegularPhotoUri(regularUri);
+        partialHeroPhoto.setThumbPhotoUri(thumbUri);
+        return partialHeroPhoto;
     }
 }

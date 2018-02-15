@@ -1,8 +1,8 @@
 package com.ratik.uttam.api;
 
-import com.ratik.uttam.model._Photo;
+import com.ratik.uttam.model.PhotoResponse;
 
-import retrofit2.Call;
+import io.reactivex.Observable;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 
@@ -13,6 +13,6 @@ import retrofit2.http.Query;
 public interface UnsplashService {
 
     @GET("photos/random")
-    Call<_Photo> getRandomPhoto(@Query("client_id") String clientId,
-                                @Query("category") String category);
+    Observable<PhotoResponse> getRandomPhoto(@Query("client_id") String clientId,
+                                             @Query("collections") String collections);
 }
