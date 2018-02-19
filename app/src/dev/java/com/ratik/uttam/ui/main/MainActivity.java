@@ -27,7 +27,7 @@ import com.ratik.uttam.Constants;
 import com.ratik.uttam.R;
 import com.ratik.uttam.di.Injector;
 import com.ratik.uttam.model.Photo;
-import com.ratik.uttam.services.GetPhotoService;
+import com.ratik.uttam.services.GetPhotoJob;
 import com.ratik.uttam.ui.settings.SettingsActivity;
 import com.ratik.uttam.utils.BitmapUtils;
 import com.ratik.uttam.utils.FileUtils;
@@ -37,8 +37,6 @@ import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 
 import javax.inject.Inject;
 
@@ -160,24 +158,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         photo = p;
 
         setWallpaperImageView();
-
         photographerTextView.setText(photo.getPhotographerName());
-
-        if (Utils.isFirstRun(this)) {
-            // Set it as the wallpaper
-            try {
-                InputStream inputStream = new URL(photo.getPhotoUri()).openStream();
-                WallpaperManager.getInstance(this).setStream(inputStream);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            // cast first notification
-            notificationUtils.pushNewWallpaperNotification();
-
-            // update first run state
-            Utils.setFirstRun(this, false);
-        }
     }
 
     private void setWallpaperImageView() {
@@ -196,6 +177,21 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     private void onWallpaperImageViewSetSuccess(Bitmap bitmap) {
         wallpaperImageView.setImageBitmap(bitmap);
+
+        if (Utils.isFirstRun(this)) {
+            // Set it as the wallpaper
+            try {
+                WallpaperManager.getInstance(this).setBitmap(bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            // cast first notification
+            notificationUtils.pushNewWallpaperNotification();
+
+            // update first run state
+            Utils.setFirstRun(this, false);
+        }
     }
 
     @Override
@@ -250,7 +246,9 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     // region HELPERS
 
     public void refreshPhoto() {
-        startService(new Intent(this, GetPhotoService.class));
+        Intent intent = new Intent(this, GetPhotoJob.class);
+        intent.putExtra("type", "service");
+        startService(intent);
         finish();
     }
 
