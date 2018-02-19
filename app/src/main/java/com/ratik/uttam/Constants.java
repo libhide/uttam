@@ -7,7 +7,7 @@ public class Constants {
 
     public class Api {
         public static final String BASE_URL = "https://api.unsplash.com/";
-        public static final String COLLECTIONS = "420324,935527,881815,589374,1113375,791207";
+        public static final String COLLECTIONS = "935527,881815,791207";
     }
 
     public class General {
