@@ -1,8 +1,12 @@
 package com.ratik.uttam.services;
 
+import android.app.WallpaperManager;
 import android.app.job.JobParameters;
 import android.app.job.JobService;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.ratik.uttam.BuildConfig;
@@ -18,6 +22,8 @@ import com.ratik.uttam.utils.NotificationUtils;
 import com.ratik.uttam.utils.PrefUtils;
 import com.ratik.uttam.utils.Utils;
 
+import java.io.IOException;
+
 import javax.inject.Inject;
 
 import io.reactivex.Single;
@@ -31,6 +37,15 @@ import io.reactivex.schedulers.Schedulers;
 public class GetPhotoJob extends JobService {
     private static final String TAG = GetPhotoJob.class.getSimpleName();
 
+    boolean isWorking = false;
+    boolean jobCancelled = false;
+
+    private Context context;
+    private JobParameters jobParams;
+    private String type = "";
+
+    private String fetchedWallpaperFullUri;
+
     @Inject
     UnsplashService service;
 
@@ -40,10 +55,26 @@ public class GetPhotoJob extends JobService {
     @Inject
     NotificationUtils notificationUtils;
 
-    private Context context;
-
     public GetPhotoJob() {
         context = GetPhotoJob.this;
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        if (intent.hasExtra("type")) {
+            type = intent.getStringExtra("type");
+        } else {
+            type = "";
+        }
+
+        if (type.equals("service")) {
+            fetchPhoto();
+            return START_STICKY;
+        } else {
+            // super class's behaviour
+            // JobScheduler will handle calling onStartJob
+            return super.onStartCommand(intent, flags, startId);
+        }
     }
 
     @Override
@@ -52,24 +83,47 @@ public class GetPhotoJob extends JobService {
         Injector.getAppComponent().inject(this);
     }
 
-    @Override
-    public boolean onStopJob(JobParameters jobParameters) {
-        return true;
-    }
-
+    // Called by the Android system when it's time to run the job
     @Override
     public boolean onStartJob(JobParameters jobParameters) {
+        Log.d(TAG, "Job started!");
+        isWorking = true;
+
+        // save jobParams
+        jobParams = jobParameters;
+
+        // do the work
         fetchPhoto();
-        return true;
+
+        return isWorking;
+    }
+
+    // Called if the job was cancelled before being finished
+    @Override
+    public boolean onStopJob(JobParameters jobParameters) {
+        Log.d(TAG, "Job cancelled before being completed.");
+
+        jobCancelled = true;
+        boolean needsReschedule = isWorking;
+        jobFinished(jobParameters, needsReschedule);
+        return needsReschedule;
     }
 
     private void fetchPhoto() {
         Log.i(TAG, "Getting random photo...");
+
+        // If the job has been cancelled, stop working; the job will be rescheduled.
+        if (jobCancelled)
+            return;
+
         service.getRandomPhoto(BuildConfig.CLIENT_ID, Constants.Api.COLLECTIONS)
                 .flatMapSingle(response -> {
-                    Single<String> fullSingle = FetchUtils.downloadWallpaper(context, response, PhotoType.FULL);
-                    Single<String> regularSingle = FetchUtils.downloadWallpaper(context, response, PhotoType.REGULAR);
-                    Single<String> thumbSingle = FetchUtils.downloadWallpaper(context, response, PhotoType.THUMB);
+                    Single<String> fullSingle = FetchUtils.downloadWallpaper(context,
+                            response, PhotoType.FULL);
+                    Single<String> regularSingle = FetchUtils.downloadWallpaper(context,
+                            response, PhotoType.REGULAR);
+                    Single<String> thumbSingle = FetchUtils.downloadWallpaper(context,
+                            response, PhotoType.THUMB);
 
                     return Single.zip(fullSingle, regularSingle, thumbSingle,
                             (fullUri, regularUri, thumbUri) -> {
@@ -89,21 +143,39 @@ public class GetPhotoJob extends JobService {
 
         // If user wants auto-magical setting, set the wallpaper
         if (PrefUtils.shouldSetWallpaperAutomatically(context)) {
-            // todo: figure out automagical setting
-            // WallpaperManager.getInstance(context).setBitmap(image);
+            Bitmap b = BitmapFactory.decodeFile(fetchedWallpaperFullUri);
+            try {
+                WallpaperManager.getInstance(context).setBitmap(b);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         Log.i(TAG, "Photo saved successfully!");
 
-        // stop service
-        stopSelf();
+        // stop job / service
+        if (!type.equals("service")) {
+            // JOB
+            Log.d(TAG, "Job finished!");
+            isWorking = false;
+            boolean needsReschedule = false;
+            jobFinished(jobParams, needsReschedule);
+        } else {
+            // SERVICE
+            stopSelf();
+        }
     }
 
     private void onFetchFailure(Throwable throwable) {
         Log.e(TAG, throwable.getMessage());
     }
 
-    private Photo getPhoto(PhotoResponse response, String fullUri, String regularUri, String thumbUri) {
+    private Photo getPhoto(PhotoResponse response, String fullUri, String regularUri,
+                           String thumbUri) {
+
+        // save fetchedPhotoFullUri for later use
+        fetchedWallpaperFullUri = fullUri;
+
         return new Photo.Builder()
                 .setId(response.getId())
                 .setPhotoUri(fullUri)

@@ -9,7 +9,6 @@ import com.ratik.uttam.di.module.PresenterModule;
 import com.ratik.uttam.di.module.SharedPrefsModule;
 import com.ratik.uttam.di.module.UtilsModule;
 import com.ratik.uttam.services.GetPhotoJob;
-import com.ratik.uttam.services.GetPhotoService;
 import com.ratik.uttam.ui.hero.HeroActivity;
 import com.ratik.uttam.ui.main.MainActivity;
 import com.ratik.uttam.utils.NotificationUtils;
@@ -32,7 +31,7 @@ public interface AppComponent {
 
     void inject(DataStoreImpl dataStore);
 
-    void inject(GetPhotoService service);
+    // void inject(GetPhotoService service);
     void inject(GetPhotoJob job);
 
     void inject(HeroActivity activity);
