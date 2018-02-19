@@ -14,4 +14,7 @@ public interface DataStore {
     Completable putPhoto(Photo photo);
 
     Single<Photo> getPhoto();
+
+    void setAutoSet(boolean autoSet);
+    boolean isAutoSetEnabled();
 }
