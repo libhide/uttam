@@ -17,15 +17,16 @@ import com.ratik.uttam.di.Injector;
 import com.ratik.uttam.model.Photo;
 import com.ratik.uttam.model.PhotoResponse;
 import com.ratik.uttam.model.PhotoType;
+import com.ratik.uttam.utils.BitmapUtils;
 import com.ratik.uttam.utils.FetchUtils;
 import com.ratik.uttam.utils.NotificationUtils;
-import com.ratik.uttam.utils.PrefUtils;
 import com.ratik.uttam.utils.Utils;
 
 import java.io.IOException;
 
 import javax.inject.Inject;
 
+import io.reactivex.Completable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -44,7 +45,7 @@ public class GetPhotoJob extends JobService {
     private JobParameters jobParams;
     private String type = "";
 
-    private String fetchedWallpaperFullUri;
+    private WallpaperManager wallpaperManager;
 
     @Inject
     UnsplashService service;
@@ -81,6 +82,8 @@ public class GetPhotoJob extends JobService {
     public void onCreate() {
         super.onCreate();
         Injector.getAppComponent().inject(this);
+
+        wallpaperManager = WallpaperManager.getInstance(context);
     }
 
     // Called by the Android system when it's time to run the job
@@ -117,40 +120,66 @@ public class GetPhotoJob extends JobService {
             return;
 
         service.getRandomPhoto(BuildConfig.CLIENT_ID, Constants.Api.COLLECTIONS)
-                .flatMapSingle(response -> {
-                    Single<String> fullSingle = FetchUtils.downloadWallpaper(context,
-                            response, PhotoType.FULL);
-                    Single<String> regularSingle = FetchUtils.downloadWallpaper(context,
-                            response, PhotoType.REGULAR);
-                    Single<String> thumbSingle = FetchUtils.downloadWallpaper(context,
-                            response, PhotoType.THUMB);
+                .flatMapSingle(response -> getPhotoSingle(response))
+                .flatMapCompletable(photo -> {
+                    final Photo p = photo;
+                    return dataStore.putPhoto(p)
+                            .toObservable()
+                            // .filter(dataStore.isAutoSetEnabled())
+                            .map(getWallpaperPath(p))
 
-                    return Single.zip(fullSingle, regularSingle, thumbSingle,
-                            (fullUri, regularUri, thumbUri) -> {
-                                Log.d(TAG, "Downloaded images");
-                                return getPhoto(response, fullUri, regularUri, thumbUri);
-                            });
+
+
+
                 })
-                .flatMapCompletable(photo -> dataStore.putPhoto(photo))
+
+                .map(wallpaperPath -> BitmapFactory.decodeFile(wallpaperPath))
+                .flatMapSingle(wallpaper -> scaleWallpaper(wallpaper))
+                .flatMapCompletable(scaledWallpaper -> setWall(scaledWallpaper))
+                .doOnComplete(this::pushNotification)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::onFetchSuccess, this::onFetchFailure);
     }
 
+    private String getWallpaperPath(Photo photo) {
+        return photo.getPhotoUri();
+    }
+
+    private Single<Photo> getPhotoSingle(PhotoResponse response) {
+        Single<String> fullSingle = FetchUtils.downloadWallpaper(context,
+                response, PhotoType.FULL);
+        Single<String> regularSingle = FetchUtils.downloadWallpaper(context,
+                response, PhotoType.REGULAR);
+        Single<String> thumbSingle = FetchUtils.downloadWallpaper(context,
+                response, PhotoType.THUMB);
+
+        return Single.zip(fullSingle, regularSingle, thumbSingle,
+                (fullUri, regularUri, thumbUri) -> {
+                    Log.d(TAG, "Downloaded images");
+                    return getPhoto(response, fullUri, regularUri, thumbUri);
+                });
+    }
+
+    private Completable pushNotification() {
+        return Completable.fromAction(() -> {
+            notificationUtils.pushNewWallpaperNotification();
+        });
+    }
+
+    private Bitmap scaleWallpaper(Bitmap wallpaper) {
+        Bitmap blank = BitmapUtils.createNewBitmap(
+                wallpaperManager.getDesiredMinimumWidth(),
+                wallpaperManager.getDesiredMinimumHeight()
+        );
+        return Single.fromCallable(() -> BitmapUtils.overlayIntoCentre(blank, wallpaper));
+    }
+
+    private Completable setWall(Bitmap bitmap) throws IOException {
+        return Completable.fromAction(() -> wallpaperManager.setBitmap(bitmap));
+    }
+
     private void onFetchSuccess() {
-        // Notify User
-        notificationUtils.pushNewWallpaperNotification();
-
-        // If user wants auto-magical setting, set the wallpaper
-        if (PrefUtils.shouldSetWallpaperAutomatically(context)) {
-            Bitmap b = BitmapFactory.decodeFile(fetchedWallpaperFullUri);
-            try {
-                WallpaperManager.getInstance(context).setBitmap(b);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
         Log.i(TAG, "Photo saved successfully!");
 
         // stop job / service
@@ -172,9 +201,6 @@ public class GetPhotoJob extends JobService {
 
     private Photo getPhoto(PhotoResponse response, String fullUri, String regularUri,
                            String thumbUri) {
-
-        // save fetchedPhotoFullUri for later use
-        fetchedWallpaperFullUri = fullUri;
 
         return new Photo.Builder()
                 .setId(response.getId())
