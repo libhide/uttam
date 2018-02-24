@@ -125,7 +125,7 @@ public class GetPhotoJob extends JobService {
                     final Photo p = photo;
                     return dataStore.putPhoto(p)
                             .toObservable()
-                            // .filter(dataStore.isAutoSetEnabled())
+                            .filter(dataStore.enableAutoSet())
                             .map(getWallpaperPath(p))
 
 

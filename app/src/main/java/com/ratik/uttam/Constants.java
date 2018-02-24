@@ -44,6 +44,7 @@ public class Constants {
     public static final String FIRST_RUN = "first_run";
     public static final String SCREEN_WIDTH = "screen_width";
     public static final String SCREEN_HEIGHT = "screen_height";
+    public static final String AUTO_SET = "setWallpaperAuto";
 
     // IAP constants
     public static final String SKU_REMOVE_ADS = "remove_adverts";
