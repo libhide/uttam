@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.ratik.uttam.Constants;
-import com.ratik.uttam.R;
 import com.ratik.uttam.data.DataStore;
 import com.ratik.uttam.di.Injector;
 import com.ratik.uttam.model.Photo;
@@ -69,14 +68,16 @@ public class DataStoreImpl implements DataStore {
     }
 
     @Override
-    public boolean isAutoSetEnabled() {
-        return prefs.getBoolean(context.getString(R.string.key_automatic_wallpaper_set), false);
+    public void enableAutoSet() {
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean(Constants.AUTO_SET, true);
+        editor.apply();
     }
 
     @Override
-    public void setAutoSet(boolean autoSet) {
+    public void disableAutoSet() {
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putBoolean(context.getString(R.string.key_automatic_wallpaper_set), autoSet);
+        editor.putBoolean(Constants.AUTO_SET, false);
         editor.apply();
     }
 }
