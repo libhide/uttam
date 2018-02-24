@@ -30,7 +30,6 @@
     <!-- Preferences -->
     <string name="category_general">General</string>
     <string name="category_iap">In-app Purchases</string>
-    <string name="key_automatic_wallpaper_set">setWallpaperAuto</string>
     <string name="title_automatic_wallpaper_set">Set Wallpaper Automatically</string>
     <string name="summary_automatic_wallpaper_set">New wallpaper will be set automatically in the background.</string>
     <string name="category_misc">Misc.</string>

@@ -15,6 +15,6 @@ public interface DataStore {
 
     Single<Photo> getPhoto();
 
-    void setAutoSet(boolean autoSet);
-    boolean isAutoSetEnabled();
+    void enableAutoSet();
+    void disableAutoSet();
 }
