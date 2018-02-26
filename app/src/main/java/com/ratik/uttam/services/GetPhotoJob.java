@@ -6,7 +6,6 @@ import android.app.job.JobService;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.ratik.uttam.BuildConfig;
@@ -28,8 +27,6 @@ import javax.inject.Inject;
 
 import io.reactivex.Completable;
 import io.reactivex.Single;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Ratik on 23/10/17.
@@ -122,24 +119,15 @@ public class GetPhotoJob extends JobService {
         service.getRandomPhoto(BuildConfig.CLIENT_ID, Constants.Api.COLLECTIONS)
                 .flatMapSingle(response -> getPhotoSingle(response))
                 .flatMapCompletable(photo -> {
-                    final Photo p = photo;
-                    return dataStore.putPhoto(p)
-                            .toObservable()
-                            .filter(dataStore.enableAutoSet())
-                            .map(getWallpaperPath(p))
-
-
-
-
-                })
-
-                .map(wallpaperPath -> BitmapFactory.decodeFile(wallpaperPath))
-                .flatMapSingle(wallpaper -> scaleWallpaper(wallpaper))
-                .flatMapCompletable(scaledWallpaper -> setWall(scaledWallpaper))
-                .doOnComplete(this::pushNotification)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::onFetchSuccess, this::onFetchFailure);
+                    return dataStore.putPhoto(photo);
+                    /*
+                    TODO -
+                        1. check if user wants automatic setting of wallpaper
+                        2. If yes, scale wallpaper and set it. If no, move on.
+                        3. Push notification for wallpaper (notifs require the wallpaper
+                        and its meta data to be saved beforehand).
+                     */
+                });
     }
 
     private String getWallpaperPath(Photo photo) {
@@ -167,7 +155,7 @@ public class GetPhotoJob extends JobService {
         });
     }
 
-    private Bitmap scaleWallpaper(Bitmap wallpaper) {
+    private Single<Bitmap> scaleWallpaper(Bitmap wallpaper) {
         Bitmap blank = BitmapUtils.createNewBitmap(
                 wallpaperManager.getDesiredMinimumWidth(),
                 wallpaperManager.getDesiredMinimumHeight()
