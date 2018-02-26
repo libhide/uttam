@@ -111,11 +111,11 @@ public class HeroActivity extends AppCompatActivity {
         });
 
         Single.zip(fullPhotoSingle, regularPhotoSingle, thumbPhotoSingle, this::getHeroPhoto)
-                .flatMap(photo -> dataStore.putPhoto(photo))
+                .flatMapCompletable(photo -> dataStore.putPhoto(photo))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        result -> Log.i(TAG, "First save successful"),
+                        () -> Log.i(TAG, "First save successful"),
                         throwable -> Log.e(TAG, throwable.getMessage())
                 );
     }
@@ -182,7 +182,7 @@ public class HeroActivity extends AppCompatActivity {
 //        } else {
 //            PrefUtils.setCompressState(this, false);
 //        }
-        dataStore.setAutoSet(true);
+        dataStore.enableAutoSet();
     }
 
     private String storeImage(Bitmap image, PhotoType photoType) {
