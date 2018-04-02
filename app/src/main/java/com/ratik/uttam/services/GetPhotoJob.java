@@ -6,6 +6,7 @@ import android.app.job.JobService;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.ratik.uttam.BuildConfig;
@@ -27,6 +28,9 @@ import javax.inject.Inject;
 
 import io.reactivex.Completable;
 import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Ratik on 23/10/17.
@@ -43,6 +47,7 @@ public class GetPhotoJob extends JobService {
     private String type = "";
 
     private WallpaperManager wallpaperManager;
+    private CompositeDisposable compositeDisposable;
 
     @Inject
     UnsplashService service;
@@ -55,6 +60,7 @@ public class GetPhotoJob extends JobService {
 
     public GetPhotoJob() {
         context = GetPhotoJob.this;
+        compositeDisposable = new CompositeDisposable();
     }
 
     @Override
@@ -116,22 +122,34 @@ public class GetPhotoJob extends JobService {
         if (jobCancelled)
             return;
 
-        service.getRandomPhoto(BuildConfig.CLIENT_ID, Constants.Api.COLLECTIONS)
-                .flatMapSingle(response -> getPhotoSingle(response))
+        compositeDisposable.add(
+                service.getRandomPhoto(BuildConfig.CLIENT_ID, Constants.Api.COLLECTIONS)
+                .flatMapSingle(this::getPhotoSingle)
                 .flatMapCompletable(photo -> {
-                    return dataStore.putPhoto(photo);
-                    /*
-                    TODO -
-                        1. check if user wants automatic setting of wallpaper
-                        2. If yes, scale wallpaper and set it. If no, move on.
-                        3. Push notification for wallpaper (notifs require the wallpaper
-                        and its meta data to be saved beforehand).
-                     */
-                });
+                    Completable putCompletable = dataStore.putPhoto(photo);
+                    if (dataStore.isAutoSetEnabled()) {
+                        return doPostSavingStuff(putCompletable, photo);
+                    } else {
+                        return putCompletable;
+                    }
+                })
+                .doOnComplete(this::pushNotification)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::onFetchSuccess, this::onFetchFailure)
+        );
     }
 
-    private String getWallpaperPath(Photo photo) {
-        return photo.getPhotoUri();
+    private Completable doPostSavingStuff(Completable completable, Photo photo) {
+        return completable
+                .andThen(getWallpaperPath(photo))
+                .map(BitmapFactory::decodeFile)
+                .flatMap(this::scaleWallpaper)
+                .flatMapCompletable(this::setWall);
+    }
+
+    private Single<String> getWallpaperPath(Photo photo) {
+        return Single.just(photo.getPhotoUri());
     }
 
     private Single<Photo> getPhotoSingle(PhotoResponse response) {
@@ -169,6 +187,7 @@ public class GetPhotoJob extends JobService {
 
     private void onFetchSuccess() {
         Log.i(TAG, "Photo saved successfully!");
+        compositeDisposable.dispose();
 
         // stop job / service
         if (!type.equals("service")) {
