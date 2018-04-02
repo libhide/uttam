@@ -17,4 +17,6 @@ public interface DataStore {
 
     void enableAutoSet();
     void disableAutoSet();
+
+    boolean isAutoSetEnabled();
 }

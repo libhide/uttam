@@ -80,4 +80,9 @@ public class DataStoreImpl implements DataStore {
         editor.putBoolean(Constants.AUTO_SET, false);
         editor.apply();
     }
+
+    @Override
+    public boolean isAutoSetEnabled() {
+        return prefs.getBoolean(Constants.AUTO_SET, true);
+    }
 }
