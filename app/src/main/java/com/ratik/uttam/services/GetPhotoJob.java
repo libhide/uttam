@@ -133,15 +133,14 @@ public class GetPhotoJob extends JobService {
                         return putCompletable;
                     }
                 })
-                .doOnComplete(this::pushNotification)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::onFetchSuccess, this::onFetchFailure)
         );
     }
 
-    private Completable doPostSavingStuff(Completable completable, Photo photo) {
-        return completable
+    private Completable doPostSavingStuff(Completable dataStorePutCompletable, Photo photo) {
+        return dataStorePutCompletable
                 .andThen(getWallpaperPath(photo))
                 .map(BitmapFactory::decodeFile)
                 .flatMap(this::scaleWallpaper)
@@ -167,10 +166,8 @@ public class GetPhotoJob extends JobService {
                 });
     }
 
-    private Completable pushNotification() {
-        return Completable.fromAction(() -> {
-            notificationUtils.pushNewWallpaperNotification();
-        });
+    private void pushNotification() {
+        notificationUtils.pushNewWallpaperNotification();
     }
 
     private Single<Bitmap> scaleWallpaper(Bitmap wallpaper) {
@@ -187,6 +184,7 @@ public class GetPhotoJob extends JobService {
 
     private void onFetchSuccess() {
         Log.i(TAG, "Photo saved successfully!");
+        pushNotification();
         compositeDisposable.dispose();
 
         // stop job / service
