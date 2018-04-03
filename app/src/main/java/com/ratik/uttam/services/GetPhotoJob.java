@@ -22,8 +22,6 @@ import com.ratik.uttam.utils.FetchUtils;
 import com.ratik.uttam.utils.NotificationUtils;
 import com.ratik.uttam.utils.Utils;
 
-import java.io.IOException;
-
 import javax.inject.Inject;
 
 import io.reactivex.Completable;
@@ -38,16 +36,8 @@ import io.reactivex.schedulers.Schedulers;
 
 public class GetPhotoJob extends JobService {
     private static final String TAG = GetPhotoJob.class.getSimpleName();
-
-    boolean isWorking = false;
-    boolean jobCancelled = false;
-
-    private Context context;
-    private JobParameters jobParams;
-    private String type = "";
-
-    private WallpaperManager wallpaperManager;
-    private CompositeDisposable compositeDisposable;
+    public static final String FETCH_TYPE_SERVICE = "service";
+    public static final String FETCH_TYPE_JOB = "";
 
     @Inject
     UnsplashService service;
@@ -58,6 +48,16 @@ public class GetPhotoJob extends JobService {
     @Inject
     NotificationUtils notificationUtils;
 
+    private Context context;
+    private JobParameters jobParams;
+    private String type = "";
+
+    private WallpaperManager wallpaperManager;
+    private CompositeDisposable compositeDisposable;
+
+    boolean isWorking = false;
+    boolean jobCancelled = false;
+
     public GetPhotoJob() {
         context = GetPhotoJob.this;
         compositeDisposable = new CompositeDisposable();
@@ -65,19 +65,24 @@ public class GetPhotoJob extends JobService {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (intent.hasExtra("type")) {
-            type = intent.getStringExtra("type");
+        if (intent.hasExtra(Constants.Fetch.EXTRA_FETCH_TYPE)) {
+            type = intent.getStringExtra(Constants.Fetch.EXTRA_FETCH_TYPE);
         } else {
-            type = "";
+            type = FETCH_TYPE_JOB;
         }
 
-        if (type.equals("service")) {
-            fetchPhoto();
-            return START_STICKY;
-        } else {
-            // super class's behaviour
-            // JobScheduler will handle calling onStartJob
-            return super.onStartCommand(intent, flags, startId);
+        switch (type) {
+            case FETCH_TYPE_SERVICE:
+                fetchPhoto();
+                return START_STICKY;
+            case FETCH_TYPE_JOB:
+                // super class's behaviour
+                // JobScheduler will handle calling onStartJob
+                return super.onStartCommand(intent, flags, startId);
+            default:
+                // super class's behaviour
+                // JobScheduler will handle calling onStartJob
+                return super.onStartCommand(intent, flags, startId);
         }
     }
 
@@ -139,7 +144,8 @@ public class GetPhotoJob extends JobService {
         );
     }
 
-    private Completable doPostSavingStuff(Completable dataStorePutCompletable, Photo photo) {
+    private Completable doPostSavingStuff(Completable dataStorePutCompletable,
+                                          Photo photo) {
         return dataStorePutCompletable
                 .andThen(getWallpaperPath(photo))
                 .map(BitmapFactory::decodeFile)
@@ -178,7 +184,7 @@ public class GetPhotoJob extends JobService {
         return Single.fromCallable(() -> BitmapUtils.overlayIntoCentre(blank, wallpaper));
     }
 
-    private Completable setWall(Bitmap bitmap) throws IOException {
+    private Completable setWall(Bitmap bitmap) {
         return Completable.fromAction(() -> wallpaperManager.setBitmap(bitmap));
     }
 
