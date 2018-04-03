@@ -18,8 +18,9 @@ public class Constants {
     }
 
     public class Fetch {
-        public static final int WALLPAPER_FETCH_JOB_ID = 1;
+        public static final String EXTRA_FETCH_TYPE = "type";
 
+        public static final int WALLPAPER_FETCH_JOB_ID = 1;
         public static final String FIRST_WALLPAPER_ID = "RnCPiXixooY";
         public static final String FIRST_WALLPAPER_PHOTOGRAPHER_NAME = "Efe Kurnaz";
         public static final String FIRST_WALLPAPER_PHOTOGRAPHER_USERNAME = "@efekurnaz";
