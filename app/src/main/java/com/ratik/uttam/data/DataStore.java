@@ -15,5 +15,7 @@ public interface DataStore {
 
     Single<Photo> getPhoto();
 
+    void enableWallpaperAutoSet();
+
     boolean isAutoSetEnabled();
 }
