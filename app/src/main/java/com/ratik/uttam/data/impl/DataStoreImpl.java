@@ -1,5 +1,6 @@
 package com.ratik.uttam.data.impl;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
@@ -19,6 +20,9 @@ import io.reactivex.Single;
  */
 
 public class DataStoreImpl implements DataStore {
+
+    @Inject
+    Context context;
 
     @Inject
     SharedPreferences prefs;
@@ -44,6 +48,7 @@ public class DataStoreImpl implements DataStore {
         editor.putString(Constants.Data.DOWNLOAD_URL, photo.getPhotoDownloadUrl());
         editor.putString(Constants.Data.HTML_URL, photo.getPhotoHtmlUrl());
         editor.apply();
+
         Log.d(DataStore.class.getSimpleName(), "Stored to prefs");
     }
 
@@ -60,5 +65,10 @@ public class DataStoreImpl implements DataStore {
                 .setPhotoDownloadUrl(prefs.getString(Constants.Data.DOWNLOAD_URL, ""))
                 .setPhotoHtmlUrl(prefs.getString(Constants.Data.HTML_URL, ""))
                 .build());
+    }
+
+    @Override
+    public boolean isAutoSetEnabled() {
+        return prefs.getBoolean(Constants.AUTO_SET, true);
     }
 }

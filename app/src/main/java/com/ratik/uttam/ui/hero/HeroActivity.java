@@ -27,7 +27,6 @@ import com.ratik.uttam.ui.main.MainActivity;
 import com.ratik.uttam.ui.tour.TourActivity;
 import com.ratik.uttam.utils.BitmapUtils;
 import com.ratik.uttam.utils.FetchUtils;
-import com.ratik.uttam.utils.PrefUtils;
 import com.ratik.uttam.utils.Utils;
 
 import java.io.File;
@@ -115,15 +114,10 @@ public class HeroActivity extends AppCompatActivity {
                 .flatMapCompletable(photo -> dataStore.putPhoto(photo))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::onSuccessfulFirstSave, this::onFirstSaveFail);
-    }
-
-    private void onFirstSaveFail(Throwable throwable) {
-        Log.e(TAG, throwable.getMessage());
-    }
-
-    private void onSuccessfulFirstSave() {
-        Log.i(TAG, "First save successful");
+                .subscribe(
+                        () -> Log.i(TAG, "First save successful"),
+                        throwable -> Log.e(TAG, throwable.getMessage())
+                );
     }
 
     @OnClick(R.id.getStartedButton)
@@ -131,6 +125,10 @@ public class HeroActivity extends AppCompatActivity {
         // Start Tour
         startActivity(new Intent(HeroActivity.this, TourActivity.class));
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+    }
+
+    private void onFirstSaveFail(Throwable throwable) {
+        Log.e(TAG, throwable.getMessage());
     }
 
     private void doAnimations() {
@@ -179,12 +177,12 @@ public class HeroActivity extends AppCompatActivity {
 
     private void setupDefaultPrefs() {
         // Check if device has resolution under 720p
-        if (Utils.getScreenWidth(this) <= 720) {
-            PrefUtils.setCompressState(this, true);
-        } else {
-            PrefUtils.setCompressState(this, false);
-        }
-        PrefUtils.setAutomaticWallpaperSet(this, true);
+//        if (Utils.getScreenWidth(this) <= 720) {
+//            PrefUtils.setCompressState(this, true);
+//        } else {
+//            PrefUtils.setCompressState(this, false);
+//        }
+        dataStore.enableAutoSet();
     }
 
     private String storeImage(Bitmap image, PhotoType photoType) {
