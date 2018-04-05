@@ -53,8 +53,6 @@
             </intent-filter>
         </receiver>
 
-        <service android:name=".services.GetPhotoService" />
-
         <service
             android:name=".services.GetPhotoJob"
             android:exported="true"

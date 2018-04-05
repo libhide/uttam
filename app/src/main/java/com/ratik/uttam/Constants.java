@@ -7,7 +7,7 @@ public class Constants {
 
     public class Api {
         public static final String BASE_URL = "https://api.unsplash.com/";
-        public static final String COLLECTIONS = "420324,935527,881815,589374,1113375,791207";
+        public static final String COLLECTIONS = "935527,881815,791207";
     }
 
     public class General {
@@ -18,8 +18,9 @@ public class Constants {
     }
 
     public class Fetch {
-        public static final int WALLPAPER_FETCH_JOB_ID = 1;
+        public static final String EXTRA_FETCH_TYPE = "type";
 
+        public static final int WALLPAPER_FETCH_JOB_ID = 1;
         public static final String FIRST_WALLPAPER_ID = "RnCPiXixooY";
         public static final String FIRST_WALLPAPER_PHOTOGRAPHER_NAME = "Efe Kurnaz";
         public static final String FIRST_WALLPAPER_PHOTOGRAPHER_USERNAME = "@efekurnaz";
@@ -44,6 +45,7 @@ public class Constants {
     public static final String FIRST_RUN = "first_run";
     public static final String SCREEN_WIDTH = "screen_width";
     public static final String SCREEN_HEIGHT = "screen_height";
+    public static final String AUTO_SET = "setWallpaperAuto";
 
     // IAP constants
     public static final String SKU_REMOVE_ADS = "remove_adverts";

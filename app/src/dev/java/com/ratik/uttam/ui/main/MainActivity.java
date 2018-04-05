@@ -247,7 +247,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     public void refreshPhoto() {
         Intent intent = new Intent(this, GetPhotoJob.class);
-        intent.putExtra("type", "service");
+        intent.putExtra(Constants.Fetch.EXTRA_FETCH_TYPE, GetPhotoJob.FETCH_TYPE_SERVICE);
         startService(intent);
         finish();
     }
