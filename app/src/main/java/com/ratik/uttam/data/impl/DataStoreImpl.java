@@ -68,20 +68,6 @@ public class DataStoreImpl implements DataStore {
     }
 
     @Override
-    public void enableAutoSet() {
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putBoolean(Constants.AUTO_SET, true);
-        editor.apply();
-    }
-
-    @Override
-    public void disableAutoSet() {
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putBoolean(Constants.AUTO_SET, false);
-        editor.apply();
-    }
-
-    @Override
     public boolean isAutoSetEnabled() {
         return prefs.getBoolean(Constants.AUTO_SET, true);
     }
