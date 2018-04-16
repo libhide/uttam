@@ -41,6 +41,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -52,6 +53,8 @@ public class HeroActivity extends AppCompatActivity {
 
     @Inject
     DataStore dataStore;
+
+    private CompositeDisposable compositeDisposable;
 
     @Nullable
     @BindView(R.id.uttam)
@@ -66,6 +69,8 @@ public class HeroActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         Injector.getAppComponent().inject(this);
+
+        compositeDisposable = new CompositeDisposable();
 
         boolean firstRun = Utils.isFirstRun(this);
         if (firstRun) {
@@ -110,14 +115,16 @@ public class HeroActivity extends AppCompatActivity {
             return storeImage(b, PhotoType.THUMB);
         });
 
-        Single.zip(fullPhotoSingle, regularPhotoSingle, thumbPhotoSingle, this::getHeroPhoto)
-                .flatMapCompletable(photo -> dataStore.putPhoto(photo))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        () -> Log.i(TAG, "First save successful"),
-                        throwable -> Log.e(TAG, throwable.getMessage())
-                );
+        compositeDisposable.add(
+                Single.zip(fullPhotoSingle, regularPhotoSingle, thumbPhotoSingle, this::getHeroPhoto)
+                        .flatMapCompletable(photo -> dataStore.putPhoto(photo))
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                () -> Log.i(TAG, "First save successful"),
+                                throwable -> Log.e(TAG, throwable.getMessage())
+                        )
+        );
     }
 
     @OnClick(R.id.getStartedButton)
@@ -167,6 +174,12 @@ public class HeroActivity extends AppCompatActivity {
         finish();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        compositeDisposable.dispose();
+    }
+
     private void saveScreenSize() {
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -176,13 +189,7 @@ public class HeroActivity extends AppCompatActivity {
     }
 
     private void setupDefaultPrefs() {
-        // Check if device has resolution under 720p
-//        if (Utils.getScreenWidth(this) <= 720) {
-//            PrefUtils.setCompressState(this, true);
-//        } else {
-//            PrefUtils.setCompressState(this, false);
-//        }
-        dataStore.enableAutoSet();
+        dataStore.enableWallpaperAutoSet();
     }
 
     private String storeImage(Bitmap image, PhotoType photoType) {
