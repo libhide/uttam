@@ -43,6 +43,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 import static com.ratik.uttam.R.id.creditsContainer;
@@ -53,13 +54,14 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     public static final String TAG = MainActivity.class.getSimpleName();
     private static final int REQUEST_CODE_SET_WALLPAPER = 1;
 
-    // Member variables
     @Inject
     MainContract.Presenter presenter;
 
     @Inject
     NotificationUtils notificationUtils;
 
+    // Member variables
+    private CompositeDisposable compositeDisposable;
     private RxPermissions rxPermissions;
     private Photo photo;
 
@@ -86,9 +88,11 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
 
         Injector.getAppComponent().inject(this);
-        ButterKnife.bind(this);
+
+        compositeDisposable = new CompositeDisposable();
 
         init();
 
@@ -124,28 +128,34 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     private void setupClickListeners() {
         rxPermissions = new RxPermissions(this);
 
-        RxView.clicks(saveWallpaperButton)
-                .compose(rxPermissions.ensure(Manifest.permission.WRITE_EXTERNAL_STORAGE))
-                .subscribe(granted -> {
-                    if (granted) {
-                        saveWallpaperToExternalStorage();
-                    } else {
-                        Toast.makeText(this, "Fine, okay. :(", Toast.LENGTH_SHORT).show();
-                    }
-                });
+        compositeDisposable.add(
+                RxView.clicks(saveWallpaperButton)
+                        .compose(rxPermissions.ensure(Manifest.permission.WRITE_EXTERNAL_STORAGE))
+                        .subscribe(granted -> {
+                            if (granted) {
+                                saveWallpaperToExternalStorage();
+                            } else {
+                                Toast.makeText(this, "Fine, okay. :(", Toast.LENGTH_SHORT).show();
+                            }
+                        })
+        );
 
-        RxView.clicks(setWallpaperButton)
-                .compose(rxPermissions.ensure(Manifest.permission.WRITE_EXTERNAL_STORAGE))
-                .subscribe(granted -> {
-                    if (granted) {
-                        doWallpaperSetting();
-                    } else {
-                        Toast.makeText(this, "Fine, okay. :(", Toast.LENGTH_SHORT).show();
-                    }
-                });
+        compositeDisposable.add(
+                RxView.clicks(setWallpaperButton)
+                        .compose(rxPermissions.ensure(Manifest.permission.WRITE_EXTERNAL_STORAGE))
+                        .subscribe(granted -> {
+                            if (granted) {
+                                doWallpaperSetting();
+                            } else {
+                                Toast.makeText(this, "Fine, okay. :(", Toast.LENGTH_SHORT).show();
+                            }
+                        })
+        );
 
-        RxView.clicks(creditsView)
-                .subscribe(click -> showWallpaperCredits());
+        compositeDisposable.add(
+                RxView.clicks(creditsView)
+                        .subscribe(click -> showWallpaperCredits())
+        );
     }
 
     // endregion
@@ -162,13 +172,15 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     }
 
     private void setWallpaperImageView() {
-        BitmapUtils.getBitmapFromFile(photo.getRegularPhotoUri())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        this::onWallpaperImageViewSetSuccess,
-                        this::onWallpaperImageViewSetFailure
-                );
+        compositeDisposable.add(
+                BitmapUtils.getBitmapFromFile(photo.getRegularPhotoUri())
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                this::onWallpaperImageViewSetSuccess,
+                                this::onWallpaperImageViewSetFailure
+                        )
+        );
     }
 
     private void onWallpaperImageViewSetFailure(Throwable throwable) {
@@ -241,6 +253,12 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        compositeDisposable.dispose();
+    }
+
     // endregion
 
     // region HELPERS
@@ -267,10 +285,12 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     private void saveWallpaperToExternalStorage() throws IOException {
         File srcFile = new File(photo.getPhotoUri());
 
-        FileUtils.exportFile(srcFile, photo.getId() + ".png")
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::onSaveSuccess, this::onSaveFailure);
+        compositeDisposable.add(
+                FileUtils.exportFile(srcFile, photo.getId() + ".png")
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(this::onSaveSuccess, this::onSaveFailure)
+        );
     }
 
     private void onSaveFailure(Throwable throwable) {
@@ -285,10 +305,12 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     private void doWallpaperSetting() throws IOException {
         File srcFile = new File(photo.getPhotoUri());
 
-        FileUtils.exportFile(srcFile, photo.getId() + ".png")
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::onSettingSaveSuccess, this::onSettingSaveFailure);
+        compositeDisposable.add(
+                FileUtils.exportFile(srcFile, photo.getId() + ".png")
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(this::onSettingSaveSuccess, this::onSettingSaveFailure)
+        );
     }
 
     private void onSettingSaveFailure(Throwable throwable) {
