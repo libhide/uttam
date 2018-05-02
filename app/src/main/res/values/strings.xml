@@ -33,13 +33,10 @@
     <string name="title_automatic_wallpaper_set">Set Wallpaper Automatically</string>
     <string name="summary_automatic_wallpaper_set">New wallpaper will be set automatically in the background.</string>
     <string name="category_misc">Misc.</string>
-    <string name="key_contact">contactDev</string>
     <string name="summary_contact">Want help? Have suggestions? Use this to contact the developer.</string>
     <string name="title_contact">Contact the Developer</string>
-    <string name="key_review">review</string>
     <string name="summary_review">Like the app? Consider leaving a review in the Play Store!</string>
     <string name="title_review">Say Thanks!</string>
-    <string name="key_compress_wallpaper">compressWallpaper</string>
 
     <!-- Toast message strings -->
     <string name="wallpaper_set_text">Wallpaper set successfully!</string>
