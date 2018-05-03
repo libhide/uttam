@@ -11,6 +11,7 @@ import com.ratik.uttam.di.module.UtilsModule;
 import com.ratik.uttam.services.GetPhotoJob;
 import com.ratik.uttam.ui.hero.HeroActivity;
 import com.ratik.uttam.ui.main.MainActivity;
+import com.ratik.uttam.ui.settings.SettingsActivity;
 import com.ratik.uttam.utils.NotificationUtils;
 
 import javax.inject.Singleton;
@@ -36,6 +37,7 @@ public interface AppComponent {
 
     void inject(HeroActivity activity);
     void inject(MainActivity activity);
+    void inject(SettingsActivity activity);
 
     void inject(NotificationUtils notificationUtils);
 }
