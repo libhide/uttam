@@ -22,6 +22,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.ratik.uttam.Constants;
 import com.ratik.uttam.R;
@@ -35,9 +38,16 @@ import com.ratik.uttam.utils.NotificationUtils;
 import com.ratik.uttam.utils.Utils;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
+import org.solovyev.android.checkout.ActivityCheckout;
+import org.solovyev.android.checkout.Billing;
+import org.solovyev.android.checkout.Checkout;
+import org.solovyev.android.checkout.Inventory;
+import org.solovyev.android.checkout.ProductTypes;
+
 import java.io.File;
 import java.io.IOException;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 import butterknife.BindView;
@@ -50,7 +60,6 @@ import static com.ratik.uttam.R.id.creditsContainer;
 
 public class MainActivity extends AppCompatActivity implements MainContract.View {
 
-    // Constants
     public static final String TAG = MainActivity.class.getSimpleName();
     private static final int REQUEST_CODE_SET_WALLPAPER = 1;
 
@@ -60,12 +69,15 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     @Inject
     NotificationUtils notificationUtils;
 
-    // Member variables
+    @Inject
+    Billing billing;
+    private boolean addFree = true;
+
     private CompositeDisposable compositeDisposable;
     private RxPermissions rxPermissions;
     private Photo photo;
+    private InterstitialAd savingAd;
 
-    // Views
     @BindView(R.id.wallpaper)
     ImageView wallpaperImageView;
 
@@ -96,24 +108,19 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
         init();
 
-        // Set the presenter's view
         presenter.setView(this);
-
         presenter.getPhoto();
     }
 
     // region INITIALIZATION
 
     private void init() {
-        // Toolbar
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle("");
             getSupportActionBar().setIcon(R.drawable.uttam);
         }
 
-        // Adjust theme
-        // Do cool stuff for L+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setEnterTransition(new Slide(Gravity.END));
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -121,8 +128,13 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
             setTheme(R.style.AppTheme_Fullscreen);
         }
 
-        // Click listeners
         setupClickListeners();
+        setupAds();
+
+        // Billing
+        ActivityCheckout activityCheckout = Checkout.forActivity(this, billing);
+        activityCheckout.start();
+        activityCheckout.loadInventory(Inventory.Request.create().loadAllPurchases(), new MainActivity.InventoryCallback());
     }
 
     private void setupClickListeners() {
@@ -133,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
                         .compose(rxPermissions.ensure(Manifest.permission.WRITE_EXTERNAL_STORAGE))
                         .subscribe(granted -> {
                             if (granted) {
-                                saveWallpaperToExternalStorage();
+                                saveWallpaper();
                             } else {
                                 Toast.makeText(this, "Fine, okay. :(", Toast.LENGTH_SHORT).show();
                             }
@@ -261,6 +273,29 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     // endregion
 
+    // region BILLING
+
+    private class InventoryCallback implements Inventory.Callback {
+
+        @Override
+        public void onLoaded(@Nonnull Inventory.Products products) {
+            final Inventory.Product product = products.get(ProductTypes.IN_APP);
+            if (!product.supported) {
+                // Billing is not supported, user can't purchase anything
+                // Don't show ads in this case
+                addFree = true;
+                return;
+            }
+            if (product.isPurchased(Constants.Billing.SKU_REMOVE_ADS)) {
+                addFree = true;
+                return;
+            }
+            addFree = false;
+        }
+    }
+
+    // endregion
+
     // region HELPERS
 
     public void refreshPhoto() {
@@ -302,6 +337,19 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(file)));
     }
 
+    private void saveWallpaper() throws IOException {
+        if (addFree) {
+            saveWallpaperToExternalStorage();
+        } else {
+            if (savingAd.isLoaded()) {
+                savingAd.show();
+                Toast.makeText(MainActivity.this,
+                        "Close the ad to continue saving...",
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
     private void doWallpaperSetting() throws IOException {
         File srcFile = new File(photo.getPhotoUri());
 
@@ -334,6 +382,32 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         shareIntent.setType("text/plain");
         shareIntent.putExtra(Intent.EXTRA_TEXT, shareText);
         startActivity(shareIntent);
+    }
+
+    private void setupAds() {
+        savingAd = new InterstitialAd(this);
+        savingAd.setAdUnitId(Constants.Ads.INTERSTITIAL_AD);
+        savingAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                requestNewInterstitial(savingAd);
+                try {
+                    saveWallpaperToExternalStorage();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        requestNewInterstitial(savingAd);
+    }
+
+    private void requestNewInterstitial(InterstitialAd ad) {
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice("F10B72A932B17CB36CBBE69C25167324")
+                .build();
+
+        ad.loadAd(adRequest);
     }
 
     // endregion

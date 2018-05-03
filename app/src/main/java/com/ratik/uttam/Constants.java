@@ -41,6 +41,14 @@ public class Constants {
         public static final String HTML_URL = "html_url";
     }
 
+    public class Billing {
+        public static final String SKU_REMOVE_ADS = "remove_adverts";
+    }
+
+    public class Ads {
+        public static final String INTERSTITIAL_AD = "ca-app-pub-3718717081206155/1204419282";
+    }
+
     // Preference constants
     public static final String FIRST_RUN = "first_run";
     public static final String SCREEN_WIDTH = "screen_width";
