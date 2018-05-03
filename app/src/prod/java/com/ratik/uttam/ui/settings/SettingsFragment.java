@@ -1,8 +1,6 @@
 package com.ratik.uttam.ui.settings;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
@@ -16,9 +14,10 @@ import com.ratik.uttam.R;
  */
 public class SettingsFragment extends PreferenceFragment implements Preference.OnPreferenceChangeListener {
 
-    private Preference removeAdsPreference;
     public static final String ARG_ADS_REMOVED = "adverts_removed";
-    private RemoveAdsClickListener removeAdsClickListener;
+
+    private Preference removeAdsPreference;
+    private Callback callback;
 
     public static SettingsFragment newInstance(Bundle args) {
         SettingsFragment fragment = new SettingsFragment();
@@ -26,8 +25,12 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         return fragment;
     }
 
-    interface RemoveAdsClickListener {
+    interface Callback {
         void startRemoveAdsPurchaseFlow();
+
+        void startContactTheDevFlow();
+
+        void startRateTheAppFlow();
     }
 
     @Override
@@ -36,10 +39,10 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         // This makes sure that the container activity has implemented
         // the callback interface. If not, it throws an exception
         try {
-            removeAdsClickListener = (RemoveAdsClickListener) context;
+            callback = (Callback) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
-                    + " must implement RemoveAdsClickListener");
+                    + " must implement SettingsFragment.Callback");
         }
     }
 
@@ -57,17 +60,14 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         initLayout();
 
         removeAdsPreference.setOnPreferenceClickListener(preference -> {
-            removeAdsClickListener.startRemoveAdsPurchaseFlow();
+            callback.startRemoveAdsPurchaseFlow();
             return true;
         });
 
         Preference contactPreference = getPreferenceManager().findPreference("contactDev");
         if (contactPreference != null) {
             contactPreference.setOnPreferenceClickListener(preference -> {
-                Intent emailIntent = new Intent(Intent.ACTION_SEND);
-                emailIntent.setType("message/rfc822");
-                emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{"ratik96@gmail.com"});
-                startActivity(emailIntent);
+                callback.startContactTheDevFlow();
                 return true;
             });
         }
@@ -75,9 +75,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         Preference reviewPreference = getPreferenceManager().findPreference("review");
         if (reviewPreference != null) {
             reviewPreference.setOnPreferenceClickListener(preference -> {
-                Intent i = new Intent();
-                i.setData(Uri.parse("market://details?id=com.ratik.uttam.prod"));
-                startActivity(i);
+                callback.startRateTheAppFlow();
                 return true;
             });
         }
