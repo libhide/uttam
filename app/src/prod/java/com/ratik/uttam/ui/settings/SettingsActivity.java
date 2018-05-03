@@ -1,6 +1,7 @@
 package com.ratik.uttam.ui.settings;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -31,7 +32,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Ratik on 07/03/16.
  */
-public class SettingsActivity extends AppCompatActivity implements SettingsFragment.RemoveAdsClickListener {
+public class SettingsActivity extends AppCompatActivity implements SettingsFragment.Callback {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -115,6 +116,21 @@ public class SettingsActivity extends AppCompatActivity implements SettingsFragm
     public void startRemoveAdsPurchaseFlow() {
         activityCheckout.startPurchaseFlow(ProductTypes.IN_APP, REMOVE_ADVERTS,
                 null, new PurchaseListener());
+    }
+
+    @Override
+    public void startContactTheDevFlow() {
+        Intent emailIntent = new Intent(Intent.ACTION_SEND);
+        emailIntent.setType("message/rfc822");
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{"ratik96@gmail.com"});
+        startActivity(emailIntent);
+    }
+
+    @Override
+    public void startRateTheAppFlow() {
+        Intent i = new Intent();
+        i.setData(Uri.parse("market://details?id=com.ratik.uttam.prod"));
+        startActivity(i);
     }
 
     private class PurchaseListener extends EmptyRequestListener<Purchase> {
