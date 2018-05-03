@@ -12,6 +12,7 @@ import android.widget.ProgressBar;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.ratik.uttam.Constants;
 import com.ratik.uttam.R;
 import com.ratik.uttam.di.Injector;
 
@@ -48,11 +49,8 @@ public class SettingsActivity extends AppCompatActivity implements SettingsFragm
 
     @Inject
     Billing billing;
-
     private ActivityCheckout activityCheckout;
-
     private boolean addFree = true;
-    private static final String REMOVE_ADVERTS = "remove_adverts";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -114,8 +112,8 @@ public class SettingsActivity extends AppCompatActivity implements SettingsFragm
 
     @Override
     public void startRemoveAdsPurchaseFlow() {
-        activityCheckout.startPurchaseFlow(ProductTypes.IN_APP, REMOVE_ADVERTS,
-                null, new PurchaseListener());
+        activityCheckout.startPurchaseFlow(ProductTypes.IN_APP,
+                Constants.Billing.SKU_REMOVE_ADS, null, new PurchaseListener());
     }
 
     @Override
@@ -150,7 +148,7 @@ public class SettingsActivity extends AppCompatActivity implements SettingsFragm
                 showSettings(false);
                 return;
             }
-            if (product.isPurchased(REMOVE_ADVERTS)) {
+            if (product.isPurchased(Constants.Billing.SKU_REMOVE_ADS)) {
                 showSettings(true);
                 return;
             }
