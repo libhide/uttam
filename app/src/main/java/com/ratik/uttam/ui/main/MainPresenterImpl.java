@@ -1,6 +1,6 @@
 package com.ratik.uttam.ui.main;
 
-import com.ratik.uttam.data.DataStore;
+import com.ratik.uttam.data.PhotoStore;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -12,10 +12,10 @@ import io.reactivex.schedulers.Schedulers;
 public class MainPresenterImpl implements MainContract.Presenter {
 
     private MainContract.View view;
-    private DataStore dataStore;
+    private PhotoStore photoStore;
 
-    public MainPresenterImpl(DataStore dataStore) {
-        this.dataStore = dataStore;
+    public MainPresenterImpl(PhotoStore photoStore) {
+        this.photoStore = photoStore;
     }
 
     @Override
@@ -25,7 +25,7 @@ public class MainPresenterImpl implements MainContract.Presenter {
 
     @Override
     public void getPhoto() {
-        dataStore.getPhoto()
+        photoStore.getPhoto()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
