@@ -71,17 +71,21 @@ public class SettingsActivity extends AppCompatActivity implements SettingsFragm
         billingManager.loadInventory(products -> {
             final Inventory.Product product = products.get(ProductTypes.IN_APP);
             if (product.isPurchased(Constants.Billing.SKU_REMOVE_ADS)) {
-                showSettings(addFree);
+                showSettings();
                 return;
             }
-            showSettings(!addFree);
             showAd();
+            showSettings();
         });
     }
 
-    private void showSettings(boolean advertsRemoved) {
+    private void showSettings() {
         Bundle args = new Bundle();
-        args.putBoolean(SettingsFragment.ARG_ADS_REMOVED, advertsRemoved);
+        if (addFree) {
+            args.putBoolean(SettingsFragment.ARG_ADS_REMOVED, true);
+        } else {
+            args.putBoolean(SettingsFragment.ARG_ADS_REMOVED, false);
+        }
         SettingsFragment fragment = SettingsFragment.newInstance(args);
         getFragmentManager().beginTransaction().replace(
                 R.id.settings_content, fragment).commit();
@@ -133,6 +137,8 @@ public class SettingsActivity extends AppCompatActivity implements SettingsFragm
             @Override
             public void onSuccess(@Nonnull Purchase result) {
                 hideAd();
+                addFree = true;
+                showSettings();
             }
         });
     }
