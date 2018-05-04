@@ -3,37 +3,25 @@
 
     <PreferenceCategory android:title="General">
         <SwitchPreference
-            android:defaultValue="false"
-            android:key="@string/key_automatic_wallpaper_set"
+            android:defaultValue="true"
+            android:key="setWallpaperAuto"
             android:summary="@string/summary_automatic_wallpaper_set"
             android:title="@string/title_automatic_wallpaper_set" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="Notification">
-        <SwitchPreference
-            android:defaultValue="true"
-            android:key="@string/key_custom_sounds"
-            android:summary="@string/summary_custom_sounds"
-            android:title="@string/title_custom_sounds" />
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="@string/key_notif_led"
-            android:summary="@string/summary_notif_led"
-            android:title="@string/title_notif_led" />
-    </PreferenceCategory>
     <PreferenceCategory android:title="@string/category_iap">
         <Preference
-            android:key="@string/key_remove_ads"
+            android:key="removeAds"
             android:summary="@string/summary_remove_ads"
             android:title="@string/title_remove_ads" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/category_misc">
         <Preference
-            android:key="@string/key_contact"
+            android:key="contactDev"
             android:summary="@string/summary_contact"
             android:title="@string/title_contact" />
         <Preference
-            android:key="@string/key_review"
+            android:key="review"
             android:summary="@string/summary_review"
             android:title="@string/title_review" />
     </PreferenceCategory>
