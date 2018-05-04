@@ -49,11 +49,10 @@ public class Constants {
         public static final String INTERSTITIAL_AD = "ca-app-pub-3718717081206155/1204419282";
     }
 
-    // Preference constants
-    public static final String FIRST_RUN = "first_run";
-    public static final String SCREEN_WIDTH = "screen_width";
-    public static final String SCREEN_HEIGHT = "screen_height";
-    public static final String AUTO_SET = "setWallpaperAuto";
+    public class Prefs {
+        public static final String FIRST_RUN = "first_run";
+        public static final String AUTO_SET = "setWallpaperAuto";
+    }
 
     // Notification constants
     public static final String NOTIF_CHANNEL_ID = "uttam_channel";
