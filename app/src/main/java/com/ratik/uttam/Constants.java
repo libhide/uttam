@@ -41,15 +41,19 @@ public class Constants {
         public static final String HTML_URL = "html_url";
     }
 
+    public class Billing {
+        public static final String SKU_REMOVE_ADS = "remove_adverts";
+    }
+
+    public class Ads {
+        public static final String INTERSTITIAL_AD = "ca-app-pub-3718717081206155/1204419282";
+    }
+
     // Preference constants
     public static final String FIRST_RUN = "first_run";
     public static final String SCREEN_WIDTH = "screen_width";
     public static final String SCREEN_HEIGHT = "screen_height";
     public static final String AUTO_SET = "setWallpaperAuto";
-
-    // IAP constants
-    public static final String SKU_REMOVE_ADS = "remove_adverts";
-    public static final String REMOVE_ADS = "remove_ads";
 
     // Notification constants
     public static final String NOTIF_CHANNEL_ID = "uttam_channel";
