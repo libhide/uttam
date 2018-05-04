@@ -55,10 +55,6 @@ public class Constants {
     public static final String SCREEN_HEIGHT = "screen_height";
     public static final String AUTO_SET = "setWallpaperAuto";
 
-    // IAP constants
-    public static final String SKU_REMOVE_ADS = "remove_adverts";
-    public static final String REMOVE_ADS = "remove_ads";
-
     // Notification constants
     public static final String NOTIF_CHANNEL_ID = "uttam_channel";
     public static final String NOTIF_CHANNEL_NAME = "General";

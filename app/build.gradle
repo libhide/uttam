@@ -16,13 +16,19 @@ def getProperty(String filename, String propName) {
     }
 }
 
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+
+def keystoreProperties = new Properties()
+
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
 android {
     signingConfigs {
         config {
-            keyAlias 'ratik'
-            keyPassword 'zaq123'
-            storeFile file("$rootDir/keystore.jks")
-            storePassword 'zaq123'
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
         }
     }
 
@@ -32,8 +38,8 @@ android {
         applicationId "com.ratik.uttam"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 16
-        versionName "3.1"
+        versionCode 17
+        versionName "4.0"
 
         buildConfigField "String", "CLIENT_ID", "\"${getProperty("local.properties", "client_id")}\""
     }
