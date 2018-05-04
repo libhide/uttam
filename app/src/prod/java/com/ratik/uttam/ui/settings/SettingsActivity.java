@@ -14,11 +14,10 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.ratik.uttam.Constants;
 import com.ratik.uttam.R;
+import com.ratik.uttam.billing.BillingManager;
 import com.ratik.uttam.di.Injector;
 
-import org.solovyev.android.checkout.ActivityCheckout;
 import org.solovyev.android.checkout.Billing;
-import org.solovyev.android.checkout.Checkout;
 import org.solovyev.android.checkout.EmptyRequestListener;
 import org.solovyev.android.checkout.Inventory;
 import org.solovyev.android.checkout.ProductTypes;
@@ -49,8 +48,9 @@ public class SettingsActivity extends AppCompatActivity implements SettingsFragm
 
     @Inject
     Billing billing;
-    private ActivityCheckout activityCheckout;
     private boolean addFree = true;
+
+    private BillingManager billingManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,9 +59,6 @@ public class SettingsActivity extends AppCompatActivity implements SettingsFragm
         ButterKnife.bind(this);
 
         Injector.getAppComponent().inject(this);
-        activityCheckout = Checkout.forActivity(this, billing);
-        activityCheckout.start();
-        activityCheckout.loadInventory(Inventory.Request.create().loadAllPurchases(), new InventoryCallback());
 
         // Add Toolbar
         setSupportActionBar(toolbar);
@@ -69,18 +66,26 @@ public class SettingsActivity extends AppCompatActivity implements SettingsFragm
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+
+        billingManager = new BillingManager(this, billing);
+        billingManager.loadInventory(products -> {
+            final Inventory.Product product = products.get(ProductTypes.IN_APP);
+            if (product.isPurchased(Constants.Billing.SKU_REMOVE_ADS)) {
+                showSettings(addFree);
+                return;
+            }
+            showSettings(!addFree);
+            showAd();
+        });
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        activityCheckout.onActivityResult(requestCode, resultCode, data);
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    @Override
-    protected void onDestroy() {
-        activityCheckout.stop();
-        super.onDestroy();
+    private void showSettings(boolean advertsRemoved) {
+        Bundle args = new Bundle();
+        args.putBoolean(SettingsFragment.ARG_ADS_REMOVED, advertsRemoved);
+        SettingsFragment fragment = SettingsFragment.newInstance(args);
+        getFragmentManager().beginTransaction().replace(
+                R.id.settings_content, fragment).commit();
+        progressBar.setVisibility(View.INVISIBLE);
     }
 
     private void showAd() {
@@ -111,9 +116,25 @@ public class SettingsActivity extends AppCompatActivity implements SettingsFragm
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        billingManager.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    protected void onDestroy() {
+        billingManager.stopCheckout();
+        super.onDestroy();
+    }
+
+    @Override
     public void startRemoveAdsPurchaseFlow() {
-        activityCheckout.startPurchaseFlow(ProductTypes.IN_APP,
-                Constants.Billing.SKU_REMOVE_ADS, null, new PurchaseListener());
+        billingManager.startPurchaseFlowForIAP(Constants.Billing.SKU_REMOVE_ADS, new EmptyRequestListener<Purchase>() {
+            @Override
+            public void onSuccess(@Nonnull Purchase result) {
+                hideAd();
+            }
+        });
     }
 
     @Override
@@ -129,41 +150,6 @@ public class SettingsActivity extends AppCompatActivity implements SettingsFragm
         Intent i = new Intent();
         i.setData(Uri.parse("market://details?id=com.ratik.uttam.prod"));
         startActivity(i);
-    }
-
-    private class PurchaseListener extends EmptyRequestListener<Purchase> {
-        @Override
-        public void onSuccess(@Nonnull Purchase purchase) {
-            hideAd();
-        }
-    }
-
-    private class InventoryCallback implements Inventory.Callback {
-        @Override
-        public void onLoaded(@Nonnull Inventory.Products products) {
-            final Inventory.Product product = products.get(ProductTypes.IN_APP);
-            if (!product.supported) {
-                // Billing is not supported, user can't purchase anything
-                // Don't show ads in this case
-                showSettings(false);
-                return;
-            }
-            if (product.isPurchased(Constants.Billing.SKU_REMOVE_ADS)) {
-                showSettings(true);
-                return;
-            }
-            showSettings(false);
-            showAd();
-        }
-    }
-
-    private void showSettings(boolean advertsRemoved) {
-        Bundle args = new Bundle();
-        args.putBoolean(SettingsFragment.ARG_ADS_REMOVED, advertsRemoved);
-        SettingsFragment fragment = SettingsFragment.newInstance(args);
-        getFragmentManager().beginTransaction().replace(
-                R.id.settings_content, fragment).commit();
-        progressBar.setVisibility(View.INVISIBLE);
     }
 }
 
