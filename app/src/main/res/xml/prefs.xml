@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:title="@string/category_general">
+    <PreferenceCategory android:title="General">
         <SwitchPreference
             android:defaultValue="true"
-            android:key="@string/key_automatic_wallpaper_set"
+            android:key="setWallpaperAuto"
             android:summary="@string/summary_automatic_wallpaper_set"
             android:title="@string/title_automatic_wallpaper_set" />
     </PreferenceCategory>

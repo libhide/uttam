@@ -16,13 +16,19 @@ def getProperty(String filename, String propName) {
     }
 }
 
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+
+def keystoreProperties = new Properties()
+
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
 android {
     signingConfigs {
         config {
-            keyAlias 'ratik'
-            keyPassword 'zaq123'
-            storeFile file("$rootDir/keystore.jks")
-            storePassword 'zaq123'
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile file("$rootDir/${keystoreProperties['storeFile']}")
+            storePassword keystoreProperties['storePassword']
         }
     }
 
@@ -32,8 +38,8 @@ android {
         applicationId "com.ratik.uttam"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 16
-        versionName "3.1"
+        versionCode 17
+        versionName "4.0"
 
         buildConfigField "String", "CLIENT_ID", "\"${getProperty("local.properties", "client_id")}\""
     }
@@ -94,6 +100,9 @@ dependencies {
     // Butter Knife
     implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+
+    // Billing
+    prodImplementation 'org.solovyev.android:checkout:1.2.1'
 
     // Ads
     prodImplementation 'com.google.firebase:firebase-ads:11.4.2'
