@@ -12,7 +12,8 @@ import android.util.Log;
 import com.ratik.uttam.BuildConfig;
 import com.ratik.uttam.Constants;
 import com.ratik.uttam.api.UnsplashService;
-import com.ratik.uttam.data.DataStore;
+import com.ratik.uttam.data.PhotoStore;
+import com.ratik.uttam.data.PrefStore;
 import com.ratik.uttam.di.Injector;
 import com.ratik.uttam.model.Photo;
 import com.ratik.uttam.model.PhotoResponse;
@@ -43,7 +44,10 @@ public class GetPhotoJob extends JobService {
     UnsplashService service;
 
     @Inject
-    DataStore dataStore;
+    PhotoStore photoStore;
+
+    @Inject
+    PrefStore prefStore;
 
     @Inject
     NotificationUtils notificationUtils;
@@ -129,24 +133,24 @@ public class GetPhotoJob extends JobService {
 
         compositeDisposable.add(
                 service.getRandomPhoto(BuildConfig.CLIENT_ID, Constants.Api.COLLECTIONS)
-                .flatMapSingle(this::getPhotoSingle)
-                .flatMapCompletable(photo -> {
-                    Completable putCompletable = dataStore.putPhoto(photo);
-                    if (dataStore.isAutoSetEnabled()) {
-                        return doPostSavingStuff(putCompletable, photo);
-                    } else {
-                        return putCompletable;
-                    }
-                })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::onFetchSuccess, this::onFetchFailure)
+                        .flatMapSingle(this::getPhotoSingle)
+                        .flatMapCompletable(photo -> {
+                            Completable putCompletable = photoStore.putPhoto(photo);
+                            if (prefStore.isAutoSetEnabled()) {
+                                return doPostSavingStuff(putCompletable, photo);
+                            } else {
+                                return putCompletable;
+                            }
+                        })
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(this::onFetchSuccess, this::onFetchFailure)
         );
     }
 
-    private Completable doPostSavingStuff(Completable dataStorePutCompletable,
+    private Completable doPostSavingStuff(Completable photoStorePutCompletable,
                                           Photo photo) {
-        return dataStorePutCompletable
+        return photoStorePutCompletable
                 .andThen(getWallpaperPath(photo))
                 .map(BitmapFactory::decodeFile)
                 .flatMap(this::scaleWallpaper)

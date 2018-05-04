@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.ratik.uttam.Constants;
 import com.ratik.uttam.R;
+import com.ratik.uttam.data.PrefStore;
 import com.ratik.uttam.di.Injector;
 import com.ratik.uttam.model.Photo;
 import com.ratik.uttam.services.GetPhotoJob;
@@ -32,7 +33,6 @@ import com.ratik.uttam.ui.settings.SettingsActivity;
 import com.ratik.uttam.utils.BitmapUtils;
 import com.ratik.uttam.utils.FileUtils;
 import com.ratik.uttam.utils.NotificationUtils;
-import com.ratik.uttam.utils.Utils;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.io.File;
@@ -59,6 +59,9 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     @Inject
     NotificationUtils notificationUtils;
+
+    @Inject
+    PrefStore prefStore;
 
     // Member variables
     private CompositeDisposable compositeDisposable;
@@ -190,19 +193,14 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     private void onWallpaperImageViewSetSuccess(Bitmap bitmap) {
         wallpaperImageView.setImageBitmap(bitmap);
 
-        if (Utils.isFirstRun(this)) {
-            // Set it as the wallpaper
+        if (prefStore.isFirstRun()) {
             try {
                 WallpaperManager.getInstance(this).setBitmap(bitmap);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-            // cast first notification
             notificationUtils.pushNewWallpaperNotification();
-
-            // update first run state
-            Utils.setFirstRun(this, false);
+            prefStore.firstRunDone();
         }
     }
 

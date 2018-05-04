@@ -1,6 +1,6 @@
 package com.ratik.uttam.ui.main;
 
-import com.ratik.uttam.data.DataStore;
+import com.ratik.uttam.data.PhotoStore;
 import com.ratik.uttam.model.Photo;
 
 import org.junit.Before;
@@ -26,12 +26,10 @@ public class MainPresenterImplTest {
     public RxSchedulerRule rule = new RxSchedulerRule();
 
     @Mock
-    private
-    MainContract.View view;
+    private MainContract.View view;
 
     @Mock
-    private
-    DataStore dataStore;
+    private PhotoStore photoStore;
 
     private MainPresenterImpl presenter;
 
@@ -41,7 +39,7 @@ public class MainPresenterImplTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
 
-        presenter = new MainPresenterImpl(dataStore);
+        presenter = new MainPresenterImpl(photoStore);
         presenter.setView(view);
 
         testPhoto = new Photo.Builder().build();
@@ -50,7 +48,7 @@ public class MainPresenterImplTest {
     @Test
     public void shouldLoadPhotoIntoView() {
         // given
-        when(dataStore.getPhoto()).thenReturn(Single.just(testPhoto));
+        when(photoStore.getPhoto()).thenReturn(Single.just(testPhoto));
 
         // when
         presenter.getPhoto();
@@ -63,7 +61,7 @@ public class MainPresenterImplTest {
     @Test
     public void shouldShowErrorView() {
         // given
-        when(dataStore.getPhoto()).thenReturn(Single.error(new IOException()));
+        when(photoStore.getPhoto()).thenReturn(Single.error(new IOException()));
 
         // when
         presenter.getPhoto();
