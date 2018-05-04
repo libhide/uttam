@@ -28,6 +28,7 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.ratik.uttam.Constants;
 import com.ratik.uttam.R;
+import com.ratik.uttam.billing.BillingManager;
 import com.ratik.uttam.di.Injector;
 import com.ratik.uttam.model.Photo;
 import com.ratik.uttam.services.GetPhotoJob;
@@ -38,16 +39,13 @@ import com.ratik.uttam.utils.NotificationUtils;
 import com.ratik.uttam.utils.Utils;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
-import org.solovyev.android.checkout.ActivityCheckout;
 import org.solovyev.android.checkout.Billing;
-import org.solovyev.android.checkout.Checkout;
 import org.solovyev.android.checkout.Inventory;
 import org.solovyev.android.checkout.ProductTypes;
 
 import java.io.File;
 import java.io.IOException;
 
-import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 import butterknife.BindView;
@@ -69,13 +67,15 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     @Inject
     NotificationUtils notificationUtils;
 
-    @Inject
-    Billing billing;
-    private boolean addFree = true;
-
     private CompositeDisposable compositeDisposable;
     private RxPermissions rxPermissions;
     private Photo photo;
+
+    @Inject
+    Billing billing;
+    private boolean addFree = true;
+    private BillingManager billingManager;
+
     private InterstitialAd savingAd;
 
     @BindView(R.id.wallpaper)
@@ -132,9 +132,15 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         setupAds();
 
         // Billing
-        ActivityCheckout activityCheckout = Checkout.forActivity(this, billing);
-        activityCheckout.start();
-        activityCheckout.loadInventory(Inventory.Request.create().loadAllPurchases(), new MainActivity.InventoryCallback());
+        billingManager = new BillingManager(this, billing);
+        billingManager.loadInventory(products -> {
+            final Inventory.Product product = products.get(ProductTypes.IN_APP);
+            if (product.isPurchased(Constants.Billing.SKU_REMOVE_ADS)) {
+                addFree = true;
+                return;
+            }
+            addFree = false;
+        });
     }
 
     private void setupClickListeners() {
@@ -267,31 +273,9 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     @Override
     protected void onDestroy() {
+        billingManager.stopCheckout();
         super.onDestroy();
         compositeDisposable.dispose();
-    }
-
-    // endregion
-
-    // region BILLING
-
-    private class InventoryCallback implements Inventory.Callback {
-
-        @Override
-        public void onLoaded(@Nonnull Inventory.Products products) {
-            final Inventory.Product product = products.get(ProductTypes.IN_APP);
-            if (!product.supported) {
-                // Billing is not supported, user can't purchase anything
-                // Don't show ads in this case
-                addFree = true;
-                return;
-            }
-            if (product.isPurchased(Constants.Billing.SKU_REMOVE_ADS)) {
-                addFree = true;
-                return;
-            }
-            addFree = false;
-        }
     }
 
     // endregion
