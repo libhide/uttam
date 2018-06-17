@@ -14,6 +14,7 @@ import dagger.Provides;
  */
 @Module
 public class UtilsModule {
+
     @Provides
     @Singleton
     public NotificationUtils providesNotificationUtils(Context context) {

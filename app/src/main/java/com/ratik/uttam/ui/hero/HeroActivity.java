@@ -4,7 +4,6 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,14 +11,14 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.transition.Fade;
 import android.util.Log;
-import android.view.Display;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 
 import com.ratik.uttam.R;
-import com.ratik.uttam.data.DataStore;
+import com.ratik.uttam.data.PhotoStore;
+import com.ratik.uttam.data.PrefStore;
 import com.ratik.uttam.di.Injector;
 import com.ratik.uttam.model.Photo;
 import com.ratik.uttam.model.PhotoType;
@@ -27,7 +26,6 @@ import com.ratik.uttam.ui.main.MainActivity;
 import com.ratik.uttam.ui.tour.TourActivity;
 import com.ratik.uttam.utils.BitmapUtils;
 import com.ratik.uttam.utils.FetchUtils;
-import com.ratik.uttam.utils.Utils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -52,7 +50,10 @@ public class HeroActivity extends AppCompatActivity {
     private static final String TAG = HeroActivity.class.getSimpleName();
 
     @Inject
-    DataStore dataStore;
+    PhotoStore photoStore;
+
+    @Inject
+    PrefStore prefStore;
 
     private CompositeDisposable compositeDisposable;
 
@@ -72,8 +73,7 @@ public class HeroActivity extends AppCompatActivity {
 
         compositeDisposable = new CompositeDisposable();
 
-        boolean firstRun = Utils.isFirstRun(this);
-        if (firstRun) {
+        if (prefStore.isFirstRun()) {
             setContentView(R.layout.activity_hero);
             ButterKnife.bind(this);
             doAnimations();
@@ -94,10 +94,6 @@ public class HeroActivity extends AppCompatActivity {
     }
 
     private void setupAppForUser() {
-        // save the user's screen size for later use
-        saveScreenSize();
-
-        // set default prefs for the user
         setupDefaultPrefs();
 
         Single<String> fullPhotoSingle = Single.fromCallable(() -> {
@@ -117,7 +113,7 @@ public class HeroActivity extends AppCompatActivity {
 
         compositeDisposable.add(
                 Single.zip(fullPhotoSingle, regularPhotoSingle, thumbPhotoSingle, this::getHeroPhoto)
-                        .flatMapCompletable(photo -> dataStore.putPhoto(photo))
+                        .flatMapCompletable(photo -> photoStore.putPhoto(photo))
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
@@ -180,16 +176,8 @@ public class HeroActivity extends AppCompatActivity {
         compositeDisposable.dispose();
     }
 
-    private void saveScreenSize() {
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        Utils.setScreenWidth(this, size.x);
-        Utils.setScreenHeight(this, size.y);
-    }
-
     private void setupDefaultPrefs() {
-        dataStore.enableWallpaperAutoSet();
+        prefStore.enableWallpaperAutoSet();
     }
 
     private String storeImage(Bitmap image, PhotoType photoType) {

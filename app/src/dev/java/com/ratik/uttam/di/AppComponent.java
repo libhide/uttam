@@ -1,7 +1,7 @@
 package com.ratik.uttam.di;
 
 import com.ratik.uttam.UttamApplication;
-import com.ratik.uttam.data.impl.DataStoreImpl;
+import com.ratik.uttam.data.impl.PhotoStoreImpl;
 import com.ratik.uttam.di.module.ApiModule;
 import com.ratik.uttam.di.module.AppContextModule;
 import com.ratik.uttam.di.module.DataModule;
@@ -30,12 +30,12 @@ public interface AppComponent {
 
     void inject(UttamApplication application);
 
-    void inject(DataStoreImpl dataStore);
-
     void inject(GetPhotoJob job);
 
     void inject(HeroActivity activity);
+
     void inject(MainActivity activity);
+
     void inject(SettingsActivity activity);
 
     void inject(NotificationUtils notificationUtils);
