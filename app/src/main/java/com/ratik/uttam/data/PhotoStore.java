@@ -10,12 +10,8 @@ import io.reactivex.Single;
  * Created by Ratik on 17/10/17.
  */
 
-public interface DataStore {
+public interface PhotoStore {
     Completable putPhoto(Photo photo);
 
     Single<Photo> getPhoto();
-
-    void enableWallpaperAutoSet();
-
-    boolean isAutoSetEnabled();
 }
