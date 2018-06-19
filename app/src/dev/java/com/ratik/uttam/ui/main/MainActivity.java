@@ -2,11 +2,15 @@ package com.ratik.uttam.ui.main;
 
 import android.Manifest;
 import android.app.WallpaperManager;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -15,10 +19,12 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,7 +33,7 @@ import com.ratik.uttam.Constants;
 import com.ratik.uttam.R;
 import com.ratik.uttam.di.Injector;
 import com.ratik.uttam.model.Photo;
-import com.ratik.uttam.services.GetPhotoJob;
+import com.ratik.uttam.services.RefetchService;
 import com.ratik.uttam.ui.settings.SettingsActivity;
 import com.ratik.uttam.utils.BitmapUtils;
 import com.ratik.uttam.utils.FileUtils;
@@ -48,7 +54,7 @@ import io.reactivex.schedulers.Schedulers;
 
 import static com.ratik.uttam.R.id.creditsContainer;
 
-public class MainActivity extends AppCompatActivity implements MainContract.View {
+public class MainActivity extends AppCompatActivity implements MainContract.View, RefetchService.Callback {
 
     // Constants
     public static final String TAG = MainActivity.class.getSimpleName();
@@ -83,6 +89,35 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+
+    @BindView(R.id.refetchOverlay)
+    View refetchOverlay;
+
+    @BindView(R.id.progressBar)
+    ProgressBar progressBar;
+
+    private boolean isFetchServiceBound;
+    private RefetchService refetchService;
+    private ServiceConnection refetchServiceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder binder) {
+            isFetchServiceBound = true;
+            refetchService = ((RefetchService.LocalBinder) binder).getService();
+            refetchService.setRefetchCallback(MainActivity.this);
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            isFetchServiceBound = false;
+        }
+    };
+
+    @Override
+    public void refetchComplete() {
+        presenter.getPhoto();
+        refetchOverlay.setVisibility(View.INVISIBLE);
+        progressBar.setVisibility(View.INVISIBLE);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -215,6 +250,14 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     // region ACTIVITY OVERRIDES
 
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Intent intent = new Intent(this, RefetchService.class);
+        bindService(intent, refetchServiceConnection, Context.BIND_AUTO_CREATE);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE_SET_WALLPAPER) {
@@ -259,15 +302,25 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         compositeDisposable.dispose();
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (isFetchServiceBound) {
+            refetchService.setRefetchCallback(null);
+            unbindService(refetchServiceConnection);
+            isFetchServiceBound = false;
+        }
+    }
+
     // endregion
 
     // region HELPERS
 
     public void refreshPhoto() {
-        Intent intent = new Intent(this, GetPhotoJob.class);
-        intent.putExtra(Constants.Fetch.EXTRA_FETCH_TYPE, GetPhotoJob.FETCH_TYPE_SERVICE);
-        startService(intent);
-        finish();
+        refetchOverlay.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
+        refetchService.fetchPhoto();
+        Toast.makeText(this, R.string.fetching_new_wallpaper_message, Toast.LENGTH_LONG).show();
     }
 
     public void showWallpaperCredits() {
