@@ -14,5 +14,7 @@ public interface UnsplashService {
 
     @GET("photos/random")
     Observable<PhotoResponse> getRandomPhoto(@Query("client_id") String clientId,
-                                             @Query("collections") String collections);
+                                             @Query("collections") String collections,
+                                             @Query("w") int w,
+                                             @Query("h") int h);
 }
