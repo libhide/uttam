@@ -43,8 +43,8 @@
     <string name="wallpaper_saved_message">Wallpaper saved successfully!</string>
     <string name="wallpaper_share_text">Great wallpaper from %1$s on @getuttamapp today! %2$s</string>
     <string name="generic_error">There was an error. Try restarting the app.</string>
-    <string name="wallpaper_saving_message">Saving...</string>
-    <string name="wallpaper_setting_message">Setting wallpaper...</string>
-    <string name="fetching_new_wallpaper_message">Fetching new wallpaper...</string>
+    <string name="wallpaper_saving_message">Saving…</string>
+    <string name="wallpaper_setting_message">Setting wallpaper…</string>
+    <string name="fetching_new_wallpaper_message">Fetching new wallpaper</string>
 
 </resources>
