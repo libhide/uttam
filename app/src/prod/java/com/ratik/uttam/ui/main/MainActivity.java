@@ -336,7 +336,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         refetchOverlay.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.VISIBLE);
         refetchService.fetchPhoto();
-        Toast.makeText(this, R.string.fetching_new_wallpaper_message, Toast.LENGTH_LONG).show();
     }
 
     public void showWallpaperCredits() {

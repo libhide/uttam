@@ -1,6 +1,8 @@
 package com.ratik.uttam.ui.main;
 
 
+import android.annotation.SuppressLint;
+
 import com.ratik.uttam.data.PhotoStore;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
