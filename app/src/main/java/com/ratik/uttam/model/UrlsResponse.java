@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class UrlsResponse {
 
-    @SerializedName("full")
+    @SerializedName("custom")
     private String fullUrl;
 
     @SerializedName("regular")

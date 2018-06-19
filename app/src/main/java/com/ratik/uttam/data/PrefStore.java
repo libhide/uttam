@@ -11,5 +11,9 @@ public interface PrefStore {
 
     void setDesiredWallpaperWidth(int width);
 
+    int getDesiredWallpaperWidth();
+
     void setDesiredWallpaperHeight(int height);
+
+    int getDesiredWallpaperHeight();
 }

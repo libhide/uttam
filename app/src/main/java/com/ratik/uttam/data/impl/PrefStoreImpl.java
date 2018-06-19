@@ -45,9 +45,19 @@ public class PrefStoreImpl implements PrefStore {
     }
 
     @Override
+    public int getDesiredWallpaperWidth() {
+        return prefs.getInt(Constants.Prefs.DESIRED_WIDTH, 1080);
+    }
+
+    @Override
     public void setDesiredWallpaperHeight(int height) {
         SharedPreferences.Editor editor = prefs.edit();
         editor.putInt(Constants.Prefs.DESIRED_HEIGHT, height);
         editor.apply();
+    }
+
+    @Override
+    public int getDesiredWallpaperHeight() {
+        return prefs.getInt(Constants.Prefs.DESIRED_HEIGHT, 1920);
     }
 }
