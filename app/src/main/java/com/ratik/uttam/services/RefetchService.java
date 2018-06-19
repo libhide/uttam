@@ -1,8 +1,11 @@
 package com.ratik.uttam.services;
 
 import android.app.Service;
+import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
@@ -22,6 +25,7 @@ import com.ratik.uttam.utils.Utils;
 
 import javax.inject.Inject;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -46,6 +50,7 @@ public class RefetchService extends Service {
     private CompositeDisposable compositeDisposable;
     private IBinder localBinder;
     private Callback callback;
+    private WallpaperManager wallpaperManager;
 
     @Inject
     UnsplashService service;
@@ -70,6 +75,7 @@ public class RefetchService extends Service {
         context = RefetchService.this;
         compositeDisposable = new CompositeDisposable();
         localBinder = new LocalBinder();
+        wallpaperManager = WallpaperManager.getInstance(this);
         Injector.getAppComponent().inject(this);
     }
 
@@ -90,7 +96,14 @@ public class RefetchService extends Service {
         compositeDisposable.add(
                 photoResponseObservable
                         .flatMapSingle(this::getPhotoSingle)
-                        .flatMapCompletable(photo -> photoStore.putPhoto(photo))
+                        .flatMapCompletable(photo -> {
+                            Completable putCompletable = photoStore.putPhoto(photo);
+                            if (prefStore.isAutoSetEnabled()) {
+                                return doPostSavingStuff(putCompletable, photo);
+                            } else {
+                                return putCompletable;
+                            }
+                        })
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(this::onFetchSuccess, this::onFetchFailure)
@@ -122,6 +135,22 @@ public class RefetchService extends Service {
 
     private void onFetchFailure(Throwable throwable) {
         Log.e(TAG, throwable.getMessage());
+    }
+
+    private Completable doPostSavingStuff(Completable photoStorePutCompletable,
+                                          Photo photo) {
+        return photoStorePutCompletable
+                .andThen(getWallpaperPath(photo))
+                .map(BitmapFactory::decodeFile)
+                .flatMapCompletable(this::setWall);
+    }
+
+    private Single<String> getWallpaperPath(Photo photo) {
+        return Single.just(photo.getPhotoUri());
+    }
+
+    private Completable setWall(Bitmap bitmap) {
+        return Completable.fromAction(() -> wallpaperManager.setBitmap(bitmap));
     }
 
     private Photo getPhoto(PhotoResponse response, String fullUri, String regularUri,
