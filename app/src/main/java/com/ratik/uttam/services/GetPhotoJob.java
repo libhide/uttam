@@ -4,7 +4,6 @@ import android.app.WallpaperManager;
 import android.app.job.JobParameters;
 import android.app.job.JobService;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
@@ -37,8 +36,6 @@ import io.reactivex.schedulers.Schedulers;
 
 public class GetPhotoJob extends JobService {
     private static final String TAG = GetPhotoJob.class.getSimpleName();
-    public static final String FETCH_TYPE_SERVICE = "service";
-    public static final String FETCH_TYPE_JOB = "";
 
     @Inject
     UnsplashService service;
@@ -54,8 +51,6 @@ public class GetPhotoJob extends JobService {
 
     private Context context;
     private JobParameters jobParams;
-    private String type = "";
-
     private WallpaperManager wallpaperManager;
     private CompositeDisposable compositeDisposable;
 
@@ -68,56 +63,22 @@ public class GetPhotoJob extends JobService {
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        if (intent.hasExtra(Constants.Fetch.EXTRA_FETCH_TYPE)) {
-            type = intent.getStringExtra(Constants.Fetch.EXTRA_FETCH_TYPE);
-        } else {
-            type = FETCH_TYPE_JOB;
-        }
-
-        switch (type) {
-            case FETCH_TYPE_SERVICE:
-                fetchPhoto();
-                return START_STICKY;
-            case FETCH_TYPE_JOB:
-                // super class's behaviour
-                // JobScheduler will handle calling onStartJob
-                return super.onStartCommand(intent, flags, startId);
-            default:
-                // super class's behaviour
-                // JobScheduler will handle calling onStartJob
-                return super.onStartCommand(intent, flags, startId);
-        }
-    }
-
-    @Override
     public void onCreate() {
         super.onCreate();
         Injector.getAppComponent().inject(this);
-
         wallpaperManager = WallpaperManager.getInstance(context);
     }
 
-    // Called by the Android system when it's time to run the job
     @Override
     public boolean onStartJob(JobParameters jobParameters) {
-        Log.d(TAG, "Job started!");
         isWorking = true;
-
-        // save jobParams
         jobParams = jobParameters;
-
-        // do the work
         fetchPhoto();
-
         return isWorking;
     }
 
-    // Called if the job was cancelled before being finished
     @Override
     public boolean onStopJob(JobParameters jobParameters) {
-        Log.d(TAG, "Job cancelled before being completed.");
-
         jobCancelled = true;
         boolean needsReschedule = isWorking;
         jobFinished(jobParameters, needsReschedule);
@@ -125,7 +86,7 @@ public class GetPhotoJob extends JobService {
     }
 
     private void fetchPhoto() {
-        Log.i(TAG, "Getting random photo...");
+        Log.i(TAG, "Fetching photo...");
 
         // If the job has been cancelled, stop working; the job will be rescheduled.
         if (jobCancelled)
@@ -171,7 +132,7 @@ public class GetPhotoJob extends JobService {
 
         return Single.zip(fullSingle, regularSingle, thumbSingle,
                 (fullUri, regularUri, thumbUri) -> {
-                    Log.d(TAG, "Downloaded images");
+                    Log.i(TAG, "Images downloaded");
                     return getPhoto(response, fullUri, regularUri, thumbUri);
                 });
     }
@@ -195,19 +156,10 @@ public class GetPhotoJob extends JobService {
     private void onFetchSuccess() {
         Log.i(TAG, "Photo saved successfully!");
         pushNotification();
+        isWorking = false;
         compositeDisposable.dispose();
 
-        // stop job / service
-        if (!type.equals("service")) {
-            // JOB
-            Log.d(TAG, "Job finished!");
-            isWorking = false;
-            boolean needsReschedule = false;
-            jobFinished(jobParams, needsReschedule);
-        } else {
-            // SERVICE
-            stopSelf();
-        }
+        jobFinished(jobParams, false);
     }
 
     private void onFetchFailure(Throwable throwable) {
