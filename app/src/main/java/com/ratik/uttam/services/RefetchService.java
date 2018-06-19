@@ -71,7 +71,6 @@ public class RefetchService extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        Log.d(TAG, "onBind");
         return localBinder;
     }
 
@@ -98,7 +97,7 @@ public class RefetchService extends Service {
 
         return Single.zip(fullSingle, regularSingle, thumbSingle,
                 (fullUri, regularUri, thumbUri) -> {
-                    Log.d(TAG, "Downloaded images");
+                    Log.i(TAG, "Images downloaded");
                     return getPhoto(response, fullUri, regularUri, thumbUri);
                 });
     }
@@ -131,7 +130,6 @@ public class RefetchService extends Service {
 
     @Override
     public boolean onUnbind(Intent intent) {
-        Log.d(TAG, "onUnbind");
         compositeDisposable.dispose();
         return super.onUnbind(intent);
     }
