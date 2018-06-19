@@ -1,51 +1,6 @@
 package com.ratik.uttam.utils;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-
-import com.ratik.uttam.Constants;
-
-/**
- * Created by Ratik on 29/02/16.
- */
 public class Utils {
-    public static void setFirstRun(Context context, boolean value) {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putBoolean(Constants.FIRST_RUN, value);
-        editor.apply();
-    }
-
-    public static boolean isFirstRun(Context context) {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        return sp.getBoolean(Constants.FIRST_RUN, true);
-    }
-
-    public static void setScreenWidth(Context context, int value) {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putInt(Constants.SCREEN_WIDTH, value);
-        editor.apply();
-    }
-
-    public static int getScreenWidth(Context context) {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        return sp.getInt(Constants.SCREEN_WIDTH, 1920);
-    }
-
-    public static void setScreenHeight(Context context, int value) {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putInt(Constants.SCREEN_HEIGHT, value);
-        editor.apply();
-    }
-
-    static int getScreenHeight(Context context) {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        return sp.getInt(Constants.SCREEN_HEIGHT, 1080);
-    }
-
     public static String toTitleCase(String input) {
         StringBuilder titleCase = new StringBuilder();
         boolean nextTitleCase = true;

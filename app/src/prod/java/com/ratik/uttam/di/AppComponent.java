@@ -1,7 +1,6 @@
 package com.ratik.uttam.di;
 
 import com.ratik.uttam.UttamApplication;
-import com.ratik.uttam.data.impl.DataStoreImpl;
 import com.ratik.uttam.di.module.ApiModule;
 import com.ratik.uttam.di.module.AppContextModule;
 import com.ratik.uttam.di.module.BillingModule;
@@ -26,19 +25,19 @@ import dagger.Component;
 
 @Singleton
 @Component(modules = {AppContextModule.class, PresenterModule.class,
-                      ApiModule.class, DataModule.class, SharedPrefsModule.class,
-                      UtilsModule.class, BillingModule.class})
+           ApiModule.class, DataModule.class, SharedPrefsModule.class,
+           UtilsModule.class, BillingModule.class})
 public interface AppComponent {
 
     void inject(UttamApplication application);
-
-    void inject(DataStoreImpl dataStore);
 
     void inject(GetPhotoJob job);
     void inject(RefetchService service);
 
     void inject(HeroActivity activity);
+
     void inject(MainActivity activity);
+
     void inject(SettingsActivity activity);
 
     void inject(NotificationUtils notificationUtils);
