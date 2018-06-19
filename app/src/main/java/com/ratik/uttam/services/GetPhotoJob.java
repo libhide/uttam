@@ -17,7 +17,6 @@ import com.ratik.uttam.di.Injector;
 import com.ratik.uttam.model.Photo;
 import com.ratik.uttam.model.PhotoResponse;
 import com.ratik.uttam.model.PhotoType;
-import com.ratik.uttam.utils.BitmapUtils;
 import com.ratik.uttam.utils.FetchUtils;
 import com.ratik.uttam.utils.NotificationUtils;
 import com.ratik.uttam.utils.Utils;
@@ -25,6 +24,7 @@ import com.ratik.uttam.utils.Utils;
 import javax.inject.Inject;
 
 import io.reactivex.Completable;
+import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -92,8 +92,14 @@ public class GetPhotoJob extends JobService {
         if (jobCancelled)
             return;
 
+        Observable<PhotoResponse> photoResponseObservable = service.getRandomPhoto(
+                BuildConfig.CLIENT_ID,
+                Constants.Api.COLLECTIONS,
+                prefStore.getDesiredWallpaperWidth(),
+                prefStore.getDesiredWallpaperHeight()
+        );
         compositeDisposable.add(
-                service.getRandomPhoto(BuildConfig.CLIENT_ID, Constants.Api.COLLECTIONS)
+                photoResponseObservable
                         .flatMapSingle(this::getPhotoSingle)
                         .flatMapCompletable(photo -> {
                             Completable putCompletable = photoStore.putPhoto(photo);
@@ -114,7 +120,6 @@ public class GetPhotoJob extends JobService {
         return photoStorePutCompletable
                 .andThen(getWallpaperPath(photo))
                 .map(BitmapFactory::decodeFile)
-                .flatMap(this::scaleWallpaper)
                 .flatMapCompletable(this::setWall);
     }
 
@@ -139,14 +144,6 @@ public class GetPhotoJob extends JobService {
 
     private void pushNotification() {
         notificationUtils.pushNewWallpaperNotification();
-    }
-
-    private Single<Bitmap> scaleWallpaper(Bitmap wallpaper) {
-        Bitmap blank = BitmapUtils.createNewBitmap(
-                wallpaperManager.getDesiredMinimumWidth(),
-                wallpaperManager.getDesiredMinimumHeight()
-        );
-        return Single.fromCallable(() -> BitmapUtils.overlayIntoCentre(blank, wallpaper));
     }
 
     private Completable setWall(Bitmap bitmap) {

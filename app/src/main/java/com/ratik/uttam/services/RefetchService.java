@@ -12,6 +12,7 @@ import com.ratik.uttam.BuildConfig;
 import com.ratik.uttam.Constants;
 import com.ratik.uttam.api.UnsplashService;
 import com.ratik.uttam.data.PhotoStore;
+import com.ratik.uttam.data.PrefStore;
 import com.ratik.uttam.di.Injector;
 import com.ratik.uttam.model.Photo;
 import com.ratik.uttam.model.PhotoResponse;
@@ -21,6 +22,7 @@ import com.ratik.uttam.utils.Utils;
 
 import javax.inject.Inject;
 
+import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -51,6 +53,9 @@ public class RefetchService extends Service {
     @Inject
     PhotoStore photoStore;
 
+    @Inject
+    PrefStore prefStore;
+
     public RefetchService() {
 
     }
@@ -76,8 +81,14 @@ public class RefetchService extends Service {
 
     public void fetchPhoto() {
         Log.i(TAG, "Fetching new photo...");
+        Observable<PhotoResponse> photoResponseObservable = service.getRandomPhoto(
+                BuildConfig.CLIENT_ID,
+                Constants.Api.COLLECTIONS,
+                prefStore.getDesiredWallpaperWidth(),
+                prefStore.getDesiredWallpaperHeight()
+        );
         compositeDisposable.add(
-                service.getRandomPhoto(BuildConfig.CLIENT_ID, Constants.Api.COLLECTIONS)
+                photoResponseObservable
                         .flatMapSingle(this::getPhotoSingle)
                         .flatMapCompletable(photo -> photoStore.putPhoto(photo))
                         .subscribeOn(Schedulers.io())
