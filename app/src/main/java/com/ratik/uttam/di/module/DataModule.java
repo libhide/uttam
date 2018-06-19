@@ -1,7 +1,11 @@
 package com.ratik.uttam.di.module;
 
-import com.ratik.uttam.data.DataStore;
-import com.ratik.uttam.data.impl.DataStoreImpl;
+import android.content.SharedPreferences;
+
+import com.ratik.uttam.data.PhotoStore;
+import com.ratik.uttam.data.PrefStore;
+import com.ratik.uttam.data.impl.PhotoStoreImpl;
+import com.ratik.uttam.data.impl.PrefStoreImpl;
 
 import javax.inject.Singleton;
 
@@ -17,7 +21,13 @@ public class DataModule {
 
     @Provides
     @Singleton
-    public DataStore providesDataStore() {
-        return new DataStoreImpl();
+    public PhotoStore providesPhotoStore(SharedPreferences prefs) {
+        return new PhotoStoreImpl(prefs);
+    }
+
+    @Provides
+    @Singleton
+    public PrefStore providesPrefStore(SharedPreferences prefs) {
+        return new PrefStoreImpl(prefs);
     }
 }

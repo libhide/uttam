@@ -13,7 +13,7 @@ import android.util.Log;
 
 import com.ratik.uttam.Constants;
 import com.ratik.uttam.R;
-import com.ratik.uttam.data.DataStore;
+import com.ratik.uttam.data.PhotoStore;
 import com.ratik.uttam.di.Injector;
 import com.ratik.uttam.model.Photo;
 import com.ratik.uttam.ui.main.MainActivity;
@@ -37,7 +37,7 @@ public class NotificationUtils {
     private Context context;
 
     @Inject
-    DataStore dataStore;
+    PhotoStore photoStore;
 
     public NotificationUtils(Context context) {
         this.context = context;
@@ -46,7 +46,7 @@ public class NotificationUtils {
     }
 
     public void pushNewWallpaperNotification() {
-        dataStore.getPhoto()
+        photoStore.getPhoto()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(

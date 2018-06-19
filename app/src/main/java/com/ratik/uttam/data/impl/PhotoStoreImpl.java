@@ -1,34 +1,21 @@
 package com.ratik.uttam.data.impl;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.ratik.uttam.Constants;
-import com.ratik.uttam.data.DataStore;
-import com.ratik.uttam.di.Injector;
+import com.ratik.uttam.data.PhotoStore;
 import com.ratik.uttam.model.Photo;
-
-import javax.inject.Inject;
 
 import io.reactivex.Completable;
 import io.reactivex.Single;
 
+public class PhotoStoreImpl implements PhotoStore {
 
-/**
- * Created by Ratik on 09/01/18.
- */
+    private SharedPreferences prefs;
 
-public class DataStoreImpl implements DataStore {
-
-    @Inject
-    Context context;
-
-    @Inject
-    SharedPreferences prefs;
-
-    public DataStoreImpl() {
-        Injector.getAppComponent().inject(this);
+    public PhotoStoreImpl(SharedPreferences prefs) {
+        this.prefs = prefs;
     }
 
     @Override
@@ -49,7 +36,7 @@ public class DataStoreImpl implements DataStore {
         editor.putString(Constants.Data.HTML_URL, photo.getPhotoHtmlUrl());
         editor.apply();
 
-        Log.d(DataStore.class.getSimpleName(), "Stored to prefs");
+        Log.d(PhotoStore.class.getSimpleName(), "Stored to prefs");
     }
 
     @Override
@@ -65,17 +52,5 @@ public class DataStoreImpl implements DataStore {
                 .setPhotoDownloadUrl(prefs.getString(Constants.Data.DOWNLOAD_URL, ""))
                 .setPhotoHtmlUrl(prefs.getString(Constants.Data.HTML_URL, ""))
                 .build());
-    }
-
-    @Override
-    public void enableWallpaperAutoSet() {
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putBoolean(Constants.AUTO_SET, true);
-        editor.apply();
-    }
-
-    @Override
-    public boolean isAutoSetEnabled() {
-        return prefs.getBoolean(Constants.AUTO_SET, true);
     }
 }
