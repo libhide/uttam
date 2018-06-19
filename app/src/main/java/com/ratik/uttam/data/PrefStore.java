@@ -8,4 +8,12 @@ public interface PrefStore {
     boolean isFirstRun();
 
     void firstRunDone();
+
+    void setDesiredWallpaperWidth(int width);
+
+    int getDesiredWallpaperWidth();
+
+    void setDesiredWallpaperHeight(int height);
+
+    int getDesiredWallpaperHeight();
 }

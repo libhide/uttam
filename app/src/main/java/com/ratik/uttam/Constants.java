@@ -52,6 +52,8 @@ public class Constants {
     public class Prefs {
         public static final String FIRST_RUN = "first_run";
         public static final String AUTO_SET = "setWallpaperAuto";
+        public static final String DESIRED_WIDTH = "w";
+        public static final String DESIRED_HEIGHT = "h";
     }
 
     // Notification constants

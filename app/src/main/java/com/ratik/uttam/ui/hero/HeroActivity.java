@@ -2,6 +2,7 @@ package com.ratik.uttam.ui.hero;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.app.WallpaperManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
@@ -130,10 +131,6 @@ public class HeroActivity extends AppCompatActivity {
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 
-    private void onFirstSaveFail(Throwable throwable) {
-        Log.e(TAG, throwable.getMessage());
-    }
-
     private void doAnimations() {
         // Logo
         uttamLogo.setAlpha(0f);
@@ -178,6 +175,9 @@ public class HeroActivity extends AppCompatActivity {
 
     private void setupDefaultPrefs() {
         prefStore.enableWallpaperAutoSet();
+        WallpaperManager wallpaperManager = WallpaperManager.getInstance(this);
+        prefStore.setDesiredWallpaperWidth(wallpaperManager.getDesiredMinimumWidth());
+        prefStore.setDesiredWallpaperHeight(wallpaperManager.getDesiredMinimumHeight());
     }
 
     private String storeImage(Bitmap image, PhotoType photoType) {
