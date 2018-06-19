@@ -1,5 +1,7 @@
 package com.ratik.uttam.ui.main;
 
+import android.annotation.SuppressLint;
+
 import com.ratik.uttam.data.DataStore;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -23,6 +25,7 @@ public class MainPresenterImpl implements MainContract.Presenter {
         this.view = view;
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public void getPhoto() {
         dataStore.getPhoto()
