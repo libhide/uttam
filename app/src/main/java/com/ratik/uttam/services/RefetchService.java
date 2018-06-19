@@ -11,7 +11,7 @@ import android.util.Log;
 import com.ratik.uttam.BuildConfig;
 import com.ratik.uttam.Constants;
 import com.ratik.uttam.api.UnsplashService;
-import com.ratik.uttam.data.DataStore;
+import com.ratik.uttam.data.PhotoStore;
 import com.ratik.uttam.di.Injector;
 import com.ratik.uttam.model.Photo;
 import com.ratik.uttam.model.PhotoResponse;
@@ -49,7 +49,7 @@ public class RefetchService extends Service {
     UnsplashService service;
 
     @Inject
-    DataStore dataStore;
+    PhotoStore photoStore;
 
     public RefetchService() {
 
@@ -79,7 +79,7 @@ public class RefetchService extends Service {
         compositeDisposable.add(
                 service.getRandomPhoto(BuildConfig.CLIENT_ID, Constants.Api.COLLECTIONS)
                         .flatMapSingle(this::getPhotoSingle)
-                        .flatMapCompletable(photo -> dataStore.putPhoto(photo))
+                        .flatMapCompletable(photo -> photoStore.putPhoto(photo))
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(this::onFetchSuccess, this::onFetchFailure)
