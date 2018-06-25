@@ -3,18 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_settings"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
+        android:id="@+id/action_refresh"
+        android:icon="@drawable/ic_refresh"
+        android:title="Fetch Again"
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/action_share"
-        android:title="Share wallpaper"
+        android:title="Share"
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/action_refresh"
-        android:title="Fetch Again"
+        android:id="@+id/action_settings"
+        android:title="@string/action_settings"
         app:showAsAction="never" />
 
 </menu>
