@@ -1,23 +1,62 @@
 package com.ratik.uttam.ui.tour;
 
+import android.app.WallpaperManager;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 
 import com.ratik.uttam.R;
+import com.ratik.uttam.data.PhotoStore;
+import com.ratik.uttam.data.PrefStore;
+import com.ratik.uttam.di.Injector;
+import com.ratik.uttam.model.Photo;
+import com.ratik.uttam.model.PhotoType;
 import com.ratik.uttam.ui.main.MainActivity;
 import com.ratik.uttam.utils.AlarmUtils;
+import com.ratik.uttam.utils.BitmapUtils;
+import com.ratik.uttam.utils.FetchUtils;
 import com.vlonjatg.android.apptourlibrary.AppTour;
 import com.vlonjatg.android.apptourlibrary.MaterialSlide;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+import javax.inject.Inject;
+
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Ratik on 08/03/16.
  */
 public class TourActivity extends AppTour {
 
+    public static final String TAG = TourActivity.class.getSimpleName();
+
+    @Inject
+    PhotoStore photoStore;
+
+    @Inject
+    PrefStore prefStore;
+
+    private CompositeDisposable compositeDisposable;
+
     private AllDoneFragment doneFragment;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Injector.getAppComponent().inject(this);
+        compositeDisposable = new CompositeDisposable();
+    }
 
     @Override
     public void init(@Nullable Bundle savedInstanceState) {
@@ -56,13 +95,84 @@ public class TourActivity extends AppTour {
 
     @Override
     public void onDonePressed() {
+        setupAppForUser();
+        doneFragment.showProgressBar();
+    }
+
+    private void setupAppForUser() {
         // set alarm to set job for 7 AM
         AlarmUtils.setJobSetAlarm(this);
 
-        doneFragment.hideCircle();
+        setupDefaultPrefs();
 
+        Single<String> fullPhotoSingle = Single.fromCallable(() -> {
+            Bitmap b = BitmapUtils.getBitmapFromResources(this, R.drawable.uttam_hero);
+            return storeImage(b, PhotoType.FULL);
+        });
+
+        Single<String> regularPhotoSingle = Single.fromCallable(() -> {
+            Bitmap b = BitmapUtils.getBitmapFromResources(this, R.drawable.uttam_hero_regular);
+            return storeImage(b, PhotoType.REGULAR);
+        });
+
+        Single<String> thumbPhotoSingle = Single.fromCallable(() -> {
+            Bitmap b = BitmapUtils.getBitmapFromResources(this, R.drawable.uttam_hero_thumb);
+            return storeImage(b, PhotoType.THUMB);
+        });
+
+        compositeDisposable.add(
+                Single.zip(fullPhotoSingle, regularPhotoSingle, thumbPhotoSingle, this::getHeroPhoto)
+                        .flatMapCompletable(photo -> photoStore.putPhoto(photo))
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                () -> {
+                                    Log.i(TAG, "App setup done!");
+                                    startMain();
+                                },
+                                throwable -> Log.e(TAG, throwable.getMessage())
+                        )
+        );
+    }
+
+    private void startMain() {
         startActivity(new Intent(TourActivity.this, MainActivity.class));
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         finish();
+    }
+
+    private void setupDefaultPrefs() {
+        prefStore.enableWallpaperAutoSet();
+        WallpaperManager wallpaperManager = WallpaperManager.getInstance(this);
+        prefStore.setDesiredWallpaperWidth(wallpaperManager.getDesiredMinimumWidth());
+        prefStore.setDesiredWallpaperHeight(wallpaperManager.getDesiredMinimumHeight());
+    }
+
+    private String storeImage(Bitmap image, PhotoType photoType) {
+        File pictureFile = FetchUtils.createFile(this, photoType);
+        try {
+            FileOutputStream fos = new FileOutputStream(pictureFile);
+            image.compress(Bitmap.CompressFormat.PNG, 90, fos);
+            fos.close();
+        } catch (FileNotFoundException e) {
+            Log.d(TAG, "File not found: " + e.getMessage());
+        } catch (IOException e) {
+            Log.d(TAG, "Error accessing file: " + e.getMessage());
+        }
+        return pictureFile.getAbsolutePath();
+    }
+
+    private Photo getHeroPhoto(String fullUri, String regularUri, String thumbUri) {
+        Photo partialHeroPhoto = FetchUtils.getPartialHeroPhoto();
+        partialHeroPhoto.setPhotoUri(fullUri);
+        partialHeroPhoto.setRegularPhotoUri(regularUri);
+        partialHeroPhoto.setThumbPhotoUri(thumbUri);
+        return partialHeroPhoto;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        compositeDisposable.dispose();
     }
 }

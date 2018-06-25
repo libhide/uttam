@@ -27,7 +27,7 @@ public class AllDoneFragment extends Fragment {
         return rootView;
     }
 
-    public void hideCircle() {
+    public void showProgressBar() {
         progressBar.setVisibility(View.VISIBLE);
     }
 }
