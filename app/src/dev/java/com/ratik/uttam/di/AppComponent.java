@@ -1,7 +1,6 @@
 package com.ratik.uttam.di;
 
 import com.ratik.uttam.UttamApplication;
-import com.ratik.uttam.data.impl.PhotoStoreImpl;
 import com.ratik.uttam.di.module.ApiModule;
 import com.ratik.uttam.di.module.AppContextModule;
 import com.ratik.uttam.di.module.DataModule;
@@ -13,6 +12,7 @@ import com.ratik.uttam.services.RefetchService;
 import com.ratik.uttam.ui.hero.HeroActivity;
 import com.ratik.uttam.ui.main.MainActivity;
 import com.ratik.uttam.ui.settings.SettingsActivity;
+import com.ratik.uttam.ui.tour.TourActivity;
 import com.ratik.uttam.utils.NotificationUtils;
 
 import javax.inject.Singleton;
@@ -35,6 +35,7 @@ public interface AppComponent {
     void inject(RefetchService service);
 
     void inject(HeroActivity activity);
+    void inject(TourActivity activity);
 
     void inject(MainActivity activity);
 

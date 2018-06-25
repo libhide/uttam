@@ -35,6 +35,7 @@ public interface AppComponent {
     void inject(RefetchService service);
 
     void inject(HeroActivity activity);
+    void inject(TourActivity activity);
 
     void inject(MainActivity activity);
 
