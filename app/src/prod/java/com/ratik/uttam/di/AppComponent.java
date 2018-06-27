@@ -32,7 +32,7 @@ public interface AppComponent {
     void inject(UttamApplication application);
 
     void inject(GetPhotoJob job);
-    void inject(RefetchService service);
+    void inject(Refetcher target);
 
     void inject(HeroActivity activity);
     void inject(TourActivity activity);
