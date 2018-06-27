@@ -1,14 +1,9 @@
-package com.ratik.uttam.services;
+package com.ratik.uttam.network;
 
-import android.app.Service;
 import android.app.WallpaperManager;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Binder;
-import android.os.IBinder;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.ratik.uttam.BuildConfig;
@@ -32,25 +27,18 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
-public class RefetchService extends Service {
+public class Refetcher {
+    private static final String TAG = Refetcher.class.getSimpleName();
 
-    public class LocalBinder extends Binder {
-        public RefetchService getService() {
-            return RefetchService.this;
-        }
-    }
+    private Context context;
+    private CompositeDisposable compositeDisposable;
+    private WallpaperManager wallpaperManager;
+
+    private Refetcher.Callback callback;
 
     public interface Callback {
         void refetchComplete();
     }
-
-    public static final String TAG = RefetchService.class.getSimpleName();
-
-    private Context context;
-    private CompositeDisposable compositeDisposable;
-    private IBinder localBinder;
-    private Callback callback;
-    private WallpaperManager wallpaperManager;
 
     @Inject
     UnsplashService service;
@@ -61,31 +49,18 @@ public class RefetchService extends Service {
     @Inject
     PrefStore prefStore;
 
-    public RefetchService() {
-
-    }
-
-    public void setRefetchCallback(Callback callback) {
-        this.callback = callback;
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        context = RefetchService.this;
+    public Refetcher(Context context) {
+        this.context = context;
         compositeDisposable = new CompositeDisposable();
-        localBinder = new LocalBinder();
-        wallpaperManager = WallpaperManager.getInstance(this);
+        wallpaperManager = WallpaperManager.getInstance(context);
         Injector.getAppComponent().inject(this);
     }
 
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return localBinder;
+    public void setRefetchCallback(Refetcher.Callback callback) {
+        this.callback = callback;
     }
 
-    public void fetchPhoto() {
+    public void doRefetch(){
         Log.i(TAG, "Fetching new photo...");
         Observable<PhotoResponse> photoResponseObservable = service.getRandomPhoto(
                 BuildConfig.CLIENT_ID,
@@ -108,6 +83,10 @@ public class RefetchService extends Service {
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(this::onFetchSuccess, this::onFetchFailure)
         );
+    }
+
+    public void cleanup() {
+        compositeDisposable.dispose();
     }
 
     // Helper methods
@@ -166,11 +145,5 @@ public class RefetchService extends Service {
                 .setPhotographerUserName(response.getPhotographer().getUsername())
                 .setPhotographerName(Utils.toTitleCase(response.getPhotographer().getName()))
                 .build();
-    }
-
-    @Override
-    public boolean onUnbind(Intent intent) {
-        compositeDisposable.dispose();
-        return super.onUnbind(intent);
     }
 }

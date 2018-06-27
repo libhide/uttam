@@ -3,6 +3,7 @@ package com.ratik.uttam.di.module;
 import android.content.Context;
 
 import com.ratik.uttam.UttamApplication;
+import com.ratik.uttam.network.Refetcher;
 
 import javax.inject.Singleton;
 
@@ -31,5 +32,11 @@ public class AppContextModule {
     @Singleton
     public Context applicationContext() {
         return application.getApplicationContext();
+    }
+
+    @Provides
+    @Singleton
+    public Refetcher provideRefetcher(Context context) {
+        return new Refetcher(context);
     }
 }
