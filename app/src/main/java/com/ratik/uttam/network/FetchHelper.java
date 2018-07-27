@@ -1,10 +1,9 @@
-package com.ratik.uttam.utils;
+package com.ratik.uttam.network;
 
 import android.content.Context;
 import android.util.Log;
 
 import com.ratik.uttam.Constants;
-import com.ratik.uttam.model.Photo;
 import com.ratik.uttam.model.PhotoResponse;
 import com.ratik.uttam.model.PhotoType;
 
@@ -15,35 +14,25 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import javax.inject.Inject;
+
 import io.reactivex.Single;
 
-/**
- * Created by Ratik on 08/09/17.
- */
+public class FetchHelper {
+    private static final String TAG = FetchHelper.class.getSimpleName();
 
-public class FetchUtils {
-    private static final String TAG = FetchUtils.class.getSimpleName();
+    private Context context;
 
-    public static Photo getPartialHeroPhoto() {
-        return new Photo.Builder()
-                .setId(Constants.Fetch.FIRST_WALLPAPER_ID)
-                .setPhotoUri(null)
-                .setRegularPhotoUri(null)
-                .setThumbPhotoUri(null)
-                .setPhotographerName(Constants.Fetch.FIRST_WALLPAPER_PHOTOGRAPHER_NAME)
-                .setPhotographerUserName(Constants.Fetch.FIRST_WALLPAPER_PHOTOGRAPHER_USERNAME)
-                .setPhotoFullUrl(Constants.Fetch.FIRST_WALLPAPER_FULL_URL)
-                .setPhotoHtmlUrl(Constants.Fetch.FIRST_WALLPAPER_HTML_URL)
-                .setPhotoDownloadUrl(Constants.Fetch.FIRST_WALLPAPER_DOWNLOAD_URL)
-                .build();
+    @Inject
+    public FetchHelper(Context context) {
+        this.context = context;
     }
 
     /**
-     * @param context   Android Context
      * @param photoType filename type ("FULL", "REGULAR" or "THUMB")
      * @return absolute path to created file
      */
-    public static File createFile(Context context, PhotoType photoType) {
+    public File createFile(PhotoType photoType) {
         File directory;
 
         directory = context.getDir("Uttam", Context.MODE_PRIVATE);
@@ -64,20 +53,19 @@ public class FetchUtils {
     }
 
     /**
-     * @param context   Android Context
      * @param url       url to image that needs downloading
      * @param photoType filename type ("FULL", "REGULAR" or "THUMB")
      * @return absolute path to downloaded file
      * @throws IOException if something goes wrong
      */
-    private static String downloadImage(Context context, URL url, PhotoType photoType) throws IOException {
+    private String downloadImage(URL url, PhotoType photoType) throws IOException {
         try {
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setDoInput(true);
             connection.connect();
             InputStream inputStream = connection.getInputStream();
 
-            File imageFile = FetchUtils.createFile(context, photoType);
+            File imageFile = createFile(photoType);
             FileOutputStream output = new FileOutputStream(imageFile);
             int bufferSize = 1024;
             byte[] buffer = new byte[bufferSize];
@@ -91,28 +79,27 @@ public class FetchUtils {
         }
     }
 
-    public static Single<String> downloadWallpaper(Context context, PhotoResponse photoResponse,
-                                                   PhotoType type) {
+    public Single<String> downloadWallpaper(PhotoResponse photoResponse, PhotoType type) {
         switch (type) {
             case FULL:
                 return Single.fromCallable(() -> {
                     URL url = new URL(photoResponse.getUrls().getFullUrl());
-                    return downloadImage(context, url, type);
+                    return downloadImage(url, type);
                 });
             case REGULAR:
                 return Single.fromCallable(() -> {
                     URL url = new URL(photoResponse.getUrls().getRegularUrl());
-                    return downloadImage(context, url, type);
+                    return downloadImage(url, type);
                 });
             case THUMB:
                 return Single.fromCallable(() -> {
                     URL url = new URL(photoResponse.getUrls().getThumbUrl());
-                    return downloadImage(context, url, type);
+                    return downloadImage(url, type);
                 });
             default:
                 return Single.fromCallable(() -> {
                     URL url = new URL(photoResponse.getUrls().getFullUrl());
-                    return downloadImage(context, url, type);
+                    return downloadImage(url, type);
                 });
         }
     }
