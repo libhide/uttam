@@ -146,7 +146,6 @@ public class TourActivity extends AppTour {
 
     private void setupDefaultPrefs() {
         prefStore.enableWallpaperAutoSet();
-        wallpaperManager = WallpaperManager.getInstance(this);
         prefStore.setDesiredWallpaperWidth(wallpaperManager.getDesiredMinimumWidth());
         prefStore.setDesiredWallpaperHeight(wallpaperManager.getDesiredMinimumHeight());
     }
