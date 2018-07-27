@@ -1,9 +1,13 @@
 package com.ratik.uttam.di.module;
 
+import android.app.WallpaperManager;
 import android.content.Context;
 
 import com.ratik.uttam.UttamApplication;
-import com.ratik.uttam.network.Refetcher;
+import com.ratik.uttam.api.UnsplashService;
+import com.ratik.uttam.data.PhotoStore;
+import com.ratik.uttam.data.PrefStore;
+import com.ratik.uttam.network.FetchService;
 
 import javax.inject.Singleton;
 
@@ -36,7 +40,14 @@ public class AppContextModule {
 
     @Provides
     @Singleton
-    public Refetcher provideRefetcher(Context context) {
-        return new Refetcher(context);
+    public WallpaperManager provideWallpaperManager(Context context) {
+        return WallpaperManager.getInstance(context);
+    }
+
+    @Provides
+    public FetchService provideFetchService(Context context, UnsplashService service,
+                                     PhotoStore photoStore, PrefStore prefStore,
+                                     WallpaperManager wallpaperManager) {
+        return new FetchService(context, service, photoStore, prefStore, wallpaperManager);
     }
 }
