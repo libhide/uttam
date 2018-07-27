@@ -30,7 +30,7 @@ import com.ratik.uttam.R;
 import com.ratik.uttam.data.PrefStore;
 import com.ratik.uttam.di.Injector;
 import com.ratik.uttam.model.Photo;
-import com.ratik.uttam.network.Refetcher;
+import com.ratik.uttam.network.FetchService;
 import com.ratik.uttam.ui.settings.SettingsActivity;
 import com.ratik.uttam.utils.BitmapUtils;
 import com.ratik.uttam.utils.FileUtils;
@@ -50,7 +50,7 @@ import io.reactivex.schedulers.Schedulers;
 
 import static com.ratik.uttam.R.id.creditsContainer;
 
-public class MainActivity extends AppCompatActivity implements MainContract.View, Refetcher.Callback {
+public class MainActivity extends AppCompatActivity implements MainContract.View {
 
     // Constants
     public static final String TAG = MainActivity.class.getSimpleName();
@@ -63,10 +63,13 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     NotificationUtils notificationUtils;
 
     @Inject
+    WallpaperManager wallpaperManager;
+
+    @Inject
     PrefStore prefStore;
 
     @Inject
-    Refetcher refetcher;
+    FetchService fetchService;
 
     // Member variables
     private CompositeDisposable compositeDisposable;
@@ -176,13 +179,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     // region VIEW-LOGIC
 
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        refetcher.setRefetchCallback(this);
-    }
-
     @Override
     public void showPhoto(Photo p) {
         // save the returned photo
@@ -213,7 +209,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
         if (prefStore.isFirstRun()) {
             try {
-                WallpaperManager.getInstance(this).setBitmap(bitmap);
+                wallpaperManager.setBitmap(bitmap);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -227,15 +223,22 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         Toast.makeText(this, getString(R.string.generic_error), Toast.LENGTH_SHORT).show();
     }
 
-    // endregion
-
-    // region REFETCHER OVERRIDES
+    @Override
+    public void showRefetchProgress() {
+        refetchOverlay.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
+    }
 
     @Override
-    public void refetchComplete() {
+    public void onRefetchPhotoSuccessful() {
         presenter.getPhoto();
         refetchOverlay.setVisibility(View.INVISIBLE);
         progressBar.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void onRefetchPhotoFailure(Throwable t) {
+        Log.e(TAG, t.getMessage());
     }
 
     // endregion
@@ -273,7 +276,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
                         });
                 return true;
             case R.id.action_refresh:
-                refreshPhoto();
+                presenter.refetchPhoto();
                 return true;
             default:
                 return false;
@@ -283,19 +286,13 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        refetcher.cleanup();
+        presenter.destroyView();
         compositeDisposable.dispose();
     }
 
     // endregion
 
     // region HELPERS
-
-    public void refreshPhoto() {
-        refetchOverlay.setVisibility(View.VISIBLE);
-        progressBar.setVisibility(View.VISIBLE);
-        refetcher.doRefetch();
-    }
 
     public void showWallpaperCredits() {
         Uri.Builder builder = new Uri.Builder();
@@ -347,7 +344,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     private void onSettingSaveSuccess(File file) {
         Uri uri = FileProvider.getUriForFile(this, getPackageName() + ".provider", file);
         if (uri != null) {
-            Intent intent = WallpaperManager.getInstance(this).getCropAndSetWallpaperIntent(uri);
+            Intent intent = wallpaperManager.getCropAndSetWallpaperIntent(uri);
             startActivityForResult(intent, REQUEST_CODE_SET_WALLPAPER);
         } else {
             Toast.makeText(this, "Uri is null.", Toast.LENGTH_SHORT).show();

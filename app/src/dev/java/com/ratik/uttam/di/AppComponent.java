@@ -7,8 +7,7 @@ import com.ratik.uttam.di.module.DataModule;
 import com.ratik.uttam.di.module.PresenterModule;
 import com.ratik.uttam.di.module.SharedPrefsModule;
 import com.ratik.uttam.di.module.UtilsModule;
-import com.ratik.uttam.network.Refetcher;
-import com.ratik.uttam.services.GetPhotoJob;
+import com.ratik.uttam.network.GetPhotoJob;
 import com.ratik.uttam.ui.hero.HeroActivity;
 import com.ratik.uttam.ui.main.MainActivity;
 import com.ratik.uttam.ui.settings.SettingsActivity;
@@ -25,16 +24,16 @@ import dagger.Component;
 
 @Singleton
 @Component(modules = {AppContextModule.class, PresenterModule.class,
-                      ApiModule.class, DataModule.class, SharedPrefsModule.class,
-                      UtilsModule.class})
+        ApiModule.class, DataModule.class, SharedPrefsModule.class,
+        UtilsModule.class})
 public interface AppComponent {
 
     void inject(UttamApplication application);
 
     void inject(GetPhotoJob job);
-    void inject(Refetcher target);
 
     void inject(HeroActivity activity);
+
     void inject(TourActivity activity);
 
     void inject(MainActivity activity);
