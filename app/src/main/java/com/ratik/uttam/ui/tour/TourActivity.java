@@ -9,16 +9,17 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 
+import com.ratik.uttam.Constants;
 import com.ratik.uttam.R;
 import com.ratik.uttam.data.PhotoStore;
 import com.ratik.uttam.data.PrefStore;
 import com.ratik.uttam.di.Injector;
 import com.ratik.uttam.model.Photo;
 import com.ratik.uttam.model.PhotoType;
+import com.ratik.uttam.network.FetchHelper;
 import com.ratik.uttam.ui.main.MainActivity;
 import com.ratik.uttam.utils.AlarmUtils;
 import com.ratik.uttam.utils.BitmapUtils;
-import com.ratik.uttam.utils.FetchUtils;
 import com.vlonjatg.android.apptourlibrary.AppTour;
 import com.vlonjatg.android.apptourlibrary.MaterialSlide;
 
@@ -49,6 +50,9 @@ public class TourActivity extends AppTour {
 
     @Inject
     WallpaperManager wallpaperManager;
+
+    @Inject
+    FetchHelper fetchHelper;
 
     private CompositeDisposable compositeDisposable;
 
@@ -151,7 +155,7 @@ public class TourActivity extends AppTour {
     }
 
     private String storeImage(Bitmap image, PhotoType photoType) {
-        File pictureFile = FetchUtils.createFile(this, photoType);
+        File pictureFile = fetchHelper.createFile(photoType);
         try {
             FileOutputStream fos = new FileOutputStream(pictureFile);
             image.compress(Bitmap.CompressFormat.PNG, 90, fos);
@@ -165,11 +169,25 @@ public class TourActivity extends AppTour {
     }
 
     private Photo getHeroPhoto(String fullUri, String regularUri, String thumbUri) {
-        Photo partialHeroPhoto = FetchUtils.getPartialHeroPhoto();
+        Photo partialHeroPhoto = getPartialHeroPhoto();
         partialHeroPhoto.setPhotoUri(fullUri);
         partialHeroPhoto.setRegularPhotoUri(regularUri);
         partialHeroPhoto.setThumbPhotoUri(thumbUri);
         return partialHeroPhoto;
+    }
+
+    public Photo getPartialHeroPhoto() {
+        return new Photo.Builder()
+                .setId(Constants.Fetch.FIRST_WALLPAPER_ID)
+                .setPhotoUri(null)
+                .setRegularPhotoUri(null)
+                .setThumbPhotoUri(null)
+                .setPhotographerName(Constants.Fetch.FIRST_WALLPAPER_PHOTOGRAPHER_NAME)
+                .setPhotographerUserName(Constants.Fetch.FIRST_WALLPAPER_PHOTOGRAPHER_USERNAME)
+                .setPhotoFullUrl(Constants.Fetch.FIRST_WALLPAPER_FULL_URL)
+                .setPhotoHtmlUrl(Constants.Fetch.FIRST_WALLPAPER_HTML_URL)
+                .setPhotoDownloadUrl(Constants.Fetch.FIRST_WALLPAPER_DOWNLOAD_URL)
+                .build();
     }
 
     @Override

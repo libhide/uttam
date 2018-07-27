@@ -7,6 +7,7 @@ import com.ratik.uttam.UttamApplication;
 import com.ratik.uttam.api.UnsplashService;
 import com.ratik.uttam.data.PhotoStore;
 import com.ratik.uttam.data.PrefStore;
+import com.ratik.uttam.network.FetchHelper;
 import com.ratik.uttam.network.FetchService;
 
 import javax.inject.Singleton;
@@ -45,9 +46,14 @@ public class AppContextModule {
     }
 
     @Provides
-    public FetchService provideFetchService(Context context, UnsplashService service,
-                                     PhotoStore photoStore, PrefStore prefStore,
-                                     WallpaperManager wallpaperManager) {
-        return new FetchService(context, service, photoStore, prefStore, wallpaperManager);
+    public FetchHelper provideFetchHelper(Context context) {
+        return new FetchHelper(context);
+    }
+
+    @Provides
+    public FetchService provideFetchService(FetchHelper fetchHelper, UnsplashService service,
+                                            PhotoStore photoStore, PrefStore prefStore,
+                                            WallpaperManager wallpaperManager) {
+        return new FetchService(fetchHelper, service, photoStore, prefStore, wallpaperManager);
     }
 }
