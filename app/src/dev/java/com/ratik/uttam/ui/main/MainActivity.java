@@ -286,7 +286,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        presenter.destroyView();
+        presenter.detachView();
         compositeDisposable.dispose();
     }
 

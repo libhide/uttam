@@ -23,14 +23,14 @@ public interface MainContract {
     interface Presenter {
         void setView(MainContract.View view);
 
-        void destroyView();
+        void detachView();
 
         void getPhoto();
 
         void refetchPhoto();
 
-        void onRefetchPhotoSuccessful();
+        void refetchComplete();
 
-        void onRefetchPhotoFailure(Throwable t);
+        void refetchFailed(Throwable t);
     }
 }

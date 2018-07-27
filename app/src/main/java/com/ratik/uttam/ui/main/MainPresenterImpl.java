@@ -34,7 +34,7 @@ public class MainPresenterImpl implements MainContract.Presenter {
     }
 
     @Override
-    public void destroyView() {
+    public void detachView() {
         if (view != null) {
             view = null;
         }
@@ -61,20 +61,17 @@ public class MainPresenterImpl implements MainContract.Presenter {
                 service.getFetchPhotoCompletable()
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(
-                                this::onRefetchPhotoSuccessful,
-                                this::onRefetchPhotoFailure
-                        )
+                        .subscribe(this::refetchComplete, this::refetchFailed)
         );
     }
 
     @Override
-    public void onRefetchPhotoSuccessful() {
+    public void refetchComplete() {
         view.onRefetchPhotoSuccessful();
     }
 
     @Override
-    public void onRefetchPhotoFailure(Throwable t) {
+    public void refetchFailed(Throwable t) {
         view.onRefetchPhotoFailure(t);
     }
 }
