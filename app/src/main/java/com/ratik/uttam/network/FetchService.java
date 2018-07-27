@@ -1,7 +1,6 @@
 package com.ratik.uttam.network;
 
 import android.app.WallpaperManager;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
@@ -14,7 +13,6 @@ import com.ratik.uttam.data.PrefStore;
 import com.ratik.uttam.model.Photo;
 import com.ratik.uttam.model.PhotoResponse;
 import com.ratik.uttam.model.PhotoType;
-import com.ratik.uttam.utils.FetchUtils;
 import com.ratik.uttam.utils.Utils;
 
 import javax.inject.Inject;
@@ -24,19 +22,18 @@ import io.reactivex.Observable;
 import io.reactivex.Single;
 
 public class FetchService {
-
     private static final String TAG = FetchService.class.getSimpleName();
 
-    private Context context;
     private UnsplashService service;
     private PhotoStore photoStore;
     private PrefStore prefStore;
     private WallpaperManager wallpaperManager;
+    private FetchHelper fetchHelper;
 
     @Inject
-    public FetchService(Context context, UnsplashService service, PhotoStore photoStore,
+    public FetchService(FetchHelper fetchHelper, UnsplashService service, PhotoStore photoStore,
                         PrefStore prefStore, WallpaperManager wallpaperManager) {
-        this.context = context;
+        this.fetchHelper = fetchHelper;
         this.service = service;
         this.photoStore = photoStore;
         this.prefStore = prefStore;
@@ -64,12 +61,9 @@ public class FetchService {
     }
 
     private Single<Photo> getPhotoSingle(PhotoResponse response) {
-        Single<String> fullSingle = FetchUtils.downloadWallpaper(context,
-                response, PhotoType.FULL);
-        Single<String> regularSingle = FetchUtils.downloadWallpaper(context,
-                response, PhotoType.REGULAR);
-        Single<String> thumbSingle = FetchUtils.downloadWallpaper(context,
-                response, PhotoType.THUMB);
+        Single<String> fullSingle = fetchHelper.downloadWallpaper(response, PhotoType.FULL);
+        Single<String> regularSingle = fetchHelper.downloadWallpaper(response, PhotoType.REGULAR);
+        Single<String> thumbSingle = fetchHelper.downloadWallpaper(response, PhotoType.THUMB);
 
         return Single.zip(fullSingle, regularSingle, thumbSingle,
                 (fullUri, regularUri, thumbUri) -> {
