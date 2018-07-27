@@ -47,6 +47,9 @@ public class TourActivity extends AppTour {
     @Inject
     PrefStore prefStore;
 
+    @Inject
+    WallpaperManager wallpaperManager;
+
     private CompositeDisposable compositeDisposable;
 
     private AllDoneFragment doneFragment;
@@ -143,7 +146,7 @@ public class TourActivity extends AppTour {
 
     private void setupDefaultPrefs() {
         prefStore.enableWallpaperAutoSet();
-        WallpaperManager wallpaperManager = WallpaperManager.getInstance(this);
+        wallpaperManager = WallpaperManager.getInstance(this);
         prefStore.setDesiredWallpaperWidth(wallpaperManager.getDesiredMinimumWidth());
         prefStore.setDesiredWallpaperHeight(wallpaperManager.getDesiredMinimumHeight());
     }

@@ -1,11 +1,13 @@
 package com.ratik.uttam.ui.main;
 
 
-import android.annotation.SuppressLint;
-
 import com.ratik.uttam.data.PhotoStore;
+import com.ratik.uttam.network.FetchService;
+
+import javax.inject.Inject;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -16,9 +18,14 @@ public class MainPresenterImpl implements MainContract.Presenter {
 
     private MainContract.View view;
     private PhotoStore photoStore;
+    private FetchService service;
+    private CompositeDisposable compositeDisposable;
 
-    public MainPresenterImpl(PhotoStore photoStore) {
+    @Inject
+    public MainPresenterImpl(PhotoStore photoStore, FetchService service) {
         this.photoStore = photoStore;
+        this.service = service;
+        this.compositeDisposable = new CompositeDisposable();
     }
 
     @Override
@@ -26,15 +33,48 @@ public class MainPresenterImpl implements MainContract.Presenter {
         this.view = view;
     }
 
-    @SuppressLint("CheckResult")
+    @Override
+    public void destroyView() {
+        if (view != null) {
+            view = null;
+        }
+        compositeDisposable.dispose();
+    }
+
     @Override
     public void getPhoto() {
-        photoStore.getPhoto()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        photo -> view.showPhoto(photo),
-                        throwable -> view.onGetPhotoFailed()
-                );
+        compositeDisposable.add(
+                photoStore.getPhoto()
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                photo -> view.showPhoto(photo),
+                                throwable -> view.onGetPhotoFailed()
+                        )
+        );
+    }
+
+    @Override
+    public void refetchPhoto() {
+        view.showRefetchProgress();
+        compositeDisposable.add(
+                service.getFetchPhotoCompletable()
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                this::onRefetchPhotoSuccessful,
+                                this::onRefetchPhotoFailure
+                        )
+        );
+    }
+
+    @Override
+    public void onRefetchPhotoSuccessful() {
+        view.onRefetchPhotoSuccessful();
+    }
+
+    @Override
+    public void onRefetchPhotoFailure(Throwable t) {
+        view.onRefetchPhotoFailure(t);
     }
 }

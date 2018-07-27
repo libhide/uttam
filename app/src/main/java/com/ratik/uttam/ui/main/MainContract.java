@@ -12,11 +12,25 @@ public interface MainContract {
         void showPhoto(Photo photo);
 
         void onGetPhotoFailed();
+
+        void showRefetchProgress();
+
+        void onRefetchPhotoSuccessful();
+
+        void onRefetchPhotoFailure(Throwable t);
     }
 
     interface Presenter {
         void setView(MainContract.View view);
 
+        void destroyView();
+
         void getPhoto();
+
+        void refetchPhoto();
+
+        void onRefetchPhotoSuccessful();
+
+        void onRefetchPhotoFailure(Throwable t);
     }
 }
