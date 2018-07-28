@@ -230,14 +230,14 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     }
 
     @Override
-    public void onRefetchPhotoSuccessful() {
+    public void hideRefetchProgress() {
         presenter.getPhoto();
         refetchOverlay.setVisibility(View.INVISIBLE);
         progressBar.setVisibility(View.INVISIBLE);
     }
 
     @Override
-    public void onRefetchPhotoFailure(Throwable t) {
+    public void showRefetchError(Throwable t) {
         Log.e(TAG, t.getMessage());
     }
 
