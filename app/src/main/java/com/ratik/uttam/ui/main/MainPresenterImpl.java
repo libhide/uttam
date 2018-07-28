@@ -61,17 +61,15 @@ public class MainPresenterImpl implements MainContract.Presenter {
                 service.getFetchPhotoCompletable()
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(this::refetchComplete, this::refetchFailed)
+                        .subscribe(this::onRefetchSuccessful, this::onRefetchFailed)
         );
     }
 
-    @Override
-    public void refetchComplete() {
-        view.onRefetchPhotoSuccessful();
+    private void onRefetchSuccessful() {
+        view.hideRefetchProgress();
     }
 
-    @Override
-    public void refetchFailed(Throwable t) {
-        view.onRefetchPhotoFailure(t);
+    private void onRefetchFailed(Throwable t) {
+        view.showRefetchError(t);
     }
 }

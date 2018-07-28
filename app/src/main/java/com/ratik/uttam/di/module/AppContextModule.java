@@ -7,8 +7,9 @@ import com.ratik.uttam.UttamApplication;
 import com.ratik.uttam.api.UnsplashService;
 import com.ratik.uttam.data.PhotoStore;
 import com.ratik.uttam.data.PrefStore;
-import com.ratik.uttam.network.FetchHelper;
+import com.ratik.uttam.network.DownloadService;
 import com.ratik.uttam.network.FetchService;
+import com.ratik.uttam.network.FileProvider;
 
 import javax.inject.Singleton;
 
@@ -46,14 +47,19 @@ public class AppContextModule {
     }
 
     @Provides
-    public FetchHelper provideFetchHelper(Context context) {
-        return new FetchHelper(context);
+    public DownloadService provideDownloadService(Context context) {
+        return new DownloadService(context);
     }
 
     @Provides
-    public FetchService provideFetchService(FetchHelper fetchHelper, UnsplashService service,
+    public FileProvider provideFileProvider(Context context) {
+        return new FileProvider(context);
+    }
+
+    @Provides
+    public FetchService provideFetchService(DownloadService downloadService, UnsplashService service,
                                             PhotoStore photoStore, PrefStore prefStore,
                                             WallpaperManager wallpaperManager) {
-        return new FetchService(fetchHelper, service, photoStore, prefStore, wallpaperManager);
+        return new FetchService(downloadService, service, photoStore, prefStore, wallpaperManager);
     }
 }

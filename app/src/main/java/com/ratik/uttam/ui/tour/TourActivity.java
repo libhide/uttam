@@ -16,7 +16,7 @@ import com.ratik.uttam.data.PrefStore;
 import com.ratik.uttam.di.Injector;
 import com.ratik.uttam.model.Photo;
 import com.ratik.uttam.model.PhotoType;
-import com.ratik.uttam.network.FetchHelper;
+import com.ratik.uttam.network.FileProvider;
 import com.ratik.uttam.ui.main.MainActivity;
 import com.ratik.uttam.utils.AlarmUtils;
 import com.ratik.uttam.utils.BitmapUtils;
@@ -52,7 +52,7 @@ public class TourActivity extends AppTour {
     WallpaperManager wallpaperManager;
 
     @Inject
-    FetchHelper fetchHelper;
+    FileProvider fileProvider;
 
     private CompositeDisposable compositeDisposable;
 
@@ -155,7 +155,7 @@ public class TourActivity extends AppTour {
     }
 
     private String storeImage(Bitmap image, PhotoType photoType) {
-        File pictureFile = fetchHelper.createFile(photoType);
+        File pictureFile = fileProvider.createFile(photoType);
         try {
             FileOutputStream fos = new FileOutputStream(pictureFile);
             image.compress(Bitmap.CompressFormat.PNG, 90, fos);
