@@ -15,6 +15,8 @@ import com.ratik.uttam.model.PhotoResponse;
 import com.ratik.uttam.model.PhotoType;
 import com.ratik.uttam.utils.Utils;
 
+import java.io.IOException;
+
 import javax.inject.Inject;
 
 import io.reactivex.Completable;
@@ -28,12 +30,12 @@ public class FetchService {
     private PhotoStore photoStore;
     private PrefStore prefStore;
     private WallpaperManager wallpaperManager;
-    private FetchHelper fetchHelper;
+    private DownloadService downloadService;
 
     @Inject
-    public FetchService(FetchHelper fetchHelper, UnsplashService service, PhotoStore photoStore,
+    public FetchService(DownloadService downloadService, UnsplashService service, PhotoStore photoStore,
                         PrefStore prefStore, WallpaperManager wallpaperManager) {
-        this.fetchHelper = fetchHelper;
+        this.downloadService = downloadService;
         this.service = service;
         this.photoStore = photoStore;
         this.prefStore = prefStore;
@@ -60,10 +62,10 @@ public class FetchService {
                         });
     }
 
-    private Single<Photo> getPhotoSingle(PhotoResponse response) {
-        Single<String> fullSingle = fetchHelper.downloadWallpaper(response, PhotoType.FULL);
-        Single<String> regularSingle = fetchHelper.downloadWallpaper(response, PhotoType.REGULAR);
-        Single<String> thumbSingle = fetchHelper.downloadWallpaper(response, PhotoType.THUMB);
+    private Single<Photo> getPhotoSingle(PhotoResponse response) throws IOException {
+        Single<String> fullSingle = downloadService.downloadWallpaper(response, PhotoType.FULL);
+        Single<String> regularSingle = downloadService.downloadWallpaper(response, PhotoType.REGULAR);
+        Single<String> thumbSingle = downloadService.downloadWallpaper(response, PhotoType.THUMB);
 
         return Single.zip(fullSingle, regularSingle, thumbSingle,
                 (fullUri, regularUri, thumbUri) -> {
@@ -101,5 +103,4 @@ public class FetchService {
                 .setPhotographerName(Utils.toTitleCase(response.getPhotographer().getName()))
                 .build();
     }
-
 }

@@ -15,9 +15,9 @@ public interface MainContract {
 
         void showRefetchProgress();
 
-        void onRefetchPhotoSuccessful();
+        void hideRefetchProgress();
 
-        void onRefetchPhotoFailure(Throwable t);
+        void showRefetchError(Throwable t);
     }
 
     interface Presenter {
@@ -28,9 +28,5 @@ public interface MainContract {
         void getPhoto();
 
         void refetchPhoto();
-
-        void refetchComplete();
-
-        void refetchFailed(Throwable t);
     }
 }
