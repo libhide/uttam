@@ -47,11 +47,6 @@ public class AppContextModule {
     }
 
     @Provides
-    public DownloadService provideDownloadService(Context context) {
-        return new DownloadService(context);
-    }
-
-    @Provides
     public FileProvider provideFileProvider(Context context) {
         return new FileProvider(context);
     }
