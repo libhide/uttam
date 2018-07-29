@@ -11,7 +11,7 @@ import java.io.File;
 import javax.inject.Inject;
 
 public class FileProvider {
-    public static final String TAG = FileProvider.class.getSimpleName();
+    private static final String TAG = FileProvider.class.getSimpleName();
     private final Context context;
 
     @Inject
@@ -31,15 +31,23 @@ public class FileProvider {
             Log.e(TAG, "Error creating directory " + directory);
         }
 
+        return new File(directory, getFileName(photoType));
+    }
+
+    /**
+     * @param photoType filename type ("FULL", "REGULAR" or "THUMB")
+     * @return filename for passed in photoType
+     */
+    private String getFileName(PhotoType photoType) {
         switch (photoType) {
             case FULL:
-                return new File(directory, Constants.General.WALLPAPER_FILE_NAME);
+                return Constants.General.WALLPAPER_FILE_NAME;
             case REGULAR:
-                return new File(directory, Constants.General.WALLPAPER_REGULAR_FILE_NAME);
+                return Constants.General.WALLPAPER_REGULAR_FILE_NAME;
             case THUMB:
-                return new File(directory, Constants.General.WALLPAPER_THUMB_FILE_NAME);
+                return Constants.General.WALLPAPER_THUMB_FILE_NAME;
             default:
-                return new File(directory, Constants.General.WALLPAPER_FILE_NAME);
+                return Constants.General.WALLPAPER_FILE_NAME;
         }
     }
 }
