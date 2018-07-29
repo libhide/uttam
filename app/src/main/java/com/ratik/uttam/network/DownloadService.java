@@ -1,7 +1,5 @@
 package com.ratik.uttam.network;
 
-import android.content.Context;
-
 import com.ratik.uttam.model.PhotoResponse;
 import com.ratik.uttam.model.PhotoType;
 
@@ -21,11 +19,11 @@ public class DownloadService {
     private FileProvider fileProvider;
 
     @Inject
-    public DownloadService(Context context) {
-        fileProvider = new FileProvider(context);
+    public DownloadService(FileProvider fileProvider) {
+        this.fileProvider = fileProvider;
     }
 
-    private String getWallpaperFilePath(InputStream imageStream, PhotoType photoType) throws IOException{
+    private String getWallpaperFilePath(InputStream imageStream, PhotoType photoType) throws IOException {
         File imageFile = fileProvider.createFile(photoType);
         FileOutputStream output = new FileOutputStream(imageFile);
         int bufferSize = 1024;
