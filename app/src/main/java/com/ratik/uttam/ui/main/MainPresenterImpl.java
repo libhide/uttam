@@ -1,6 +1,8 @@
 package com.ratik.uttam.ui.main;
 
 
+import android.util.Log;
+
 import com.ratik.uttam.data.PhotoStore;
 import com.ratik.uttam.network.FetchService;
 
@@ -15,6 +17,7 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class MainPresenterImpl implements MainContract.Presenter {
+    private final String TAG = MainPresenterImpl.class.getSimpleName();
 
     private MainContract.View view;
     private PhotoStore photoStore;
@@ -70,6 +73,10 @@ public class MainPresenterImpl implements MainContract.Presenter {
     }
 
     private void onRefetchFailed(Throwable t) {
-        view.showRefetchError(t);
+        Log.e(TAG, t.getMessage());
+
+        // TODO: Use instanceOf to check the type of Exception that occurred to generate the errorMessage
+        String errorMessage = "An error occurred while trying to refresh your wallpaper. Try again later!";
+        view.showRefetchError(errorMessage);
     }
 }

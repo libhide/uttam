@@ -17,7 +17,7 @@ public interface MainContract {
 
         void hideRefetchProgress();
 
-        void showRefetchError(Throwable t);
+        void showRefetchError(String errorMessage);
     }
 
     interface Presenter {
