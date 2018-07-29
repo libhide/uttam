@@ -30,7 +30,6 @@ import com.ratik.uttam.R;
 import com.ratik.uttam.data.PrefStore;
 import com.ratik.uttam.di.Injector;
 import com.ratik.uttam.model.Photo;
-import com.ratik.uttam.network.FetchService;
 import com.ratik.uttam.ui.settings.SettingsActivity;
 import com.ratik.uttam.utils.BitmapUtils;
 import com.ratik.uttam.utils.FileUtils;
@@ -52,7 +51,6 @@ import static com.ratik.uttam.R.id.creditsContainer;
 
 public class MainActivity extends AppCompatActivity implements MainContract.View {
 
-    // Constants
     public static final String TAG = MainActivity.class.getSimpleName();
     private static final int REQUEST_CODE_SET_WALLPAPER = 1;
 
@@ -68,15 +66,10 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     @Inject
     PrefStore prefStore;
 
-    @Inject
-    FetchService fetchService;
-
-    // Member variables
     private CompositeDisposable compositeDisposable;
     private RxPermissions rxPermissions;
     private Photo photo;
 
-    // Views
     @BindView(R.id.wallpaper)
     ImageView wallpaperImageView;
 
@@ -113,9 +106,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
         init();
 
-        // Set the presenter's view
         presenter.setView(this);
-
         presenter.getPhoto();
     }
 
@@ -237,8 +228,10 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     }
 
     @Override
-    public void showRefetchError(Throwable t) {
-        Log.e(TAG, t.getMessage());
+    public void showRefetchError(String errorMessage) {
+        refetchOverlay.setVisibility(View.INVISIBLE);
+        progressBar.setVisibility(View.INVISIBLE);
+        Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
     }
 
     // endregion
