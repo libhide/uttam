@@ -12,11 +12,21 @@ public interface MainContract {
         void showPhoto(Photo photo);
 
         void onGetPhotoFailed();
+
+        void showRefetchProgress();
+
+        void hideRefetchProgress();
+
+        void showRefetchError(String errorMessage);
     }
 
     interface Presenter {
         void setView(MainContract.View view);
 
+        void detachView();
+
         void getPhoto();
+
+        void refetchPhoto();
     }
 }
