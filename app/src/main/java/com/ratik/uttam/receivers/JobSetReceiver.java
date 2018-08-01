@@ -9,7 +9,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.ratik.uttam.Constants;
-import com.ratik.uttam.services.GetPhotoJob;
+import com.ratik.uttam.network.GetPhotoJob;
 
 import java.util.concurrent.TimeUnit;
 
