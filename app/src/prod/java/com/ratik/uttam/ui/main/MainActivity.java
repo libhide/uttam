@@ -2,15 +2,11 @@ package com.ratik.uttam.ui.main;
 
 import android.Manifest;
 import android.app.WallpaperManager;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -38,7 +34,6 @@ import com.ratik.uttam.billing.BillingManager;
 import com.ratik.uttam.data.PrefStore;
 import com.ratik.uttam.di.Injector;
 import com.ratik.uttam.model.Photo;
-import com.ratik.uttam.services.RefetchService;
 import com.ratik.uttam.ui.settings.SettingsActivity;
 import com.ratik.uttam.utils.BitmapUtils;
 import com.ratik.uttam.utils.FileUtils;
@@ -62,7 +57,7 @@ import io.reactivex.schedulers.Schedulers;
 
 import static com.ratik.uttam.R.id.creditsContainer;
 
-public class MainActivity extends AppCompatActivity implements MainContract.View, RefetchService.Callback {
+public class MainActivity extends AppCompatActivity implements MainContract.View {
 
     public static final String TAG = MainActivity.class.getSimpleName();
     private static final int REQUEST_CODE_SET_WALLPAPER = 1;
@@ -110,29 +105,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
-
-    private boolean isFetchServiceBound;
-    private RefetchService refetchService;
-    private ServiceConnection refetchServiceConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder binder) {
-            isFetchServiceBound = true;
-            refetchService = ((RefetchService.LocalBinder) binder).getService();
-            refetchService.setRefetchCallback(MainActivity.this);
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            isFetchServiceBound = false;
-        }
-    };
-
-    @Override
-    public void refetchComplete() {
-        presenter.getPhoto();
-        refetchOverlay.setVisibility(View.INVISIBLE);
-        progressBar.setVisibility(View.INVISIBLE);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -262,16 +234,29 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         Toast.makeText(this, getString(R.string.generic_error), Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    public void showRefetchProgress() {
+        refetchOverlay.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideRefetchProgress() {
+        presenter.getPhoto();
+        refetchOverlay.setVisibility(View.INVISIBLE);
+        progressBar.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void showRefetchError(String errorMessage) {
+        refetchOverlay.setVisibility(View.INVISIBLE);
+        progressBar.setVisibility(View.INVISIBLE);
+        Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
+    }
+
     // endregion
 
     // region ACTIVITY OVERRIDES
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Intent intent = new Intent(this, RefetchService.class);
-        bindService(intent, refetchServiceConnection, Context.BIND_AUTO_CREATE);
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -304,7 +289,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
                         });
                 return true;
             case R.id.action_refresh:
-                refreshPhoto();
+                presenter.refetchPhoto();
                 return true;
             default:
                 return false;
@@ -315,28 +300,13 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     protected void onDestroy() {
         billingManager.stopCheckout();
         super.onDestroy();
+        presenter.detachView();
         compositeDisposable.dispose();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if (isFetchServiceBound) {
-            refetchService.setRefetchCallback(null);
-            unbindService(refetchServiceConnection);
-            isFetchServiceBound = false;
-        }
     }
 
     // endregion
 
     // region HELPERS
-
-    public void refreshPhoto() {
-        refetchOverlay.setVisibility(View.VISIBLE);
-        progressBar.setVisibility(View.VISIBLE);
-        refetchService.fetchPhoto();
-    }
 
     public void showWallpaperCredits() {
         Uri.Builder builder = new Uri.Builder();
