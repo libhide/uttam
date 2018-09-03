@@ -5,6 +5,7 @@ import com.ratik.uttam.di.module.ApiModule;
 import com.ratik.uttam.di.module.AppContextModule;
 import com.ratik.uttam.di.module.BillingModule;
 import com.ratik.uttam.di.module.DataModule;
+import com.ratik.uttam.di.module.FirebaseModule;
 import com.ratik.uttam.di.module.PresenterModule;
 import com.ratik.uttam.di.module.SharedPrefsModule;
 import com.ratik.uttam.di.module.UtilsModule;
@@ -26,7 +27,7 @@ import dagger.Component;
 @Singleton
 @Component(modules = {AppContextModule.class, PresenterModule.class,
         ApiModule.class, DataModule.class, SharedPrefsModule.class,
-        UtilsModule.class, BillingModule.class})
+        UtilsModule.class, BillingModule.class, FirebaseModule.class})
 public interface AppComponent {
 
     void inject(UttamApplication application);
