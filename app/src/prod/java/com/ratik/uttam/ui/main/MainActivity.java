@@ -236,6 +236,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     @Override
     public void showRefetchProgress() {
+        Toast.makeText(this, "Fetching wallpaper...", Toast.LENGTH_LONG).show();
         refetchOverlay.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.VISIBLE);
     }
