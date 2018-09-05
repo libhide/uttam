@@ -43,6 +43,4 @@ public interface AppComponent {
     void inject(SettingsActivity activity);
 
     void inject(NotificationUtils notificationUtils);
-
-
 }
