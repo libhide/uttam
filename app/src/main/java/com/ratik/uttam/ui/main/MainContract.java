@@ -2,6 +2,8 @@ package com.ratik.uttam.ui.main;
 
 import com.ratik.uttam.model.Photo;
 
+import io.reactivex.disposables.CompositeDisposable;
+
 /**
  * Created by Ratik on 17/10/17.
  */
@@ -21,6 +23,8 @@ public interface MainContract {
     }
 
     interface Presenter {
+        MainContract.View getView();
+
         void setView(MainContract.View view);
 
         void detachView();
@@ -28,5 +32,7 @@ public interface MainContract {
         void getPhoto();
 
         void refetchPhoto();
+
+        CompositeDisposable getCompositeDisposable();
     }
 }

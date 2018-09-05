@@ -1,8 +1,6 @@
 package com.ratik.uttam.ui.main;
 
 
-import android.util.Log;
-
 import com.ratik.uttam.data.PhotoStore;
 import com.ratik.uttam.network.FetchService;
 
@@ -29,6 +27,11 @@ public class MainPresenterImpl implements MainContract.Presenter {
         this.photoStore = photoStore;
         this.service = service;
         this.compositeDisposable = new CompositeDisposable();
+    }
+
+    @Override
+    public MainContract.View getView() {
+        return view;
     }
 
     @Override
@@ -68,13 +71,16 @@ public class MainPresenterImpl implements MainContract.Presenter {
         );
     }
 
+    @Override
+    public CompositeDisposable getCompositeDisposable() {
+        return compositeDisposable;
+    }
+
     private void onRefetchSuccessful() {
         view.hideRefetchProgress();
     }
 
     private void onRefetchFailed(Throwable t) {
-        Log.e(TAG, t.getMessage());
-
         // TODO: Use instanceOf to check the type of Exception that occurred to generate the errorMessage
         String errorMessage = "An error occurred while trying to refresh your wallpaper. Try again later!";
         view.showRefetchError(errorMessage);
