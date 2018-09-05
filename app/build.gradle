@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.google.gms.google-services'
 
 def getProperty(String filename, String propName) {
     def propsFile = rootProject.file(filename)
@@ -104,10 +103,14 @@ dependencies {
     // Billing
     prodImplementation 'org.solovyev.android:checkout:1.2.1'
 
-    // Ads
-    prodImplementation 'com.google.firebase:firebase-ads:11.4.2'
+    // Firebase
+    prodImplementation 'com.google.firebase:firebase-core:16.0.3'
+    prodImplementation 'com.google.firebase:firebase-ads:15.0.1'
+    prodImplementation 'com.google.firebase:firebase-config:16.0.0'
 
     // Testing
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:2.10.0'
 }
+
+apply plugin: 'com.google.gms.google-services'
