@@ -31,14 +31,13 @@ android {
         }
     }
 
-    compileSdkVersion 27
-    buildToolsVersion '27.0.3'
+    compileSdkVersion compile_sdk
     defaultConfig {
         applicationId "com.ratik.uttam"
-        minSdkVersion 21
-        targetSdkVersion 27
-        versionCode 17
-        versionName "4.0"
+        minSdkVersion min_sdk
+        targetSdkVersion target_sdk
+        versionCode version_code
+        versionName version_name
 
         buildConfigField "String", "CLIENT_ID", "\"${getProperty("local.properties", "client_id")}\""
     }
@@ -71,46 +70,44 @@ android {
 
 dependencies {
     // AppCompat
-    implementation 'com.android.support:appcompat-v7:27.1.0'
-    implementation 'com.android.support:design:27.1.0'
+    implementation "com.android.support:appcompat-v7:$support_library"
+    implementation "com.android.support:design:$support_library"
 
     // Retrofit
-    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
-    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
+    implementation "com.squareup.retrofit2:retrofit:$retrofit"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit_converter_gson"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit"
 
-    // RxJava
-    implementation 'io.reactivex.rxjava2:rxjava:2.1.8'
-    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
-
-    // RxBindings
-    implementation 'com.jakewharton.rxbinding2:rxbinding:2.0.0'
+    // Rx
+    implementation "io.reactivex.rxjava2:rxjava:$rxjava2"
+    implementation "io.reactivex.rxjava2:rxandroid:$rxandroid"
+    implementation "com.jakewharton.rxbinding2:rxbinding:$rxbinding2"
 
     // RxPermissions
-    implementation 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.4@aar'
+    implementation "com.tbruyelle.rxpermissions2:rxpermissions:$rxpermissions"
 
     // Dagger 2
-    implementation 'com.google.dagger:dagger:2.12'
-    annotationProcessor 'com.google.dagger:dagger-compiler:2.12'
+    implementation "com.google.dagger:dagger:$dagger2"
+    annotationProcessor "com.google.dagger:dagger-compiler:$dagger_compiler"
 
     // App Tour
-    implementation 'com.vlonjatg.android:app-tour:1.0'
+    implementation "com.vlonjatg.android:app-tour:$app_tour"
 
     // Butter Knife
-    implementation 'com.jakewharton:butterknife:8.8.1'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+    implementation "com.jakewharton:butterknife:$butterknife"
+    annotationProcessor "com.jakewharton:butterknife-compiler:$butterknife"
 
     // Billing
-    prodImplementation 'org.solovyev.android:checkout:1.2.1'
+    prodImplementation "org.solovyev.android:checkout:$checkout"
 
     // Firebase
-    prodImplementation 'com.google.firebase:firebase-core:16.0.3'
-    prodImplementation 'com.google.firebase:firebase-ads:15.0.1'
-    prodImplementation 'com.google.firebase:firebase-config:16.0.0'
+    prodImplementation "com.google.firebase:firebase-core:$firebase_core"
+    prodImplementation "com.google.firebase:firebase-ads:$firebase_ads"
+    prodImplementation "com.google.firebase:firebase-config:$firebase_config"
 
     // Testing
-    testImplementation 'junit:junit:4.12'
-    testImplementation 'org.mockito:mockito-core:2.10.0'
+    testImplementation "junit:junit:$junit"
+    testImplementation "org.mockito:mockito-core:$mockito"
 }
 
 apply plugin: 'com.google.gms.google-services'
