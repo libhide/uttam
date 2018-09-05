@@ -5,8 +5,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.ratik.uttam.BuildConfig;
-import com.ratik.uttam.Constants;
+import com.ratik.uttam.R;
 import com.ratik.uttam.api.UnsplashService;
 import com.ratik.uttam.data.PhotoStore;
 import com.ratik.uttam.data.PrefStore;
@@ -25,41 +26,60 @@ import io.reactivex.Single;
 
 public class FetchService {
     private static final String TAG = FetchService.class.getSimpleName();
+    private final String PARAM_COLLECTIONS = "unsplash_collections";
 
     private UnsplashService service;
     private PhotoStore photoStore;
     private PrefStore prefStore;
     private WallpaperManager wallpaperManager;
     private DownloadService downloadService;
+    private FirebaseRemoteConfig remoteConfig;
 
     @Inject
     public FetchService(DownloadService downloadService, UnsplashService service, PhotoStore photoStore,
-                        PrefStore prefStore, WallpaperManager wallpaperManager) {
+                        PrefStore prefStore, WallpaperManager wallpaperManager, FirebaseRemoteConfig remoteConfig) {
         this.downloadService = downloadService;
         this.service = service;
         this.photoStore = photoStore;
         this.prefStore = prefStore;
         this.wallpaperManager = wallpaperManager;
+        this.remoteConfig = remoteConfig;
+        this.remoteConfig.setDefaults(R.xml.remote_config_defaults);
     }
 
-    public Completable getFetchPhotoCompletable(){
+    public Completable getFetchPhotoCompletable() {
+        return getRemoteConfigFetchSingle()
+                .flatMapCompletable(this::getFetchPhotoCompletable);
+    }
+
+    private Single<String> getRemoteConfigFetchSingle() {
+        remoteConfig.fetch()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        remoteConfig.activateFetched();
+                    }
+                });
+        return Single.just(remoteConfig.getString(PARAM_COLLECTIONS));
+    }
+
+    private Completable getFetchPhotoCompletable(String collections) {
         Observable<PhotoResponse> photoResponseObservable = service.getRandomPhoto(
                 BuildConfig.CLIENT_ID,
-                Constants.Api.COLLECTIONS,
+                collections,
                 prefStore.getDesiredWallpaperWidth(),
                 prefStore.getDesiredWallpaperHeight()
         );
 
         return photoResponseObservable
-                        .flatMapSingle(this::getPhotoSingle)
-                        .flatMapCompletable(photo -> {
-                            Completable putCompletable = photoStore.putPhoto(photo);
-                            if (prefStore.isAutoSetEnabled()) {
-                                return getPostSaveSetWallpaperCompletable(putCompletable, photo);
-                            } else {
-                                return putCompletable;
-                            }
-                        });
+                .flatMapSingle(this::getPhotoSingle)
+                .flatMapCompletable(photo -> {
+                    Completable putCompletable = photoStore.putPhoto(photo);
+                    if (prefStore.isAutoSetEnabled()) {
+                        return getPostSaveSetWallpaperCompletable(putCompletable, photo);
+                    } else {
+                        return putCompletable;
+                    }
+                });
     }
 
     private Single<Photo> getPhotoSingle(PhotoResponse response) throws IOException {
