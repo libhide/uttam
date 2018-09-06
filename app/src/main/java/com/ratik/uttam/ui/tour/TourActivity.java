@@ -18,7 +18,7 @@ import com.ratik.uttam.model.Photo;
 import com.ratik.uttam.model.PhotoType;
 import com.ratik.uttam.network.FileProvider;
 import com.ratik.uttam.ui.main.MainActivity;
-import com.ratik.uttam.util.AlarmUtils;
+import com.ratik.uttam.util.AlarmHelper;
 import com.ratik.uttam.util.BitmapUtils;
 import com.vlonjatg.android.apptourlibrary.AppTour;
 import com.vlonjatg.android.apptourlibrary.MaterialSlide;
@@ -53,6 +53,9 @@ public class TourActivity extends AppTour {
 
     @Inject
     FileProvider fileProvider;
+
+    @Inject
+    AlarmHelper alarmHelper;
 
     private CompositeDisposable compositeDisposable;
 
@@ -108,7 +111,7 @@ public class TourActivity extends AppTour {
 
     private void setupAppForUser() {
         // set alarm to set job for 7 AM
-        AlarmUtils.setJobSetAlarm(this);
+        alarmHelper.setJobSetAlarm();
 
         setupDefaultPrefs();
 

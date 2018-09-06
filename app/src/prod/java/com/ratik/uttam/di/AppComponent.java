@@ -34,6 +34,8 @@ public interface AppComponent {
 
     void inject(GetPhotoJob job);
 
+    void inject(RebootReceiver receiver);
+
     void inject(HeroActivity activity);
 
     void inject(TourActivity activity);

@@ -9,13 +9,21 @@ import com.ratik.uttam.receiver.JobSetReceiver;
 
 import java.util.Calendar;
 
+import javax.inject.Inject;
+
 /**
  * Created by Ratik on 29/03/16.
  */
-public class AlarmUtils {
-    private static final int JOB_SET_INTENT_ID = 0;
+public class AlarmHelper {
+    private final int JOB_SET_INTENT_ID = 0;
+    private final Context context;
 
-    public static void setJobSetAlarm(Context context) {
+    @Inject
+    public AlarmHelper(Context context) {
+        this.context = context;
+    }
+
+    public void setJobSetAlarm() {
         Calendar calendar = Calendar.getInstance();
 
         Intent intent = new Intent(context, JobSetReceiver.class);
@@ -25,8 +33,8 @@ public class AlarmUtils {
         AlarmManager alarmManager = (AlarmManager)
                 context.getSystemService(Context.ALARM_SERVICE);
 
-        // We do this because on the first day, the user sees
-        // the hero wallpaper
+        // We do this because on the first day the
+        // user sees the hero wallpaper
         int currentDay = calendar.get(Calendar.DATE);
         int hours = calendar.get(Calendar.HOUR_OF_DAY);
         if (hours >= 0 && hours < 7) {
@@ -38,6 +46,8 @@ public class AlarmUtils {
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
 
-        alarmManager.set(AlarmManager.RTC, calendar.getTimeInMillis(), pendingIntent);
+        if (alarmManager != null) {
+            alarmManager.set(AlarmManager.RTC, calendar.getTimeInMillis(), pendingIntent);
+        }
     }
 }

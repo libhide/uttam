@@ -53,6 +53,11 @@ public class AppContextModule {
     }
 
     @Provides
+    public AlarmHelper provideAlarmHelper(Context context) {
+        return new AlarmHelper(context);
+    }
+
+    @Provides
     public FetchService provideFetchService(DownloadService downloadService, UnsplashService service,
                                             PhotoStore photoStore, PrefStore prefStore,
                                             WallpaperManager wallpaperManager, FirebaseRemoteConfig remoteConfig) {

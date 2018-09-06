@@ -10,6 +10,7 @@ import com.ratik.uttam.data.PrefStore;
 import com.ratik.uttam.network.DownloadService;
 import com.ratik.uttam.network.FetchService;
 import com.ratik.uttam.network.FileProvider;
+import com.ratik.uttam.util.AlarmHelper;
 
 import javax.inject.Singleton;
 
@@ -49,6 +50,11 @@ public class AppContextModule {
     @Provides
     public FileProvider provideFileProvider(Context context) {
         return new FileProvider(context);
+    }
+
+    @Provides
+    public AlarmHelper provideAlarmHelper(Context context) {
+        return new AlarmHelper(context);
     }
 
     @Provides
