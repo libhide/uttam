@@ -6,14 +6,13 @@ import com.ratik.uttam.di.module.AppContextModule;
 import com.ratik.uttam.di.module.DataModule;
 import com.ratik.uttam.di.module.PresenterModule;
 import com.ratik.uttam.di.module.SharedPrefsModule;
-import com.ratik.uttam.di.module.UtilsModule;
 import com.ratik.uttam.network.GetPhotoJob;
 import com.ratik.uttam.receiver.RebootReceiver;
 import com.ratik.uttam.ui.hero.HeroActivity;
 import com.ratik.uttam.ui.main.MainActivity;
 import com.ratik.uttam.ui.settings.SettingsActivity;
 import com.ratik.uttam.ui.tour.TourActivity;
-import com.ratik.uttam.util.NotificationUtils;
+import com.ratik.uttam.util.NotificationHelper;
 
 import javax.inject.Singleton;
 
@@ -25,8 +24,7 @@ import dagger.Component;
 
 @Singleton
 @Component(modules = {AppContextModule.class, PresenterModule.class,
-        ApiModule.class, DataModule.class, SharedPrefsModule.class,
-        UtilsModule.class})
+        ApiModule.class, DataModule.class, SharedPrefsModule.class})
 public interface AppComponent {
 
     void inject(UttamApplication application);
@@ -43,5 +41,5 @@ public interface AppComponent {
 
     void inject(SettingsActivity activity);
 
-    void inject(NotificationUtils notificationUtils);
+    void inject(NotificationHelper notificationHelper);
 }

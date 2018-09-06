@@ -31,13 +31,14 @@ import com.jakewharton.rxbinding2.view.RxView;
 import com.ratik.uttam.Constants;
 import com.ratik.uttam.R;
 import com.ratik.uttam.billing.BillingManager;
+import com.ratik.uttam.data.PhotoStore;
 import com.ratik.uttam.data.PrefStore;
 import com.ratik.uttam.di.Injector;
 import com.ratik.uttam.model.Photo;
 import com.ratik.uttam.ui.settings.SettingsActivity;
 import com.ratik.uttam.util.BitmapHelper;
 import com.ratik.uttam.util.FileHelper;
-import com.ratik.uttam.util.NotificationUtils;
+import com.ratik.uttam.util.NotificationHelper;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import org.solovyev.android.checkout.Billing;
@@ -66,10 +67,13 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     MainContract.Presenter presenter;
 
     @Inject
-    NotificationUtils notificationUtils;
+    NotificationHelper notificationHelper;
 
     @Inject
     PrefStore prefStore;
+
+    @Inject
+    PhotoStore photoStore;
 
     @Inject
     BitmapHelper bitmapHelper;
@@ -229,9 +233,20 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            notificationUtils.pushNewWallpaperNotification();
-            prefStore.firstRunDone();
+            pushFirstWallpaperNotification();
         }
+    }
+
+    private void pushFirstWallpaperNotification() {
+        compositeDisposable.add(
+                photoStore.getPhoto()
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(photo -> {
+                            notificationHelper.pushNewNotification(photo);
+                            prefStore.firstRunDone();
+                        }, t -> notificationHelper.pushErrorNotification(t))
+        );
     }
 
     @Override

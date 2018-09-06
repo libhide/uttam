@@ -13,67 +13,45 @@ import android.util.Log;
 
 import com.ratik.uttam.Constants;
 import com.ratik.uttam.R;
-import com.ratik.uttam.data.PhotoStore;
-import com.ratik.uttam.di.Injector;
 import com.ratik.uttam.model.Photo;
 import com.ratik.uttam.ui.main.MainActivity;
 
 import javax.inject.Inject;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
-
 /**
  * Created by Ratik on 08/09/17.
  */
 
-public class NotificationUtils {
+public class NotificationHelper {
 
-    private static final String TAG = NotificationUtils.class.getSimpleName();
+    private static final String TAG = NotificationHelper.class.getSimpleName();
 
     private static final int SHOW_WALLPAPER = 1;
     private static int WALLPAPER_NOTIF_ID = 001;
 
     private Context context;
+    private NotificationManager notificationManager;
 
     @Inject
-    PhotoStore photoStore;
-
-    public NotificationUtils(Context context) {
+    public NotificationHelper(Context context) {
         this.context = context;
-        Injector.getAppComponent().inject(this);
-
+        this.notificationManager = (NotificationManager)
+                context.getSystemService(Context.NOTIFICATION_SERVICE);
     }
 
-    public void pushNewWallpaperNotification() {
-        photoStore.getPhoto()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        photo -> pushNewNotification(photo),
-                        throwable -> pushErrorNotification()
-                );
-    }
-
-    private void pushNewNotification(Photo photo) {
-        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+    public void pushNewNotification(Photo photo) {
         notificationManager.notify(WALLPAPER_NOTIF_ID, getWallpaperNotification(photo).build());
     }
 
-    private void pushErrorNotification() {
-        Log.e(TAG, "Error getting Photo from the DataStore. Notification FAILED.");
+    public void pushErrorNotification(Throwable t) {
+        Log.e(TAG, t.getMessage());
     }
 
     private NotificationCompat.Builder getWallpaperNotification(Photo photo) {
-        // Content Intent
         Intent intent = new Intent(context, MainActivity.class);
 
-        // Content PendingIntent
         PendingIntent showWallpaperIntent = PendingIntent.getActivity(context,
                 SHOW_WALLPAPER, intent, 0);
-
-        NotificationManager notificationManager =
-                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
         // Notif Channel for O
         String channelId = Constants.NOTIF_CHANNEL_ID;
@@ -84,9 +62,12 @@ public class NotificationUtils {
                     = new NotificationChannel(channelId, channelName, importance);
 
             notificationChannel.setShowBadge(false);
-            notificationManager.createNotificationChannel(notificationChannel);
+            if (notificationManager != null) {
+                notificationManager.createNotificationChannel(notificationChannel);
+            }
         }
 
+        // TODO: Use Rx to do this work in a background thread (?)
         Bitmap bigBitmap = BitmapFactory.decodeFile(photo.getRegularPhotoUri());
         Bitmap thumbBitmap = BitmapFactory.decodeFile(photo.getThumbPhotoUri());
 

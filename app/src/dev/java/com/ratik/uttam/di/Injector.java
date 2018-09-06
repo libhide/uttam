@@ -5,7 +5,6 @@ import com.ratik.uttam.di.module.ApiModule;
 import com.ratik.uttam.di.module.AppContextModule;
 import com.ratik.uttam.di.module.DataModule;
 import com.ratik.uttam.di.module.PresenterModule;
-import com.ratik.uttam.di.module.UtilsModule;
 
 import java.util.Objects;
 
@@ -26,7 +25,6 @@ public class Injector {
                 .apiModule(new ApiModule())
                 .dataModule(new DataModule())
                 .presenterModule(new PresenterModule())
-                .utilsModule(new UtilsModule())
                 .build();
     }
 

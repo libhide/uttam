@@ -4,8 +4,10 @@ import android.app.job.JobParameters;
 import android.app.job.JobService;
 import android.util.Log;
 
+import com.ratik.uttam.data.PhotoStore;
 import com.ratik.uttam.di.Injector;
-import com.ratik.uttam.util.NotificationUtils;
+import com.ratik.uttam.model.Photo;
+import com.ratik.uttam.util.NotificationHelper;
 
 import javax.inject.Inject;
 
@@ -22,10 +24,13 @@ public class GetPhotoJob extends JobService {
     private static final String TAG = GetPhotoJob.class.getSimpleName();
 
     @Inject
-    NotificationUtils notificationUtils;
+    NotificationHelper notificationHelper;
 
     @Inject
     FetchService service;
+
+    @Inject
+    PhotoStore photoStore;
 
     private CompositeDisposable compositeDisposable;
 
@@ -56,19 +61,38 @@ public class GetPhotoJob extends JobService {
     }
 
     private void pushNotification() {
-        notificationUtils.pushNewWallpaperNotification();
+        compositeDisposable.add(
+                photoStore.getPhoto()
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                this::onSuccessfulNotificationPush,
+                                this::onNotificationPushFailure
+                        )
+        );
     }
 
-    private void onFetchFailure(Throwable throwable) {
-        Log.e(TAG, throwable.getMessage());
+    private void onSuccessfulNotificationPush(Photo photo) {
+        notificationHelper.pushNewNotification(photo);
+        isWorking = false;
+        compositeDisposable.dispose();
+        jobFinished(jobParams, false);
+    }
+
+    private void onNotificationPushFailure(Throwable throwable) {
+        notificationHelper.pushErrorNotification(throwable);
+        isWorking = false;
+        compositeDisposable.dispose();
+        jobFinished(jobParams, false);
     }
 
     private void onFetchSuccess() {
         Log.i(TAG, "Photo saved successfully!");
         pushNotification();
-        isWorking = false;
-        compositeDisposable.dispose();
-        jobFinished(jobParams, false);
+    }
+
+    private void onFetchFailure(Throwable throwable) {
+        Log.e(TAG, throwable.getMessage());
     }
 
     @Override
