@@ -32,7 +32,7 @@ import com.ratik.uttam.di.Injector;
 import com.ratik.uttam.model.Photo;
 import com.ratik.uttam.ui.settings.SettingsActivity;
 import com.ratik.uttam.util.BitmapHelper;
-import com.ratik.uttam.util.FileUtils;
+import com.ratik.uttam.util.FileHelper;
 import com.ratik.uttam.util.NotificationUtils;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
@@ -69,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     @Inject
     BitmapHelper bitmapHelper;
 
+    private FileHelper fileHelper;
     private CompositeDisposable compositeDisposable;
     private RxPermissions rxPermissions;
     private Photo photo;
@@ -106,6 +107,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         Injector.getAppComponent().inject(this);
 
         compositeDisposable = new CompositeDisposable();
+        fileHelper = new FileHelper();
 
         init();
 
@@ -307,7 +309,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         File srcFile = new File(photo.getPhotoUri());
 
         compositeDisposable.add(
-                FileUtils.exportFile(srcFile, photo.getId() + ".png")
+                fileHelper.exportFile(srcFile, photo.getId() + ".png")
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(this::onSaveSuccess, this::onSaveFailure)
@@ -327,7 +329,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         File srcFile = new File(photo.getPhotoUri());
 
         compositeDisposable.add(
-                FileUtils.exportFile(srcFile, photo.getId() + ".png")
+                fileHelper.exportFile(srcFile, photo.getId() + ".png")
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(this::onSettingSaveSuccess, this::onSettingSaveFailure)
