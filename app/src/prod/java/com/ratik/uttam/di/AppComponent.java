@@ -10,6 +10,7 @@ import com.ratik.uttam.di.module.PresenterModule;
 import com.ratik.uttam.di.module.SharedPrefsModule;
 import com.ratik.uttam.di.module.UtilsModule;
 import com.ratik.uttam.network.GetPhotoJob;
+import com.ratik.uttam.receiver.RebootReceiver;
 import com.ratik.uttam.ui.hero.HeroActivity;
 import com.ratik.uttam.ui.main.MainActivity;
 import com.ratik.uttam.ui.settings.SettingsActivity;

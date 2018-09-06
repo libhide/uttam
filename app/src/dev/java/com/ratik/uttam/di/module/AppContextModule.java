@@ -11,6 +11,7 @@ import com.ratik.uttam.network.DownloadService;
 import com.ratik.uttam.network.FetchService;
 import com.ratik.uttam.network.FileProvider;
 import com.ratik.uttam.util.AlarmHelper;
+import com.ratik.uttam.util.BitmapHelper;
 
 import javax.inject.Singleton;
 
@@ -55,6 +56,11 @@ public class AppContextModule {
     @Provides
     public AlarmHelper provideAlarmHelper(Context context) {
         return new AlarmHelper(context);
+    }
+
+    @Provides
+    public BitmapHelper provideBitmapHelper(Context context) {
+        return new BitmapHelper(context);
     }
 
     @Provides

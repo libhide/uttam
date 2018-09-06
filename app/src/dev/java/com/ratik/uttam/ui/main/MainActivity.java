@@ -31,7 +31,7 @@ import com.ratik.uttam.data.PrefStore;
 import com.ratik.uttam.di.Injector;
 import com.ratik.uttam.model.Photo;
 import com.ratik.uttam.ui.settings.SettingsActivity;
-import com.ratik.uttam.util.BitmapUtils;
+import com.ratik.uttam.util.BitmapHelper;
 import com.ratik.uttam.util.FileUtils;
 import com.ratik.uttam.util.NotificationUtils;
 import com.tbruyelle.rxpermissions2.RxPermissions;
@@ -65,6 +65,9 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     @Inject
     PrefStore prefStore;
+
+    @Inject
+    BitmapHelper bitmapHelper;
 
     private CompositeDisposable compositeDisposable;
     private RxPermissions rxPermissions;
@@ -181,7 +184,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     private void setWallpaperImageView() {
         compositeDisposable.add(
-                BitmapUtils.getBitmapFromFile(photo.getRegularPhotoUri())
+                bitmapHelper.getBitmapFromFile(photo.getRegularPhotoUri())
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
