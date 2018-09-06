@@ -14,7 +14,7 @@ import com.ratik.uttam.ui.hero.HeroActivity;
 import com.ratik.uttam.ui.main.MainActivity;
 import com.ratik.uttam.ui.settings.SettingsActivity;
 import com.ratik.uttam.ui.tour.TourActivity;
-import com.ratik.uttam.utils.NotificationUtils;
+import com.ratik.uttam.util.NotificationUtils;
 
 import javax.inject.Singleton;
 

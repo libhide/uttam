@@ -1,11 +1,11 @@
-package com.ratik.uttam.utils;
+package com.ratik.uttam.util;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 
-import com.ratik.uttam.receivers.JobSetReceiver;
+import com.ratik.uttam.receiver.JobSetReceiver;
 
 import java.util.Calendar;
 

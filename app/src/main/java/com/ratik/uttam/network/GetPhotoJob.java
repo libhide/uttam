@@ -5,7 +5,7 @@ import android.app.job.JobService;
 import android.util.Log;
 
 import com.ratik.uttam.di.Injector;
-import com.ratik.uttam.utils.NotificationUtils;
+import com.ratik.uttam.util.NotificationUtils;
 
 import javax.inject.Inject;
 

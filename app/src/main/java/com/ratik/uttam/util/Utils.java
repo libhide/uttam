@@ -1,4 +1,4 @@
-package com.ratik.uttam.utils;
+package com.ratik.uttam.util;
 
 public class Utils {
     public static String toTitleCase(String input) {

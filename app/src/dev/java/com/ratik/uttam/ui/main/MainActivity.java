@@ -31,9 +31,9 @@ import com.ratik.uttam.data.PrefStore;
 import com.ratik.uttam.di.Injector;
 import com.ratik.uttam.model.Photo;
 import com.ratik.uttam.ui.settings.SettingsActivity;
-import com.ratik.uttam.utils.BitmapUtils;
-import com.ratik.uttam.utils.FileUtils;
-import com.ratik.uttam.utils.NotificationUtils;
+import com.ratik.uttam.util.BitmapUtils;
+import com.ratik.uttam.util.FileUtils;
+import com.ratik.uttam.util.NotificationUtils;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.io.File;

@@ -14,7 +14,7 @@ import com.ratik.uttam.data.PrefStore;
 import com.ratik.uttam.model.Photo;
 import com.ratik.uttam.model.PhotoResponse;
 import com.ratik.uttam.model.PhotoType;
-import com.ratik.uttam.utils.Utils;
+import com.ratik.uttam.util.Utils;
 
 import java.io.IOException;
 

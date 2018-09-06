@@ -18,8 +18,8 @@ import com.ratik.uttam.model.Photo;
 import com.ratik.uttam.model.PhotoType;
 import com.ratik.uttam.network.FileProvider;
 import com.ratik.uttam.ui.main.MainActivity;
-import com.ratik.uttam.utils.AlarmUtils;
-import com.ratik.uttam.utils.BitmapUtils;
+import com.ratik.uttam.util.AlarmUtils;
+import com.ratik.uttam.util.BitmapUtils;
 import com.vlonjatg.android.apptourlibrary.AppTour;
 import com.vlonjatg.android.apptourlibrary.MaterialSlide;
 

@@ -1,4 +1,4 @@
-package com.ratik.uttam.utils;
+package com.ratik.uttam.util;
 
 import android.content.Context;
 import android.graphics.Bitmap;

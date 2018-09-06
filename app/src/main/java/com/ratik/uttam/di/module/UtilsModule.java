@@ -2,7 +2,7 @@ package com.ratik.uttam.di.module;
 
 import android.content.Context;
 
-import com.ratik.uttam.utils.NotificationUtils;
+import com.ratik.uttam.util.NotificationUtils;
 
 import javax.inject.Singleton;
 
