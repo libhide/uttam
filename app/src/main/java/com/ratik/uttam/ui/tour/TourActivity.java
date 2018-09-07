@@ -18,8 +18,8 @@ import com.ratik.uttam.model.Photo;
 import com.ratik.uttam.model.PhotoType;
 import com.ratik.uttam.network.FileProvider;
 import com.ratik.uttam.ui.main.MainActivity;
-import com.ratik.uttam.utils.AlarmUtils;
-import com.ratik.uttam.utils.BitmapUtils;
+import com.ratik.uttam.util.AlarmHelper;
+import com.ratik.uttam.util.BitmapHelper;
 import com.vlonjatg.android.apptourlibrary.AppTour;
 import com.vlonjatg.android.apptourlibrary.MaterialSlide;
 
@@ -53,6 +53,12 @@ public class TourActivity extends AppTour {
 
     @Inject
     FileProvider fileProvider;
+
+    @Inject
+    AlarmHelper alarmHelper;
+
+    @Inject
+    BitmapHelper bitmapHelper;
 
     private CompositeDisposable compositeDisposable;
 
@@ -108,22 +114,22 @@ public class TourActivity extends AppTour {
 
     private void setupAppForUser() {
         // set alarm to set job for 7 AM
-        AlarmUtils.setJobSetAlarm(this);
+        alarmHelper.setJobSetAlarm();
 
         setupDefaultPrefs();
 
         Single<String> fullPhotoSingle = Single.fromCallable(() -> {
-            Bitmap b = BitmapUtils.getBitmapFromResources(this, R.drawable.uttam_hero);
+            Bitmap b = bitmapHelper.getBitmapFromResources(R.drawable.uttam_hero);
             return storeImage(b, PhotoType.FULL);
         });
 
         Single<String> regularPhotoSingle = Single.fromCallable(() -> {
-            Bitmap b = BitmapUtils.getBitmapFromResources(this, R.drawable.uttam_hero_regular);
+            Bitmap b = bitmapHelper.getBitmapFromResources(R.drawable.uttam_hero_regular);
             return storeImage(b, PhotoType.REGULAR);
         });
 
         Single<String> thumbPhotoSingle = Single.fromCallable(() -> {
-            Bitmap b = BitmapUtils.getBitmapFromResources(this, R.drawable.uttam_hero_thumb);
+            Bitmap b = bitmapHelper.getBitmapFromResources(R.drawable.uttam_hero_thumb);
             return storeImage(b, PhotoType.THUMB);
         });
 

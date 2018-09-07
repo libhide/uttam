@@ -13,7 +13,7 @@ import com.ratik.uttam.data.PrefStore;
 import com.ratik.uttam.model.Photo;
 import com.ratik.uttam.model.PhotoResponse;
 import com.ratik.uttam.model.PhotoType;
-import com.ratik.uttam.utils.Utils;
+import com.ratik.uttam.util.StringExtensionsKt;
 
 import java.io.IOException;
 
@@ -100,7 +100,7 @@ public class FetchService {
                 .setPhotoHtmlUrl(response.getLinks().getHtmlLink())
                 .setPhotoDownloadUrl(response.getLinks().getDownloadLink())
                 .setPhotographerUserName(response.getPhotographer().getUsername())
-                .setPhotographerName(Utils.toTitleCase(response.getPhotographer().getName()))
+                .setPhotographerName(StringExtensionsKt.toTitleCase(response.getPhotographer().getName()))
                 .build();
     }
 }
