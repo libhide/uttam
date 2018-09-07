@@ -31,13 +31,14 @@ import com.jakewharton.rxbinding2.view.RxView;
 import com.ratik.uttam.Constants;
 import com.ratik.uttam.R;
 import com.ratik.uttam.billing.BillingManager;
+import com.ratik.uttam.data.PhotoStore;
 import com.ratik.uttam.data.PrefStore;
 import com.ratik.uttam.di.Injector;
 import com.ratik.uttam.model.Photo;
 import com.ratik.uttam.ui.settings.SettingsActivity;
-import com.ratik.uttam.utils.BitmapUtils;
-import com.ratik.uttam.utils.FileUtils;
-import com.ratik.uttam.utils.NotificationUtils;
+import com.ratik.uttam.util.BitmapHelper;
+import com.ratik.uttam.util.FileHelper;
+import com.ratik.uttam.util.NotificationHelper;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import org.solovyev.android.checkout.Billing;
@@ -66,11 +67,18 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     MainContract.Presenter presenter;
 
     @Inject
-    NotificationUtils notificationUtils;
+    NotificationHelper notificationHelper;
 
     @Inject
     PrefStore prefStore;
 
+    @Inject
+    PhotoStore photoStore;
+
+    @Inject
+    BitmapHelper bitmapHelper;
+
+    private FileHelper fileHelper;
     private CompositeDisposable compositeDisposable;
     private RxPermissions rxPermissions;
     private Photo photo;
@@ -115,6 +123,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         Injector.getAppComponent().inject(this);
 
         compositeDisposable = new CompositeDisposable();
+        fileHelper = new FileHelper();
 
         init();
 
@@ -201,7 +210,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     private void setWallpaperImageView() {
         compositeDisposable.add(
-                BitmapUtils.getBitmapFromFile(photo.getRegularPhotoUri())
+                bitmapHelper.getBitmapFromFile(photo.getRegularPhotoUri())
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
@@ -224,9 +233,20 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            notificationUtils.pushNewWallpaperNotification();
-            prefStore.firstRunDone();
+            pushFirstWallpaperNotification();
         }
+    }
+
+    private void pushFirstWallpaperNotification() {
+        compositeDisposable.add(
+                photoStore.getPhoto()
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(photo -> {
+                            notificationHelper.pushNewNotification(photo);
+                            prefStore.firstRunDone();
+                        }, t -> notificationHelper.pushErrorNotification(t))
+        );
     }
 
     @Override
@@ -325,7 +345,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         File srcFile = new File(photo.getPhotoUri());
 
         compositeDisposable.add(
-                FileUtils.exportFile(srcFile, photo.getId() + ".png")
+                fileHelper.exportFile(srcFile, photo.getId() + ".png")
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(this::onSaveSuccess, this::onSaveFailure)
@@ -358,7 +378,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         File srcFile = new File(photo.getPhotoUri());
 
         compositeDisposable.add(
-                FileUtils.exportFile(srcFile, photo.getId() + ".png")
+                fileHelper.exportFile(srcFile, photo.getId() + ".png")
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(this::onSettingSaveSuccess, this::onSettingSaveFailure)

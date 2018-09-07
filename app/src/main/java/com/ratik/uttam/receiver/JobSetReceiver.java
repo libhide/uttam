@@ -1,4 +1,4 @@
-package com.ratik.uttam.receivers;
+package com.ratik.uttam.receiver;
 
 import android.app.job.JobInfo;
 import android.app.job.JobScheduler;

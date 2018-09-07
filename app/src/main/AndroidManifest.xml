@@ -42,9 +42,9 @@
             android:name=".ui.tour.TourActivity"
             android:theme="@style/AppTheme.Fullscreen" />
 
-        <receiver android:name=".receivers.JobSetReceiver" />
+        <receiver android:name=".receiver.JobSetReceiver" />
         <receiver
-            android:name=".receivers.RebootReceiver"
+            android:name=".receiver.RebootReceiver"
             android:enabled="true"
             android:exported="true"
             android:label="RebootFixer">

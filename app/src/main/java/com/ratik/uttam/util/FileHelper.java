@@ -1,4 +1,4 @@
-package com.ratik.uttam.utils;
+package com.ratik.uttam.util;
 
 import android.os.Environment;
 
@@ -16,7 +16,11 @@ import io.reactivex.Single;
  * Created by Ratik on 02/02/18.
  */
 
-public class FileUtils {
+public class FileHelper {
+
+    public FileHelper() {
+        // Not implemented
+    }
 
     /**
      * Takes a source file and copies it to sdcard/Pictures/Uttam
@@ -25,7 +29,7 @@ public class FileUtils {
      * @param exportedFileFilename filename for exported file
      * @return Observable of the exported file
      */
-    public static Single<File> exportFile(File srcFile, String exportedFileFilename) throws IOException {
+    public Single<File> exportFile(File srcFile, String exportedFileFilename) throws IOException {
         File destination = getExtStorageDir();
         if (!destination.exists() && !destination.mkdirs()) {
             Throwable t = new Throwable("Error making directory: " + destination.getPath());
@@ -65,8 +69,10 @@ public class FileUtils {
         return Single.just(exportedFile);
     }
 
-    private static File getExtStorageDir() {
+    private File getExtStorageDir() {
+        String APP_NAME = "Uttam";
+
         return new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES), "Uttam");
+                Environment.DIRECTORY_PICTURES), APP_NAME);
     }
 }
