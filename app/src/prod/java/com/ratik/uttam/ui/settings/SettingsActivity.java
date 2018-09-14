@@ -96,7 +96,9 @@ public class SettingsActivity extends AppCompatActivity implements SettingsFragm
         addFree = false;
 
         settingsContentLayout.setPadding(0, 0, 0, 140);
-        AdRequest adRequest = new AdRequest.Builder().build();
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice("AE9739935347E14CA9FDC906502E058F")
+                .build();
         adView.loadAd(adRequest);
     }
 
