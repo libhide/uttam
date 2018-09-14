@@ -33,8 +33,9 @@ android {
     }
 
     compileSdkVersion compile_sdk
+
     defaultConfig {
-        applicationId "com.ratik.uttam"
+        applicationId app_id
         minSdkVersion min_sdk
         targetSdkVersion target_sdk
         versionCode version_code
@@ -42,7 +43,6 @@ android {
 
         buildConfigField "String", "CLIENT_ID", "\"${getProperty("local.properties", "client_id")}\""
     }
-
     buildTypes {
         release {
             8
@@ -51,14 +51,11 @@ android {
             signingConfig signingConfigs.config
         }
     }
-
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
     flavorDimensions "default"
-
     productFlavors {
         dev {
             applicationId "com.ratik.uttam.dev"
@@ -70,6 +67,7 @@ android {
 }
 
 dependencies {
+
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
