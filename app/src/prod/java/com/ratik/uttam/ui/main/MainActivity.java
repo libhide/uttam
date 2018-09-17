@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -89,6 +90,9 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     private BillingManager billingManager;
 
     private InterstitialAd savingAd;
+
+    @BindView(R.id.wallpaperScrollView)
+    HorizontalScrollView wallpaperScrollView;
 
     @BindView(R.id.wallpaper)
     ImageView wallpaperImageView;
@@ -210,7 +214,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     private void setWallpaperImageView() {
         compositeDisposable.add(
-                bitmapHelper.getBitmapFromFile(photo.getRegularPhotoUri())
+                bitmapHelper.getBitmapFromFile(photo.getFullPhotoUri())
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
@@ -342,7 +346,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     }
 
     private void saveWallpaperToExternalStorage() throws IOException {
-        File srcFile = new File(photo.getPhotoUri());
+        File srcFile = new File(photo.getFullPhotoUri());
 
         compositeDisposable.add(
                 fileHelper.exportFile(srcFile, photo.getId() + ".png")
@@ -375,7 +379,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     }
 
     private void doWallpaperSetting() throws IOException {
-        File srcFile = new File(photo.getPhotoUri());
+        File srcFile = new File(photo.getFullPhotoUri());
 
         compositeDisposable.add(
                 fileHelper.exportFile(srcFile, photo.getId() + ".png")

@@ -6,7 +6,7 @@ package com.ratik.uttam.model;
 
 public class Photo {
     // Wallpaper
-    private String photoUri;
+    private String fullPhotoUri;
     private String regularPhotoUri;
     private String thumbPhotoUri;
 
@@ -18,11 +18,11 @@ public class Photo {
     private String photoDownloadUrl;
     private String photoHtmlUrl;
 
-    private Photo(String id, String photoUri, String regularPhotoUri, String thumbPhotoUri,
+    private Photo(String id, String fullPhotoUri, String regularPhotoUri, String thumbPhotoUri,
                   String photographerName, String photographerUserName, String photoFullUrl,
                   String photoDownloadUrl, String photoHtmlUrl) {
         this.id = id;
-        this.photoUri = photoUri;
+        this.fullPhotoUri = fullPhotoUri;
         this.regularPhotoUri = regularPhotoUri;
         this.thumbPhotoUri = thumbPhotoUri;
         this.photographerName = photographerName;
@@ -36,12 +36,12 @@ public class Photo {
         return id;
     }
 
-    public String getPhotoUri() {
-        return photoUri;
+    public String getFullPhotoUri() {
+        return fullPhotoUri;
     }
 
-    public void setPhotoUri(String photoUri) {
-        this.photoUri = photoUri;
+    public void setFullPhotoUri(String fullPhotoUri) {
+        this.fullPhotoUri = fullPhotoUri;
     }
 
     public String getRegularPhotoUri() {

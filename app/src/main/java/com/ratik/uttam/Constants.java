@@ -18,15 +18,13 @@ public class Constants {
     }
 
     public class Fetch {
-        public static final String EXTRA_FETCH_TYPE = "type";
-
         public static final int WALLPAPER_FETCH_JOB_ID = 1;
-        public static final String FIRST_WALLPAPER_ID = "RnCPiXixooY";
-        public static final String FIRST_WALLPAPER_PHOTOGRAPHER_NAME = "Efe Kurnaz";
-        public static final String FIRST_WALLPAPER_PHOTOGRAPHER_USERNAME = "@efekurnaz";
-        public static final String FIRST_WALLPAPER_FULL_URL = "https://images.unsplash.com/photo-1500462918059-b1a0cb512f1d";
-        public static final String FIRST_WALLPAPER_HTML_URL = "https://unsplash.com/photos/RnCPiXixooY";
-        public static final String FIRST_WALLPAPER_DOWNLOAD_URL = "https://unsplash.com/photos/RnCPiXixooY/download";
+        public static final String FIRST_WALLPAPER_ID = "FBLZt3Hw4e8";
+        public static final String FIRST_WALLPAPER_PHOTOGRAPHER_NAME = "Andrew Haimerl";
+        public static final String FIRST_WALLPAPER_PHOTOGRAPHER_USERNAME = "@andrew_haimerl";
+        public static final String FIRST_WALLPAPER_FULL_URL = "https://images.unsplash.com/photo-1520959070944-20827755726d?ixlib=rb-0.3.5&s=0998b311d05bb5377a4938caeef0d03a&auto=format&fit=crop&w=1500&q=80";
+        public static final String FIRST_WALLPAPER_HTML_URL = "https://unsplash.com/photos/" + FIRST_WALLPAPER_ID;
+        public static final String FIRST_WALLPAPER_DOWNLOAD_URL = "https://unsplash.com/photos/FBLZt3Hw4e8/download?force=true";
     }
 
     public class Data {

@@ -102,7 +102,7 @@ public class FetchService {
     }
 
     private Single<String> getWallpaperPath(Photo photo) {
-        return Single.just(photo.getPhotoUri());
+        return Single.just(photo.getFullPhotoUri());
     }
 
     private Completable setWall(Bitmap bitmap) {

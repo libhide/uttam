@@ -176,7 +176,7 @@ public class TourActivity extends AppTour {
 
     private Photo getHeroPhoto(String fullUri, String regularUri, String thumbUri) {
         Photo partialHeroPhoto = getPartialHeroPhoto();
-        partialHeroPhoto.setPhotoUri(fullUri);
+        partialHeroPhoto.setFullPhotoUri(fullUri);
         partialHeroPhoto.setRegularPhotoUri(regularUri);
         partialHeroPhoto.setThumbPhotoUri(thumbUri);
         return partialHeroPhoto;
