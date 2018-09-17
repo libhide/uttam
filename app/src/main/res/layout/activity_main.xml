@@ -6,13 +6,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/wallpaper"
+    <HorizontalScrollView
+        android:id="@+id/wallpaperScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:contentDescription="@string/content_desc_hero_img"
-        android:scaleType="centerCrop"
-        tools:src="@drawable/uttam_hero" />
+        android:scrollbars="none"
+        android:overScrollMode="never">
+
+        <ImageView
+            android:id="@+id/wallpaper"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/content_desc_hero_img"
+            android:scaleType="centerCrop"
+            tools:src="@drawable/uttam_hero" />
+
+    </HorizontalScrollView>
 
     <View
         android:id="@+id/overlay"
@@ -95,18 +105,17 @@
 
     <View
         android:id="@+id/refetchOverlay"
-        android:visibility="invisible"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#78000000" />
+        android:background="#78000000"
+        android:visibility="invisible" />
 
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
-        android:visibility="invisible"
-        android:indeterminateTint="@android:color/white"
+        android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:layout_height="wrap_content" />
-
+        android:indeterminateTint="@android:color/white"
+        android:visibility="invisible" />
 
 </RelativeLayout>

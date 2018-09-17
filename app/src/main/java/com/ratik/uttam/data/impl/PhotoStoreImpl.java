@@ -26,7 +26,7 @@ public class PhotoStoreImpl implements PhotoStore {
     private void storePhoto(Photo photo) {
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(Constants.Data.PHOTO_ID, photo.getId());
-        editor.putString(Constants.Data.PHOTO_URI, photo.getPhotoUri());
+        editor.putString(Constants.Data.PHOTO_URI, photo.getFullPhotoUri());
         editor.putString(Constants.Data.PHOTO_REGULAR_URI, photo.getRegularPhotoUri());
         editor.putString(Constants.Data.PHOTO_THUMB_URI, photo.getThumbPhotoUri());
         editor.putString(Constants.Data.PHOTOGRAPHER_NAME, photo.getPhotographerName());
