@@ -41,6 +41,7 @@ public class Constants {
 
     public class Billing {
         public static final String SKU_REMOVE_ADS = "remove_adverts";
+        public static final String BILLING_PUBLIC_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAoueA0HGGz3Y0XE6WmVT7jt4e7cDhMWoH99mpAiu4uJjHOMR3dlpJOeK4GwayFKiemVHdQSu7hxNzVBYZdX09VWCrPGeFJfme6lMXP9QmWJKyyivPuzUW4w/0eEl908hJEJIgyJkR89LSfNVEmwrVo3mM4ZI6hXks/libNpaKiny1y2LLWlEM3Ue9nVqhj68G/iWIrF1Zk6h7K3lvF4mj7MEnTsFbVZzuGtFFOuibQXd9d1Jib3HCrApRhYXnhsi3yszCv4BErsBG2F55mJmpp7fGD37RIlTIx/PR+xOISjzliwM010REDmVpNFVRzep27Q2La3GAv4eCFf7tqeCSwQIDAQAB";
     }
 
     public class Ads {
