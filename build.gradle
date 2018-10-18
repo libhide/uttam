@@ -9,8 +9,8 @@ buildscript {
         target_sdk = 27
 
         app_id = 'com.ratik.uttam'
-        version_code = 17
-        version_name = '4.0'
+        version_code = 18
+        version_name = '4.1'
 
         support_library = '27.1.1'
         android_plugin = "3.1.4"
@@ -24,9 +24,9 @@ buildscript {
         rxbinding2 = "2.0.0"
         dagger2 = "2.15"
         dagger_compiler = "2.12"
-        firebase_core = "16.0.3"
-        firebase_ads = "15.0.1"
-        firebase_config = "16.0.0"
+        firebase_core = "16.0.4"
+        firebase_ads = "17.0.0"
+        firebase_config = "16.1.0"
         checkout = "1.2.1"
         app_tour = "1.0"
         rxpermissions = "0.9.4@aar"
