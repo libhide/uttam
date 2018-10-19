@@ -33,6 +33,7 @@ public class PhotoStoreImpl implements PhotoStore {
         editor.putString(Constants.Data.PHOTOGRAPHER_USERNAME, photo.getPhotographerUserName());
         editor.putString(Constants.Data.FULL_URL, photo.getPhotoFullUrl());
         editor.putString(Constants.Data.DOWNLOAD_URL, photo.getPhotoDownloadUrl());
+        editor.putString(Constants.Data.DOWNLOAD_ENDPOINT, photo.getPhotoDownloadEndpoint());
         editor.putString(Constants.Data.HTML_URL, photo.getPhotoHtmlUrl());
         editor.apply();
 
@@ -50,6 +51,7 @@ public class PhotoStoreImpl implements PhotoStore {
                 .setPhotographerUserName(prefs.getString(Constants.Data.PHOTOGRAPHER_USERNAME, ""))
                 .setPhotoFullUrl(prefs.getString(Constants.Data.FULL_URL, ""))
                 .setPhotoDownloadUrl(prefs.getString(Constants.Data.DOWNLOAD_URL, ""))
+                .setPhotoDownloadEndpoint(prefs.getString(Constants.Data.DOWNLOAD_ENDPOINT, ""))
                 .setPhotoHtmlUrl(prefs.getString(Constants.Data.HTML_URL, ""))
                 .build());
     }
