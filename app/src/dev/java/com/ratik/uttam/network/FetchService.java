@@ -22,6 +22,8 @@ import javax.inject.Inject;
 import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 
 public class FetchService {
     private static final String TAG = FetchService.class.getSimpleName();
@@ -52,6 +54,7 @@ public class FetchService {
 
         return photoResponseObservable
                 .flatMapSingle(this::getPhotoSingle)
+                .flatMapSingle(this::increaseDownloadCountForWallpaper)
                 .flatMapCompletable(photo -> {
                     Completable putCompletable = photoStore.putPhoto(photo);
                     if (prefStore.isAutoSetEnabled()) {
@@ -60,6 +63,18 @@ public class FetchService {
                         return putCompletable;
                     }
                 });
+    }
+
+    private Single<Photo> increaseDownloadCountForWallpaper(Photo photo) throws IOException {
+        String downloadEndpoint = photo.getPhotoDownloadEndpoint();
+        if (!downloadEndpoint.isEmpty()) {
+            downloadEndpoint += "?client_id=" + BuildConfig.CLIENT_ID;
+            Request request = new Request.Builder().url(downloadEndpoint).build();
+            new OkHttpClient().newCall(request).execute();
+            Log.i(TAG, "Download count for " + photo.getPhotoDownloadUrl() + " increased.");
+        }
+
+        return Single.just(photo);
     }
 
     private Single<Photo> getPhotoSingle(PhotoResponse response) throws IOException {
@@ -99,6 +114,7 @@ public class FetchService {
                 .setPhotoFullUrl(response.getUrls().getFullUrl())
                 .setPhotoHtmlUrl(response.getLinks().getHtmlLink())
                 .setPhotoDownloadUrl(response.getLinks().getDownloadLink())
+                .setPhotoDownloadEndpoint(response.getLinks().getDownloadEndpoint())
                 .setPhotographerUserName(response.getPhotographer().getUsername())
                 .setPhotographerName(StringExtensionsKt.toTitleCase(response.getPhotographer().getName()))
                 .build();

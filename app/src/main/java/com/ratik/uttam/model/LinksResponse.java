@@ -11,8 +11,11 @@ public class LinksResponse {
     @SerializedName("html")
     private String htmlLink;
 
-    @SerializedName("download_location")
+    @SerializedName("download")
     private String downloadLink;
+
+    @SerializedName("download_location")
+    private String downloadEndpoint;
 
     public String getHtmlLink() {
         return htmlLink;
@@ -20,5 +23,9 @@ public class LinksResponse {
 
     public String getDownloadLink() {
         return downloadLink;
+    }
+
+    public String getDownloadEndpoint() {
+        return downloadEndpoint;
     }
 }

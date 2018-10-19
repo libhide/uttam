@@ -16,11 +16,12 @@ public class Photo {
     private String photographerUserName;
     private String photoFullUrl;
     private String photoDownloadUrl;
+    private String photoDownloadEndpoint;
     private String photoHtmlUrl;
 
     private Photo(String id, String fullPhotoUri, String regularPhotoUri, String thumbPhotoUri,
                   String photographerName, String photographerUserName, String photoFullUrl,
-                  String photoDownloadUrl, String photoHtmlUrl) {
+                  String photoDownloadUrl, String photoDownloadEndpoint, String photoHtmlUrl) {
         this.id = id;
         this.fullPhotoUri = fullPhotoUri;
         this.regularPhotoUri = regularPhotoUri;
@@ -29,6 +30,7 @@ public class Photo {
         this.photographerUserName = photographerUserName;
         this.photoFullUrl = photoFullUrl;
         this.photoDownloadUrl = photoDownloadUrl;
+        this.photoDownloadEndpoint = photoDownloadEndpoint;
         this.photoHtmlUrl = photoHtmlUrl;
     }
 
@@ -76,6 +78,10 @@ public class Photo {
         return photoDownloadUrl;
     }
 
+    public String getPhotoDownloadEndpoint() {
+        return photoDownloadEndpoint;
+    }
+
     public String getPhotoHtmlUrl() {
         return photoHtmlUrl;
     }
@@ -92,6 +98,7 @@ public class Photo {
         private String photographerUserName;
         private String photoFullUrl;
         private String photoDownloadUrl;
+        private String photoDownloadEndpoint;
         private String photoHtmlUrl;
 
         public Builder setId(String id) {
@@ -134,6 +141,11 @@ public class Photo {
             return this;
         }
 
+        public Builder setPhotoDownloadEndpoint(String photoDownloadEndpoint) {
+            this.photoDownloadEndpoint = photoDownloadEndpoint;
+            return this;
+        }
+
         public Builder setPhotoHtmlUrl(String photoHtmlUrl) {
             this.photoHtmlUrl = photoHtmlUrl;
             return this;
@@ -141,7 +153,7 @@ public class Photo {
 
         public Photo build() {
             return new Photo(id, photoUri, regularPhotoUri, thumbPhotoUri, photographerName,
-                    photographerUserName, photoFullUrl, photoDownloadUrl, photoHtmlUrl);
+                    photographerUserName, photoFullUrl, photoDownloadUrl, photoDownloadEndpoint, photoHtmlUrl);
         }
     }
 }
