@@ -409,7 +409,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
                 photo.getPhotographerName(), photo.getPhotoDownloadUrl());
         shareIntent.setType("text/plain");
         shareIntent.putExtra(Intent.EXTRA_TEXT, shareText);
-        startActivity(shareIntent);
+        startActivity(Intent.createChooser(shareIntent, "Share"));
     }
 
     private void setupAds() {
