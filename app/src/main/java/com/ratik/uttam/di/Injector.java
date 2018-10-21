@@ -3,15 +3,10 @@ package com.ratik.uttam.di;
 import com.ratik.uttam.UttamApplication;
 import com.ratik.uttam.di.module.ApiModule;
 import com.ratik.uttam.di.module.AppContextModule;
-import com.ratik.uttam.di.module.BillingModule;
 import com.ratik.uttam.di.module.DataModule;
 import com.ratik.uttam.di.module.PresenterModule;
 
 import java.util.Objects;
-
-/**
- * Created by Ratik on 17/10/17.
- */
 
 public class Injector {
 
@@ -26,7 +21,6 @@ public class Injector {
                 .apiModule(new ApiModule())
                 .dataModule(new DataModule())
                 .presenterModule(new PresenterModule())
-                .billingModule(new BillingModule())
                 .build();
     }
 

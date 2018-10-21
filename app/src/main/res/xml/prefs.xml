@@ -9,4 +9,15 @@
             android:title="@string/title_automatic_wallpaper_set" />
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="@string/category_misc">
+        <Preference
+            android:key="contactDev"
+            android:summary="@string/summary_contact"
+            android:title="@string/title_contact" />
+        <Preference
+            android:key="review"
+            android:summary="@string/summary_review"
+            android:title="@string/title_review" />
+    </PreferenceCategory>
+
 </PreferenceScreen>

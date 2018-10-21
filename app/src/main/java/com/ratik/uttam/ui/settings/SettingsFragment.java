@@ -13,21 +13,9 @@ import com.ratik.uttam.R;
  * Created by Ratik on 08/03/16.
  */
 public class SettingsFragment extends PreferenceFragment implements Preference.OnPreferenceChangeListener {
-
-    public static final String ARG_ADS_REMOVED = "adverts_removed";
-
-    private Preference removeAdsPreference;
     private Callback callback;
 
-    public static SettingsFragment newInstance(Bundle args) {
-        SettingsFragment fragment = new SettingsFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     interface Callback {
-        void startRemoveAdsPurchaseFlow();
-
         void startContactTheDevFlow();
 
         void startRateTheAppFlow();
@@ -55,14 +43,6 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        removeAdsPreference = findPreference("removeAds");
-
-        initLayout();
-
-        removeAdsPreference.setOnPreferenceClickListener(preference -> {
-            callback.startRemoveAdsPurchaseFlow();
-            return true;
-        });
 
         Preference contactPreference = getPreferenceManager().findPreference("contactDev");
         if (contactPreference != null) {
@@ -78,12 +58,6 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                 callback.startRateTheAppFlow();
                 return true;
             });
-        }
-    }
-
-    private void initLayout() {
-        if (getArguments().getBoolean(ARG_ADS_REMOVED)) {
-            removeAdsPreference.setEnabled(false);
         }
     }
 

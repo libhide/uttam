@@ -33,6 +33,7 @@ android {
     }
 
     compileSdkVersion compile_sdk
+    buildToolsVersion build_tools
 
     defaultConfig {
         applicationId app_id
@@ -57,9 +58,6 @@ android {
     }
     flavorDimensions "default"
     productFlavors {
-        dev {
-            applicationId "com.ratik.uttam.dev"
-        }
         prod {
             applicationId "com.ratik.uttam.prod"
         }
@@ -73,6 +71,9 @@ dependencies {
 
     // AppCompat
     implementation "com.android.support:appcompat-v7:$support_library"
+    implementation "com.android.support:animated-vector-drawable:$support_library"
+    implementation "com.android.support:support-media-compat:$support_library"
+    implementation "com.android.support:support-v4:$support_library"
     implementation "com.android.support:design:$support_library"
 
     // Retrofit
@@ -99,13 +100,9 @@ dependencies {
     implementation "com.jakewharton:butterknife:$butterknife"
     annotationProcessor "com.jakewharton:butterknife-compiler:$butterknife"
 
-    // Billing
-    prodImplementation "org.solovyev.android:checkout:$checkout"
-
     // Firebase
-    prodImplementation "com.google.firebase:firebase-core:$firebase_core"
-    prodImplementation "com.google.firebase:firebase-ads:$firebase_ads"
-    prodImplementation "com.google.firebase:firebase-config:$firebase_config"
+    implementation "com.google.firebase:firebase-core:$firebase_core"
+    implementation "com.google.firebase:firebase-config:$firebase_config"
 
     // Testing
     testImplementation "junit:junit:$junit"
