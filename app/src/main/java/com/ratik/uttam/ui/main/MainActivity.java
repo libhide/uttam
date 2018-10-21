@@ -63,9 +63,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     NotificationHelper notificationHelper;
 
     @Inject
-    WallpaperManager wallpaperManager;
-
-    @Inject
     PrefStore prefStore;
 
     @Inject
@@ -126,15 +123,12 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     // region INITIALIZATION
 
     private void init() {
-        // Toolbar
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle("");
             getSupportActionBar().setIcon(R.drawable.uttam);
         }
 
-        // Adjust theme
-        // Do cool stuff for L+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setEnterTransition(new Slide(Gravity.END));
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -142,7 +136,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
             setTheme(R.style.AppTheme_Fullscreen);
         }
 
-        // Click listeners
         setupClickListeners();
     }
 
@@ -154,7 +147,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
                         .compose(rxPermissions.ensure(Manifest.permission.WRITE_EXTERNAL_STORAGE))
                         .subscribe(granted -> {
                             if (granted) {
-                                saveWallpaperToExternalStorage();
+                                saveWallpaper();
                             } else {
                                 Toast.makeText(this, "Fine, okay. :(", Toast.LENGTH_SHORT).show();
                             }
@@ -213,7 +206,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
         if (prefStore.isFirstRun()) {
             try {
-                wallpaperManager.setBitmap(bitmap);
+                WallpaperManager.getInstance(this).setBitmap(bitmap);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -224,12 +217,12 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     private void pushFirstWallpaperNotification() {
         compositeDisposable.add(
                 photoStore.getPhoto()
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(photo -> {
-                        notificationHelper.pushNewNotification(photo);
-                        prefStore.firstRunDone();
-                    }, t -> notificationHelper.pushErrorNotification(t))
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(photo -> {
+                            notificationHelper.pushNewNotification(photo);
+                            prefStore.firstRunDone();
+                        }, t -> notificationHelper.pushErrorNotification(t))
         );
     }
 
@@ -344,6 +337,10 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(file)));
     }
 
+    private void saveWallpaper() throws IOException {
+        saveWallpaperToExternalStorage();
+    }
+
     private void doWallpaperSetting() throws IOException {
         File srcFile = new File(photo.getFullPhotoUri());
 
@@ -362,7 +359,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     private void onSettingSaveSuccess(File file) {
         Uri uri = FileProvider.getUriForFile(this, getPackageName() + ".provider", file);
         if (uri != null) {
-            Intent intent = wallpaperManager.getCropAndSetWallpaperIntent(uri);
+            Intent intent = WallpaperManager.getInstance(this).getCropAndSetWallpaperIntent(uri);
             startActivityForResult(intent, REQUEST_CODE_SET_WALLPAPER);
         } else {
             Toast.makeText(this, "Uri is null.", Toast.LENGTH_SHORT).show();
