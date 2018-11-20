@@ -49,9 +49,9 @@ a {
 
   video {
     position: relative;
-    left: 13px;
-    top: 57px;
-    width: 279px;
+    left: 19px;
+    top: 68px;
+    width: 271px;
   }
 
   @media (max-width: 480px) {
@@ -206,6 +206,7 @@ a {
 // Footer styles
 footer hr {
   margin-bottom: 10px;
+  opacity: 0.3;
 }
 
 .creds {

@@ -101,7 +101,8 @@ abbr[title] {
   /* 1 */
   text-decoration: underline;
   /* 2 */
-  text-decoration: underline dotted;
+  -webkit-text-decoration: underline dotted;
+          text-decoration: underline dotted;
   /* 2 */ }
 
 /**
@@ -368,7 +369,8 @@ textarea {
   font: inherit;
   /* 2 */ }
 
-/*-----------------------------------*
+/*-----------------------------------*\
+
   $TOAST-GRID
 
   An insane grid.
@@ -601,6 +603,7 @@ textarea {
   margin: 30px 55px 0 0;
   cursor: pointer;
   -webkit-transition: .3s all ease-in-out;
+  -o-transition: .3s all ease-in-out;
   transition: .3s all ease-in-out;
   z-index: 99;
   opacity: 1; }
@@ -739,12 +742,13 @@ a {
   margin: 0 auto;
   width: 306px;
   height: 611px;
-  background-size: 306px 611px; }
+  -webkit-background-size: 306px 611px;
+          background-size: 306px 611px; }
   .phone video {
     position: relative;
-    left: 13px;
-    top: 57px;
-    width: 279px; }
+    left: 19px;
+    top: 68px;
+    width: 271px; }
   @media (max-width: 480px) {
     .phone {
       display: none; } }
@@ -769,7 +773,8 @@ a {
 #promo {
   height: 670px;
   background: url(../img/frnds.jpg) center center no-repeat;
-  background-size: cover;
+  -webkit-background-size: cover;
+          background-size: cover;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -818,6 +823,7 @@ a {
       -ms-flex-pack: center;
           justify-content: center;
   -webkit-transition: all 400ms ease-in-out;
+  -o-transition: all 400ms ease-in-out;
   transition: all 400ms ease-in-out; }
   @media (max-width: 900px) {
     .outer {
@@ -896,7 +902,8 @@ a {
   padding-left: 0.4em; }
 
 footer hr {
-  margin-bottom: 10px; }
+  margin-bottom: 10px;
+  opacity: 0.3; }
 
 .creds {
   margin: 0;
@@ -933,6 +940,7 @@ footer hr {
   width: 100%;
   background-color: rgba(2, 184, 117, 0.85);
   -webkit-transition: background-color 300ms ease-in-out;
+  -o-transition: background-color 300ms ease-in-out;
   transition: background-color 300ms ease-in-out; }
   #blog-cta div p {
     text-align: center;
