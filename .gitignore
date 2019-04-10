@@ -86,3 +86,6 @@ proguard/
 ## Files to keep local
 keystore.properties
 keystore.jks
+
+## Node things
+node_modules/
