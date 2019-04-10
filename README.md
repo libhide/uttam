@@ -1,5 +1,7 @@
 # Uttam
 
+<img src="https://github.com/libhide/uttam/blob/master/art/branding.jpg" alt="Uttam Branding">
+
 Uttam is an Android app which gently updates your wallpaper with a perfectly crafted image everyday!
 
 ## Story
