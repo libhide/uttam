@@ -85,7 +85,16 @@ typings/
 # dotenv environment variables file
 .env
 
-
 ### Sass ###
 .sass-cache/
 *.css.map
+
+### Android things
+.gradle/
+.idea/
+app/
+build/
+keystore.jks
+keystore.properties
+local.properties
+uttam.iml
