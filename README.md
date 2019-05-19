@@ -39,6 +39,7 @@ A lot of has happened since I initially wrote this app. Unsplash has made using 
 - [x] RxJava
 - [x] Dagger
 - [ ] Kotlin
+- [ ] WorkManager
 - [ ] Android Arch Components?
 - [ ] Android Jetpack?
 
