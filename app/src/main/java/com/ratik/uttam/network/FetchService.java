@@ -46,7 +46,7 @@ public class FetchService {
         this.prefStore = prefStore;
         this.wallpaperManager = wallpaperManager;
         this.remoteConfig = remoteConfig;
-        this.remoteConfig.setDefaults(R.xml.remote_config_defaults);
+        this.remoteConfig.setDefaultsAsync(R.xml.remote_config_defaults);
     }
 
     public Completable getFetchPhotoCompletable() {
@@ -58,7 +58,7 @@ public class FetchService {
         remoteConfig.fetch()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        remoteConfig.activateFetched();
+                        remoteConfig.fetchAndActivate();
                     }
                 });
         return Single.just(remoteConfig.getString(PARAM_COLLECTIONS));

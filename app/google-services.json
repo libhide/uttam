@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:624767362267:android:c00cb55a73b2fea5",
+        "mobilesdk_app_id": "1:624767362267:android:f758d78d51f64871",
         "android_client_info": {
-          "package_name": "com.ratik.uttam"
+          "package_name": "com.ratik.uttam.prod"
         }
       },
       "oauth_client": [
@@ -25,17 +25,16 @@
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2
+          "other_platform_oauth_client": [
+            {
+              "client_id": "624767362267-uvq1nv39d53ql7j7n3khe3vtaskgjin8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
-      }
+      },
+      "admob_app_id": "ca-app-pub-3718717081206155~7390553684"
     }
   ],
   "configuration_version": "1"
