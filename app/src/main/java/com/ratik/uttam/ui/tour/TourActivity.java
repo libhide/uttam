@@ -5,9 +5,10 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.util.Log;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import com.ratik.uttam.Constants;
 import com.ratik.uttam.R;
@@ -80,13 +81,13 @@ public class TourActivity extends AppTour {
         String third = getString(R.string.tour_slide_3_text);
 
         Fragment firstSlide = MaterialSlide.newInstance(R.drawable.tour_graphic_1,
-                getString(R.string.tour_slide_1_heading), first, Color.WHITE, Color.WHITE);
+            getString(R.string.tour_slide_1_heading), first, Color.WHITE, Color.WHITE);
 
         Fragment secondSlide = MaterialSlide.newInstance(R.drawable.tour_graphic_2,
-                getString(R.string.tour_slide_2_heading), second, Color.WHITE, Color.WHITE);
+            getString(R.string.tour_slide_2_heading), second, Color.WHITE, Color.WHITE);
 
         Fragment thirdSlide = MaterialSlide.newInstance(R.drawable.tour_graphic_3,
-                getString(R.string.tour_slide_3_heading), third, Color.WHITE, Color.WHITE);
+            getString(R.string.tour_slide_3_heading), third, Color.WHITE, Color.WHITE);
 
         addSlide(firstSlide, slideColor);
         addSlide(secondSlide, slideColor);
@@ -134,17 +135,17 @@ public class TourActivity extends AppTour {
         });
 
         compositeDisposable.add(
-                Single.zip(fullPhotoSingle, regularPhotoSingle, thumbPhotoSingle, this::getHeroPhoto)
-                        .flatMapCompletable(photo -> photoStore.putPhoto(photo))
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(
-                                () -> {
-                                    Log.i(TAG, "App setup done!");
-                                    startMain();
-                                },
-                                throwable -> Log.e(TAG, throwable.getMessage())
-                        )
+            Single.zip(fullPhotoSingle, regularPhotoSingle, thumbPhotoSingle, this::getHeroPhoto)
+                .flatMapCompletable(photo -> photoStore.putPhoto(photo))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    () -> {
+                        Log.i(TAG, "App setup done!");
+                        startMain();
+                    },
+                    throwable -> Log.e(TAG, throwable.getMessage())
+                )
         );
     }
 
@@ -184,16 +185,16 @@ public class TourActivity extends AppTour {
 
     public Photo getPartialHeroPhoto() {
         return new Photo.Builder()
-                .setId(Constants.Fetch.FIRST_WALLPAPER_ID)
-                .setPhotoUri(null)
-                .setRegularPhotoUri(null)
-                .setThumbPhotoUri(null)
-                .setPhotographerName(Constants.Fetch.FIRST_WALLPAPER_PHOTOGRAPHER_NAME)
-                .setPhotographerUserName(Constants.Fetch.FIRST_WALLPAPER_PHOTOGRAPHER_USERNAME)
-                .setPhotoFullUrl(Constants.Fetch.FIRST_WALLPAPER_FULL_URL)
-                .setPhotoHtmlUrl(Constants.Fetch.FIRST_WALLPAPER_HTML_URL)
-                .setPhotoDownloadUrl(Constants.Fetch.FIRST_WALLPAPER_DOWNLOAD_URL)
-                .build();
+            .setId(Constants.Fetch.FIRST_WALLPAPER_ID)
+            .setPhotoUri(null)
+            .setRegularPhotoUri(null)
+            .setThumbPhotoUri(null)
+            .setPhotographerName(Constants.Fetch.FIRST_WALLPAPER_PHOTOGRAPHER_NAME)
+            .setPhotographerUserName(Constants.Fetch.FIRST_WALLPAPER_PHOTOGRAPHER_USERNAME)
+            .setPhotoFullUrl(Constants.Fetch.FIRST_WALLPAPER_FULL_URL)
+            .setPhotoHtmlUrl(Constants.Fetch.FIRST_WALLPAPER_HTML_URL)
+            .setPhotoDownloadUrl(Constants.Fetch.FIRST_WALLPAPER_DOWNLOAD_URL)
+            .build();
     }
 
     @Override

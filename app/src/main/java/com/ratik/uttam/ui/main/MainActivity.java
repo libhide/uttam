@@ -7,9 +7,12 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.content.FileProvider;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.FileProvider;
+
 import android.transition.Slide;
 import android.util.Log;
 import android.view.Gravity;
@@ -143,32 +146,32 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         rxPermissions = new RxPermissions(this);
 
         compositeDisposable.add(
-                RxView.clicks(saveWallpaperButton)
-                        .compose(rxPermissions.ensure(Manifest.permission.WRITE_EXTERNAL_STORAGE))
-                        .subscribe(granted -> {
-                            if (granted) {
-                                saveWallpaper();
-                            } else {
-                                Toast.makeText(this, "Fine, okay. :(", Toast.LENGTH_SHORT).show();
-                            }
-                        })
+            RxView.clicks(saveWallpaperButton)
+                .compose(rxPermissions.ensure(Manifest.permission.WRITE_EXTERNAL_STORAGE))
+                .subscribe(granted -> {
+                    if (granted) {
+                        saveWallpaper();
+                    } else {
+                        Toast.makeText(this, "Fine, okay. :(", Toast.LENGTH_SHORT).show();
+                    }
+                })
         );
 
         compositeDisposable.add(
-                RxView.clicks(setWallpaperButton)
-                        .compose(rxPermissions.ensure(Manifest.permission.WRITE_EXTERNAL_STORAGE))
-                        .subscribe(granted -> {
-                            if (granted) {
-                                doWallpaperSetting();
-                            } else {
-                                Toast.makeText(this, "Fine, okay. :(", Toast.LENGTH_SHORT).show();
-                            }
-                        })
+            RxView.clicks(setWallpaperButton)
+                .compose(rxPermissions.ensure(Manifest.permission.WRITE_EXTERNAL_STORAGE))
+                .subscribe(granted -> {
+                    if (granted) {
+                        doWallpaperSetting();
+                    } else {
+                        Toast.makeText(this, "Fine, okay. :(", Toast.LENGTH_SHORT).show();
+                    }
+                })
         );
 
         compositeDisposable.add(
-                RxView.clicks(creditsView)
-                        .subscribe(click -> showWallpaperCredits())
+            RxView.clicks(creditsView)
+                .subscribe(click -> showWallpaperCredits())
         );
     }
 
@@ -187,13 +190,13 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     private void setWallpaperImageView() {
         compositeDisposable.add(
-                bitmapHelper.getBitmapFromFile(photo.getFullPhotoUri())
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(
-                                this::onWallpaperImageViewSetSuccess,
-                                this::onWallpaperImageViewSetFailure
-                        )
+            bitmapHelper.getBitmapFromFile(photo.getFullPhotoUri())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    this::onWallpaperImageViewSetSuccess,
+                    this::onWallpaperImageViewSetFailure
+                )
         );
     }
 
@@ -216,13 +219,13 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     private void pushFirstWallpaperNotification() {
         compositeDisposable.add(
-                photoStore.getPhoto()
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(photo -> {
-                            notificationHelper.pushNewNotification(photo);
-                            prefStore.firstRunDone();
-                        }, t -> notificationHelper.pushErrorNotification(t))
+            photoStore.getPhoto()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(photo -> {
+                    notificationHelper.pushNewNotification(photo);
+                    prefStore.firstRunDone();
+                }, t -> notificationHelper.pushErrorNotification(t))
         );
     }
 
@@ -256,8 +259,10 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     // region ACTIVITY OVERRIDES
 
+
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_SET_WALLPAPER) {
             if (resultCode == RESULT_OK) {
                 Toast.makeText(this, R.string.wallpaper_set_text, Toast.LENGTH_SHORT).show();
@@ -279,12 +284,12 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
                 return true;
             case R.id.action_share:
                 rxPermissions
-                        .request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                        .subscribe(granted -> {
-                            if (granted) {
-                                shareWallpaper();
-                            }
-                        });
+                    .request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    .subscribe(granted -> {
+                        if (granted) {
+                            shareWallpaper();
+                        }
+                    });
                 return true;
             case R.id.action_refresh:
                 presenter.refetchPhoto();
@@ -308,10 +313,10 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     public void showWallpaperCredits() {
         Uri.Builder builder = new Uri.Builder();
         builder.scheme("https")
-                .authority(Constants.General.BASE_DOMAIN)
-                .appendEncodedPath(photo.getPhotographerUserName())
-                .appendQueryParameter("utm_source", "uttam")
-                .appendQueryParameter("utm_medium", "referral");
+            .authority(Constants.General.BASE_DOMAIN)
+            .appendEncodedPath(photo.getPhotographerUserName())
+            .appendQueryParameter("utm_source", "uttam")
+            .appendQueryParameter("utm_medium", "referral");
         String url = builder.build().toString();
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         startActivity(browserIntent);
@@ -321,10 +326,10 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         File srcFile = new File(photo.getFullPhotoUri());
 
         compositeDisposable.add(
-                fileHelper.exportFile(srcFile, photo.getId() + ".png")
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(this::onSaveSuccess, this::onSaveFailure)
+            fileHelper.exportFile(srcFile, photo.getId() + ".png")
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::onSaveSuccess, this::onSaveFailure)
         );
     }
 
@@ -345,10 +350,10 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         File srcFile = new File(photo.getFullPhotoUri());
 
         compositeDisposable.add(
-                fileHelper.exportFile(srcFile, photo.getId() + ".png")
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(this::onSettingSaveSuccess, this::onSettingSaveFailure)
+            fileHelper.exportFile(srcFile, photo.getId() + ".png")
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::onSettingSaveSuccess, this::onSettingSaveFailure)
         );
     }
 
@@ -369,7 +374,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     private void shareWallpaper() {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         String shareText = String.format(getString(R.string.wallpaper_share_text),
-                photo.getPhotographerName(), photo.getPhotoDownloadUrl());
+            photo.getPhotographerName(), photo.getPhotoDownloadUrl());
         shareIntent.setType("text/plain");
         shareIntent.putExtra(Intent.EXTRA_TEXT, shareText);
         startActivity(Intent.createChooser(shareIntent, "Share"));

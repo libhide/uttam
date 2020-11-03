@@ -70,11 +70,11 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     // AppCompat
-    implementation "com.android.support:appcompat-v7:$support_library"
-    implementation "com.android.support:animated-vector-drawable:$support_library"
-    implementation "com.android.support:support-media-compat:$support_library"
-    implementation "com.android.support:support-v4:$support_library"
-    implementation "com.android.support:design:$support_library"
+    implementation "androidx.appcompat:appcompat:$appcompat"
+    implementation "androidx.vectordrawable:vectordrawable-animated:$vectordrawable_animated"
+    implementation "androidx.media:media:$media"
+    implementation "androidx.legacy:legacy-support-v4:$legacy_support"
+    implementation "com.google.android.material:material:$material"
 
     // Retrofit
     implementation "com.squareup.retrofit2:retrofit:$retrofit"

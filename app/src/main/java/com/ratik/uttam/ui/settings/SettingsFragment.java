@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
-import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.ratik.uttam.R;
@@ -41,7 +40,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         Preference contactPreference = getPreferenceManager().findPreference("contactDev");
