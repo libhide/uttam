@@ -9,9 +9,9 @@ buildscript {
         min_sdk = 21
         target_sdk = 32
 
-        app_id = 'com.ratik.uttam'
-        version_code = 20
-        version_name = '4.3'
+        app_id = 'com.ratik.uttam.prod'
+        version_code = 21
+        version_name = '4.4'
 
         support_library = '28.0.0'
         android_plugin = '7.2.0'
