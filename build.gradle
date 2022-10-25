@@ -2,37 +2,38 @@
 
 buildscript {
     ext {
-        kotlin_version = '1.4.10'
+        kotlin_version = '1.7.10'
 
         build_tools = '29.0.2'
-        compile_sdk = 28
+        compile_sdk = 32
         min_sdk = 21
-        target_sdk = 29
+        target_sdk = 32
 
         app_id = 'com.ratik.uttam'
         version_code = 20
         version_name = '4.3'
 
         support_library = '28.0.0'
-        android_plugin = '4.2.2'
-        google_play_services = "4.3.4"
+        android_plugin = '7.2.0'
+        google_play_services = '4.3.10'
 
-        appcompat = '1.2.0'
+        appcompat = '1.5.1'
         vectordrawable_animated = '1.1.0'
-        media = '1.2.0'
+        media = '1.6.0'
         legacy_support = '1.0.0'
-        material = '1.2.1'
+        material = '1.7.0'
 
         butterknife = "10.2.3"
-        retrofit = "2.8.1"
+        okhttp = "4.10.0"
+        retrofit = "2.9.0"
         retrofit_converter_gson = "2.8.1"
         rxjava2 = "2.2.10"
         rxandroid = "2.1.1"
         rxbinding2 = "2.0.0"
-        dagger2 = "2.28.3"
+        dagger2 = "2.38.1"
         dagger_compiler = "2.12"
-        firebase_core = "18.0.0"
-        firebase_config = "20.0.0"
+        firebase_core = "21.1.1"
+        firebase_config = "21.2.0"
         checkout = "1.2.1"
         app_tour = "1.0"
         rxpermissions = "0.9.4@aar"
@@ -60,9 +61,9 @@ buildscript {
 allprojects {
     ext
     repositories {
-        jcenter()
         maven { url "https://jitpack.io" }
         google()
+        jcenter()
         mavenCentral()
     }
 }
