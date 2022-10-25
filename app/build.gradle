@@ -33,7 +33,6 @@ android {
     }
 
     compileSdkVersion compile_sdk
-    buildToolsVersion build_tools
 
     defaultConfig {
         applicationId app_id
@@ -75,6 +74,9 @@ dependencies {
     implementation "androidx.media:media:$media"
     implementation "androidx.legacy:legacy-support-v4:$legacy_support"
     implementation "com.google.android.material:material:$material"
+
+    // Okhttp
+    implementation "com.squareup.okhttp3:logging-interceptor:$okhttp"
 
     // Retrofit
     implementation "com.squareup.retrofit2:retrofit:$retrofit"
