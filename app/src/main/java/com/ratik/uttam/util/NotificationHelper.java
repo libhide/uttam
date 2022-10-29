@@ -8,7 +8,9 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
+
 import androidx.core.app.NotificationCompat;
+
 import android.util.Log;
 
 import com.ratik.uttam.Constants;
@@ -50,8 +52,14 @@ public class NotificationHelper {
     private NotificationCompat.Builder getWallpaperNotification(Photo photo) {
         Intent intent = new Intent(context, MainActivity.class);
 
-        PendingIntent showWallpaperIntent = PendingIntent.getActivity(context,
-                SHOW_WALLPAPER, intent, 0);
+        PendingIntent showWallpaperIntent = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            showWallpaperIntent = PendingIntent.getActivity(context,
+                    SHOW_WALLPAPER, intent, PendingIntent.FLAG_IMMUTABLE);
+        } else {
+            showWallpaperIntent = PendingIntent.getActivity(context,
+                    SHOW_WALLPAPER, intent, 0);
+        }
 
         // Notif Channel for O
         String channelId = Constants.NOTIF_CHANNEL_ID;

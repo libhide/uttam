@@ -27,8 +27,14 @@ public class AlarmHelper {
         Calendar calendar = Calendar.getInstance();
 
         Intent intent = new Intent(context, JobSetReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
-                JOB_SET_INTENT_ID, intent, 0);
+        PendingIntent pendingIntent = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            pendingIntent = PendingIntent.getBroadcast(context,
+                    JOB_SET_INTENT_ID, intent, PendingIntent.FLAG_IMMUTABLE);
+        } else {
+            pendingIntent = PendingIntent.getBroadcast(context,
+                    JOB_SET_INTENT_ID, intent, 0);
+        }
 
         AlarmManager alarmManager = (AlarmManager)
                 context.getSystemService(Context.ALARM_SERVICE);
