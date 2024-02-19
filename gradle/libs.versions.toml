@@ -1,0 +1,88 @@
+[versions]
+# Core
+kotlin = "1.7.10"
+android-gradle-plugin = "7.2.0"
+google-services = "4.3.10"
+
+# AppCompat
+appcompat = "1.5.1"
+vectordrawable-animated = "1.1.0"
+media = "1.6.0"
+legacy-support = "1.0.0"
+material = "1.7.0"
+
+# UI
+butterknife = "10.2.3"
+
+# Networking
+okhttp = "4.10.0"
+retrofit = "2.9.0"
+retrofit-converter-gson = "2.8.1"
+
+# Rx
+rxjava = "2.2.10"
+rxandroid = "2.1.1"
+rxbinding = "2.0.0"
+rxpermissions = "0.11"
+
+# DI
+dagger = "2.38.1"
+dagger-compiler = "2.12"
+
+# Firebase
+firebase-core = "21.1.1"
+firebase-config = "21.2.0"
+
+# Testing
+junit = "4.13.1"
+mockito = "3.2.0"
+
+# Misc.
+app-tour = "1.0"
+
+[libraries]
+# Core
+kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib-jdk7", version.ref = "kotlin" }
+
+# AppCompat
+appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+vectordrawable-animated = { group = "androidx.vectordrawable", name = "vectordrawable-animated", version.ref = "vectordrawable-animated" }
+media = { group = "androidx.media", name = "media", version.ref = "media" }
+legacy-support = { group = "androidx.legacy", name = "legacy-support-v4", version.ref = "legacy-support" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+
+# UI
+butterknife = { group = "com.jakewharton", name = "butterknife", version.ref = "butterknife" }
+butterknife-compiler = { group = "com.jakewharton", name = "butterknife-compiler", version.ref = "butterknife" }
+
+# Networking
+okhttp-logging-inspector = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+retrofit-adpater-rxjava = { group = "com.squareup.retrofit2", name = "adapter-rxjava2", version.ref = "retrofit" }
+retrofit-converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit-converter-gson" }
+
+# Rx
+rxjava = { group = "io.reactivex.rxjava2", name = "rxjava", version.ref = "rxjava" }
+rxandroid = { group = "io.reactivex.rxjava2", name = "rxandroid", version.ref = "rxandroid" }
+rxbinding = { group = "com.jakewharton.rxbinding2", name = "rxbinding", version.ref = "rxbinding" }
+rxpermissions = { group = "com.github.tbruyelle", name = "rxpermissions", version.ref = "rxpermissions" }
+
+## DI
+dagger = { group = "com.google.dagger", name = "dagger", version.ref = "dagger" }
+dagger-compiler = { group = "com.google.dagger", name = "dagger-compiler", version.ref = "dagger-compiler" }
+
+# Firebase
+firebase-core = { group = "com.google.firebase", name = "firebase-core", version.ref = "firebase-core" }
+firebase-config = { group = "com.google.firebase", name = "firebase-config", version.ref = "firebase-config" }
+
+# Testing
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+mockito = { group = "org.mockito", name = "mockito-core", version.ref = "mockito" }
+
+# Misc.
+app-tour = { group = "com.vlonjatg.android", name = "app-tour", version.ref = "app-tour" }
+
+[plugins]
+# Core
+android-application = { id = "com.android.application", version.ref = "android-gradle-plugin" }
+google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }

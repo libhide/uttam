@@ -32,14 +32,14 @@ android {
         }
     }
 
-    compileSdkVersion compile_sdk
+    compileSdk 32
 
     defaultConfig {
-        applicationId app_id
-        minSdkVersion min_sdk
-        targetSdkVersion target_sdk
-        versionCode version_code
-        versionName version_name
+        applicationId "com.ratik.uttam.prod"
+        minSdkVersion 21
+        targetSdkVersion 32
+        versionCode 21
+        versionName "4.4"
 
         buildConfigField "String", "CLIENT_ID", "\"${getProperty("local.properties", "client_id")}\""
     }
@@ -55,60 +55,55 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    flavorDimensions "default"
-    productFlavors {
-        prod {
-            applicationId "com.ratik.uttam.prod"
-        }
-    }
+
     namespace 'com.ratik.uttam'
 }
 
 dependencies {
     // Kotlin
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation(libs.kotlin.stdlib)
 
     // AppCompat
-    implementation "androidx.appcompat:appcompat:$appcompat"
-    implementation "androidx.vectordrawable:vectordrawable-animated:$vectordrawable_animated"
-    implementation "androidx.media:media:$media"
-    implementation "androidx.legacy:legacy-support-v4:$legacy_support"
-    implementation "com.google.android.material:material:$material"
+    implementation(libs.appcompat)
+    implementation(libs.vectordrawable.animated)
+    implementation(libs.media)
+    implementation(libs.legacy.support)
+    implementation(libs.material)
 
     // Okhttp
-    implementation "com.squareup.okhttp3:logging-interceptor:$okhttp"
+    implementation(libs.okhttp.logging.inspector)
 
     // Retrofit
-    implementation "com.squareup.retrofit2:retrofit:$retrofit"
-    implementation "com.squareup.retrofit2:converter-gson:$retrofit_converter_gson"
-    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit"
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter.gson)
+    implementation(libs.retrofit.adpater.rxjava)
 
     // Rx
-    implementation "io.reactivex.rxjava2:rxjava:$rxjava2"
-    implementation "io.reactivex.rxjava2:rxandroid:$rxandroid"
-    implementation "com.jakewharton.rxbinding2:rxbinding:$rxbinding2"
+    implementation(libs.rxjava)
+    implementation(libs.rxandroid)
+    implementation(libs.rxbinding)
 
     // RxPermissions
-    implementation "com.tbruyelle.rxpermissions2:rxpermissions:$rxpermissions"
+    implementation(libs.rxpermissions)
 
-    // Dagger 2
-    implementation "com.google.dagger:dagger:$dagger2"
-    annotationProcessor "com.google.dagger:dagger-compiler:$dagger_compiler"
+    // DI
+    implementation(libs.dagger)
+    annotationProcessor(libs.dagger.compiler)
 
     // App Tour
-    implementation "com.vlonjatg.android:app-tour:$app_tour"
+    implementation(libs.app.tour)
 
     // Butter Knife
-    implementation "com.jakewharton:butterknife:$butterknife"
-    annotationProcessor "com.jakewharton:butterknife-compiler:$butterknife"
+    implementation(libs.butterknife)
+    annotationProcessor(libs.butterknife.compiler)
 
     // Firebase
-    implementation "com.google.firebase:firebase-core:$firebase_core"
-    implementation "com.google.firebase:firebase-config:$firebase_config"
+    implementation(libs.firebase.core)
+    implementation(libs.firebase.config)
 
     // Testing
-    testImplementation "junit:junit:$junit"
-    testImplementation "org.mockito:mockito-core:$mockito"
+    testImplementation(libs.junit)
+    testImplementation(libs.mockito)
 }
 
 apply plugin: 'com.google.gms.google-services'
