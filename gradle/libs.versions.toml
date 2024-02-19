@@ -86,3 +86,4 @@ app-tour = { group = "com.vlonjatg.android", name = "app-tour", version.ref = "a
 # Core
 android-application = { id = "com.android.application", version.ref = "android-gradle-plugin" }
 google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
+kotlin-android = {id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
