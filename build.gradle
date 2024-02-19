@@ -1,49 +1,15 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
-
 buildscript {
     ext {
         kotlin_version = '1.7.10'
 
         build_tools = '29.0.2'
-        compile_sdk = 32
-        min_sdk = 21
-        target_sdk = 32
-
-        app_id = 'com.ratik.uttam.prod'
-        version_code = 21
-        version_name = '4.4'
 
         support_library = '28.0.0'
         android_plugin = '7.2.0'
         google_play_services = '4.3.10'
-
-        appcompat = '1.5.1'
-        vectordrawable_animated = '1.1.0'
-        media = '1.6.0'
-        legacy_support = '1.0.0'
-        material = '1.7.0'
-
-        butterknife = "10.2.3"
-        okhttp = "4.10.0"
-        retrofit = "2.9.0"
-        retrofit_converter_gson = "2.8.1"
-        rxjava2 = "2.2.10"
-        rxandroid = "2.1.1"
-        rxbinding2 = "2.0.0"
-        dagger2 = "2.38.1"
-        dagger_compiler = "2.12"
-        firebase_core = "21.1.1"
-        firebase_config = "21.2.0"
-        checkout = "1.2.1"
-        app_tour = "1.0"
-        rxpermissions = "0.9.4@aar"
-
-        junit = '4.13.1'
-        mockito = '3.2.0'
     }
 
     repositories {
-        jcenter()
         mavenCentral()
         google()
     }
@@ -52,22 +18,18 @@ buildscript {
         classpath "com.android.tools.build:gradle:$android_plugin"
         classpath "com.google.gms:google-services:$google_play_services"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
     }
 }
 
 allprojects {
-    ext
     repositories {
+        jcenter()
         maven { url "https://jitpack.io" }
         google()
-        jcenter()
         mavenCentral()
     }
 }
 
-task clean(type: Delete) {
+tasks.register('clean', Delete) {
     delete rootProject.buildDir
 }
