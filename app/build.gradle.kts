@@ -23,7 +23,16 @@ fun getProperty(filename: String, propName: String): String? {
 
 android {
     namespace = "com.ratik.uttam"
-    compileSdk = 32
+    compileSdk = 34
+
+    buildFeatures {
+        buildConfig = true
+        compose = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.3.1"
+    }
 
     defaultConfig {
         applicationId = "com.ratik.uttam.prod"
@@ -64,6 +73,8 @@ android {
 dependencies {
     // Kotlin
     implementation(libs.kotlin.stdlib)
+    // TODO: figure out how to use this BOM correctly
+    implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))
 
     // AppCompat
     implementation(libs.appcompat)
@@ -71,6 +82,13 @@ dependencies {
     implementation(libs.media)
     implementation(libs.legacy.support)
     implementation(libs.material)
+
+    // Compose
+    val composeBom = platform(libs.androidx.compose.bom)
+    implementation(composeBom)
+    androidTestImplementation(composeBom)
+    api(libs.bundles.compose.core)
+    implementation(libs.androidx.activity.compose)
 
     // Okhttp
     implementation(libs.okhttp.logging.inspector)
