@@ -6,15 +6,7 @@ Uttam is an Android app which gently updates your wallpaper with a perfectly cra
 
 ## Story
 
-[The Story](https://medium.com/@Ratik96/creating-and-launching-a-product-as-a-self-taught-developer-951bd893b262)
-
-## Repo Structure
-
-The repo has three branches: `master`, `legacy` and `gh-pages`.
-
-- `master` has the latest, updated codebase written with `Retrofit`, `MVP`, `RxJava2` & `Dagger2`
-- `legacy` is the old codebase with a lot of God-Activity classes. Yeah, don't explore this 🙃
-- `gh-pages` houses the landing page for the Uttam
+[The Story](https://www.ratik.in/writing/uttam)
 
 ## Development
 
@@ -45,4 +37,4 @@ A lot of has happened since I initially wrote this app. Unsplash has made using 
 
 ## Huge Thanks
 
-Thanks a ton to [Arun](http://http://twitter.com/voidmaindev) and [Chetan](https://twitter.com/chetsachdeva) for helping me countless number of times while I was taking this codebase from it's `legacy` state to what it is now I learned so much in the process! Cheers!
+Thanks a ton to [Arun](http://http://twitter.com/voidmaindev) and [Chetan](https://twitter.com/chetsachdeva) for helping me countless number of times while I was taking this codebase from it's legacy state to what it is now I learned so much in the process! Cheers!
