@@ -44,6 +44,9 @@ mockito = "3.2.0"
 # Misc.
 app-tour = "1.0"
 
+# Logging
+timber = "5.0.1"
+
 [libraries]
 # Core
 kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib-jdk7", version.ref = "kotlin" }
@@ -91,6 +94,9 @@ firebase-config = { group = "com.google.firebase", name = "firebase-config", ver
 # Testing
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 mockito = { group = "org.mockito", name = "mockito-core", version.ref = "mockito" }
+
+# Logging
+timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 
 # Misc.
 app-tour = { group = "com.vlonjatg.android", name = "app-tour", version.ref = "app-tour" }
