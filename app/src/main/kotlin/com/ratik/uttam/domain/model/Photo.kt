@@ -1,4 +1,4 @@
-package com.ratik.uttam.data.model
+package com.ratik.uttam.domain.model
 
 /**
  * Created by Ratik on 17/10/17.

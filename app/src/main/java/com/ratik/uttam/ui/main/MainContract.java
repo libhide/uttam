@@ -1,6 +1,6 @@
 package com.ratik.uttam.ui.main;
 
-import com.ratik.uttam.data.model.Photo;
+import com.ratik.uttam.domain.model.Photo;
 
 import io.reactivex.disposables.CompositeDisposable;
 

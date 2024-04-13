@@ -9,6 +9,7 @@ plugins {
     alias(libs.plugins.google.services)
     kotlin("kapt")
     alias(libs.plugins.hilt)
+    alias(libs.plugins.ksp)
 }
 
 fun getProperty(filename: String, propName: String): String? {
@@ -107,13 +108,16 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.hilt.navigation.compose)
 
-    // Okhttp
+    // Networking
     implementation(libs.okhttp.logging.inspector)
 
-    // Retrofit
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter.gson)
     implementation(libs.retrofit.adpater.rxjava)
+
+    api(libs.moshi.core)
+    ksp(libs.moshi.codegen)
+    implementation(libs.retrofit.converter.moshi)
 
     // Rx
     implementation(libs.rxjava)

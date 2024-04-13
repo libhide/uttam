@@ -5,7 +5,7 @@ import android.content.Context;
 
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.ratik.uttam.UttamApplication;
-import com.ratik.uttam.api.UnsplashApi;
+import com.ratik.uttam.data.UnsplashApi;
 import com.ratik.uttam.data.PhotoStore;
 import com.ratik.uttam.data.PrefStore;
 import com.ratik.uttam.network.DownloadService;

@@ -1,6 +1,6 @@
 package com.ratik.uttam.data;
 
-import com.ratik.uttam.data.model.Photo;
+import com.ratik.uttam.domain.model.Photo;
 
 import io.reactivex.Completable;
 import io.reactivex.Single;

@@ -15,7 +15,7 @@ import android.util.Log;
 
 import com.ratik.uttam.Constants;
 import com.ratik.uttam.R;
-import com.ratik.uttam.data.model.Photo;
+import com.ratik.uttam.domain.model.Photo;
 import com.ratik.uttam.ui.main.MainActivity;
 
 import javax.inject.Inject;

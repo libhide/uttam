@@ -4,6 +4,7 @@ kotlin = "1.8.0"
 android-gradle-plugin = "7.4.2"
 google-services = "4.4.1"
 hilt = "2.44.2"
+ksp = "1.8.0-1.0.9"
 
 # AppCompat
 appcompat = "1.6.1"
@@ -24,6 +25,7 @@ butterknife = "10.2.3"
 okhttp = "4.10.0"
 retrofit = "2.9.0"
 retrofit-converter-gson = "2.8.1"
+moshi = "1.15.0"
 
 # Rx
 rxjava = "2.2.10"
@@ -80,6 +82,10 @@ retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = 
 retrofit-adpater-rxjava = { group = "com.squareup.retrofit2", name = "adapter-rxjava2", version.ref = "retrofit" }
 retrofit-converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit-converter-gson" }
 
+moshi-core = { group = "com.squareup.moshi", name = "moshi", version.ref = "moshi" }
+moshi-codegen = { group = "com.squareup.moshi", name = "moshi-kotlin-codegen", version.ref = "moshi" }
+retrofit-converter-moshi = { group = "com.squareup.retrofit2", name = "converter-moshi", version.ref = "retrofit" }
+
 # Rx
 rxjava = { group = "io.reactivex.rxjava2", name = "rxjava", version.ref = "rxjava" }
 rxandroid = { group = "io.reactivex.rxjava2", name = "rxandroid", version.ref = "rxandroid" }
@@ -114,5 +120,6 @@ compose-core = ["androidx-compose-foundation", "androidx-compose-foundation-layo
 # Core
 android-application = { id = "com.android.application", version.ref = "android-gradle-plugin" }
 google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
-kotlin-android = {id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp"}

@@ -8,12 +8,12 @@ import android.util.Log;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.ratik.uttam.BuildConfig;
 import com.ratik.uttam.R;
-import com.ratik.uttam.api.UnsplashApi;
+import com.ratik.uttam.data.UnsplashApi;
 import com.ratik.uttam.data.PhotoStore;
 import com.ratik.uttam.data.PrefStore;
-import com.ratik.uttam.data.model.Photo;
-import com.ratik.uttam.api.model.PhotoApiModel;
-import com.ratik.uttam.data.model.PhotoType;
+import com.ratik.uttam.domain.model.Photo;
+import com.ratik.uttam.data.model.PhotoApiModel;
+import com.ratik.uttam.domain.model.PhotoType;
 import com.ratik.uttam.util.StringExtensionsKt;
 
 import java.io.IOException;
