@@ -15,8 +15,8 @@ import com.ratik.uttam.R;
 import com.ratik.uttam.data.PhotoStore;
 import com.ratik.uttam.data.PrefStore;
 import com.ratik.uttam.di.Injector;
-import com.ratik.uttam.model.Photo;
-import com.ratik.uttam.model.PhotoType;
+import com.ratik.uttam.data.model.Photo;
+import com.ratik.uttam.data.model.PhotoType;
 import com.ratik.uttam.network.FileProvider;
 import com.ratik.uttam.ui.main.MainActivity;
 import com.ratik.uttam.util.AlarmHelper;
@@ -81,13 +81,13 @@ public class TourActivity extends AppTour {
         String third = getString(R.string.tour_slide_3_text);
 
         Fragment firstSlide = MaterialSlide.newInstance(R.drawable.tour_graphic_1,
-            getString(R.string.tour_slide_1_heading), first, Color.WHITE, Color.WHITE);
+                getString(R.string.tour_slide_1_heading), first, Color.WHITE, Color.WHITE);
 
         Fragment secondSlide = MaterialSlide.newInstance(R.drawable.tour_graphic_2,
-            getString(R.string.tour_slide_2_heading), second, Color.WHITE, Color.WHITE);
+                getString(R.string.tour_slide_2_heading), second, Color.WHITE, Color.WHITE);
 
         Fragment thirdSlide = MaterialSlide.newInstance(R.drawable.tour_graphic_3,
-            getString(R.string.tour_slide_3_heading), third, Color.WHITE, Color.WHITE);
+                getString(R.string.tour_slide_3_heading), third, Color.WHITE, Color.WHITE);
 
         addSlide(firstSlide, slideColor);
         addSlide(secondSlide, slideColor);
@@ -135,17 +135,17 @@ public class TourActivity extends AppTour {
         });
 
         compositeDisposable.add(
-            Single.zip(fullPhotoSingle, regularPhotoSingle, thumbPhotoSingle, this::getHeroPhoto)
-                .flatMapCompletable(photo -> photoStore.putPhoto(photo))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                    () -> {
-                        Log.i(TAG, "App setup done!");
-                        startMain();
-                    },
-                    throwable -> Log.e(TAG, throwable.getMessage())
-                )
+                Single.zip(fullPhotoSingle, regularPhotoSingle, thumbPhotoSingle, this::getHeroPhoto)
+                        .flatMapCompletable(photo -> photoStore.putPhoto(photo))
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                () -> {
+                                    Log.i(TAG, "App setup done!");
+                                    startMain();
+                                },
+                                throwable -> Log.e(TAG, throwable.getMessage())
+                        )
         );
     }
 
@@ -184,17 +184,18 @@ public class TourActivity extends AppTour {
     }
 
     public Photo getPartialHeroPhoto() {
-        return new Photo.Builder()
-            .setId(Constants.Fetch.FIRST_WALLPAPER_ID)
-            .setPhotoUri(null)
-            .setRegularPhotoUri(null)
-            .setThumbPhotoUri(null)
-            .setPhotographerName(Constants.Fetch.FIRST_WALLPAPER_PHOTOGRAPHER_NAME)
-            .setPhotographerUserName(Constants.Fetch.FIRST_WALLPAPER_PHOTOGRAPHER_USERNAME)
-            .setPhotoFullUrl(Constants.Fetch.FIRST_WALLPAPER_FULL_URL)
-            .setPhotoHtmlUrl(Constants.Fetch.FIRST_WALLPAPER_HTML_URL)
-            .setPhotoDownloadUrl(Constants.Fetch.FIRST_WALLPAPER_DOWNLOAD_URL)
-            .build();
+        return new Photo(
+                Constants.Fetch.FIRST_WALLPAPER_ID,
+                null,
+                null,
+                null,
+                Constants.Fetch.FIRST_WALLPAPER_PHOTOGRAPHER_NAME,
+                Constants.Fetch.FIRST_WALLPAPER_PHOTOGRAPHER_USERNAME,
+                Constants.Fetch.FIRST_WALLPAPER_FULL_URL,
+                Constants.Fetch.FIRST_WALLPAPER_DOWNLOAD_URL,
+                null,
+                Constants.Fetch.FIRST_WALLPAPER_HTML_URL
+        );
     }
 
     @Override

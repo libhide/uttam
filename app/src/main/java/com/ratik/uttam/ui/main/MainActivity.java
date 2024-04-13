@@ -34,7 +34,7 @@ import com.ratik.uttam.R;
 import com.ratik.uttam.data.PhotoStore;
 import com.ratik.uttam.data.PrefStore;
 import com.ratik.uttam.di.Injector;
-import com.ratik.uttam.model.Photo;
+import com.ratik.uttam.data.model.Photo;
 import com.ratik.uttam.ui.settings.SettingsActivity;
 import com.ratik.uttam.util.BitmapHelper;
 import com.ratik.uttam.util.FileHelper;
@@ -43,6 +43,7 @@ import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -145,34 +146,23 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     private void setupClickListeners() {
         rxPermissions = new RxPermissions(this);
 
-        compositeDisposable.add(
-            RxView.clicks(saveWallpaperButton)
-                .compose(rxPermissions.ensure(Manifest.permission.WRITE_EXTERNAL_STORAGE))
-                .subscribe(granted -> {
-                    if (granted) {
-                        saveWallpaper();
-                    } else {
-                        Toast.makeText(this, "Fine, okay. :(", Toast.LENGTH_SHORT).show();
-                    }
-                })
-        );
+        compositeDisposable.add(RxView.clicks(saveWallpaperButton).compose(rxPermissions.ensure(Manifest.permission.WRITE_EXTERNAL_STORAGE)).subscribe(granted -> {
+            if (granted) {
+                saveWallpaper();
+            } else {
+                Toast.makeText(this, "Fine, okay. :(", Toast.LENGTH_SHORT).show();
+            }
+        }));
 
-        compositeDisposable.add(
-            RxView.clicks(setWallpaperButton)
-                .compose(rxPermissions.ensure(Manifest.permission.WRITE_EXTERNAL_STORAGE))
-                .subscribe(granted -> {
-                    if (granted) {
-                        doWallpaperSetting();
-                    } else {
-                        Toast.makeText(this, "Fine, okay. :(", Toast.LENGTH_SHORT).show();
-                    }
-                })
-        );
+        compositeDisposable.add(RxView.clicks(setWallpaperButton).compose(rxPermissions.ensure(Manifest.permission.WRITE_EXTERNAL_STORAGE)).subscribe(granted -> {
+            if (granted) {
+                doWallpaperSetting();
+            } else {
+                Toast.makeText(this, "Fine, okay. :(", Toast.LENGTH_SHORT).show();
+            }
+        }));
 
-        compositeDisposable.add(
-            RxView.clicks(creditsView)
-                .subscribe(click -> showWallpaperCredits())
-        );
+        compositeDisposable.add(RxView.clicks(creditsView).subscribe(click -> showWallpaperCredits()));
     }
 
     // endregion
@@ -189,15 +179,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     }
 
     private void setWallpaperImageView() {
-        compositeDisposable.add(
-            bitmapHelper.getBitmapFromFile(photo.getFullPhotoUri())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                    this::onWallpaperImageViewSetSuccess,
-                    this::onWallpaperImageViewSetFailure
-                )
-        );
+        compositeDisposable.add(bitmapHelper.getBitmapFromFile(photo.getFullPhotoUri()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(this::onWallpaperImageViewSetSuccess, this::onWallpaperImageViewSetFailure));
     }
 
     private void onWallpaperImageViewSetFailure(Throwable throwable) {
@@ -218,15 +200,10 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     }
 
     private void pushFirstWallpaperNotification() {
-        compositeDisposable.add(
-            photoStore.getPhoto()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(photo -> {
-                    notificationHelper.pushNewNotification(photo);
-                    prefStore.firstRunDone();
-                }, t -> notificationHelper.pushErrorNotification(t))
-        );
+        compositeDisposable.add(photoStore.getPhoto().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(photo -> {
+            notificationHelper.pushNewNotification(photo);
+            prefStore.firstRunDone();
+        }, t -> notificationHelper.pushErrorNotification(t)));
     }
 
     @Override
@@ -283,13 +260,11 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
                 startActivity(new Intent(this, SettingsActivity.class));
                 return true;
             case R.id.action_share:
-                rxPermissions
-                    .request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    .subscribe(granted -> {
-                        if (granted) {
-                            shareWallpaper();
-                        }
-                    });
+                rxPermissions.request(Manifest.permission.WRITE_EXTERNAL_STORAGE).subscribe(granted -> {
+                    if (granted) {
+                        shareWallpaper();
+                    }
+                });
                 return true;
             case R.id.action_refresh:
                 presenter.refetchPhoto();
@@ -312,11 +287,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     public void showWallpaperCredits() {
         Uri.Builder builder = new Uri.Builder();
-        builder.scheme("https")
-            .authority(Constants.General.BASE_DOMAIN)
-            .appendEncodedPath(photo.getPhotographerUserName())
-            .appendQueryParameter("utm_source", "uttam")
-            .appendQueryParameter("utm_medium", "referral");
+        builder.scheme("https").authority(Constants.General.BASE_DOMAIN).appendEncodedPath(photo.getPhotographerUserName()).appendQueryParameter("utm_source", "uttam").appendQueryParameter("utm_medium", "referral");
         String url = builder.build().toString();
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         startActivity(browserIntent);
@@ -325,12 +296,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     private void saveWallpaperToExternalStorage() throws IOException {
         File srcFile = new File(photo.getFullPhotoUri());
 
-        compositeDisposable.add(
-            fileHelper.exportFile(srcFile, photo.getId() + ".png")
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::onSaveSuccess, this::onSaveFailure)
-        );
+        compositeDisposable.add(fileHelper.exportFile(srcFile, photo.getId() + ".png").subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(this::onSaveSuccess, this::onSaveFailure));
     }
 
     private void onSaveFailure(Throwable throwable) {
@@ -347,18 +313,13 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     }
 
     private void doWallpaperSetting() throws IOException {
-        File srcFile = new File(photo.getFullPhotoUri());
+        File srcFile = new File(Objects.requireNonNull(photo.getFullPhotoUri()));
 
-        compositeDisposable.add(
-            fileHelper.exportFile(srcFile, photo.getId() + ".png")
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::onSettingSaveSuccess, this::onSettingSaveFailure)
-        );
+        compositeDisposable.add(fileHelper.exportFile(srcFile, photo.getId() + ".png").subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(this::onSettingSaveSuccess, this::onSettingSaveFailure));
     }
 
     private void onSettingSaveFailure(Throwable throwable) {
-        Log.e(TAG, throwable.getMessage());
+        Log.e(TAG, Objects.requireNonNull(throwable.getMessage()));
     }
 
     private void onSettingSaveSuccess(File file) {
@@ -373,8 +334,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     private void shareWallpaper() {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
-        String shareText = String.format(getString(R.string.wallpaper_share_text),
-            photo.getPhotographerName(), photo.getPhotoDownloadUrl());
+        String shareText = String.format(getString(R.string.wallpaper_share_text), photo.getPhotographerName(), photo.getPhotoDownloadUrl());
         shareIntent.setType("text/plain");
         shareIntent.putExtra(Intent.EXTRA_TEXT, shareText);
         startActivity(Intent.createChooser(shareIntent, "Share"));

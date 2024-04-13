@@ -5,7 +5,7 @@ import android.content.Context;
 
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.ratik.uttam.UttamApplication;
-import com.ratik.uttam.api.UnsplashService;
+import com.ratik.uttam.api.UnsplashApi;
 import com.ratik.uttam.data.PhotoStore;
 import com.ratik.uttam.data.PrefStore;
 import com.ratik.uttam.network.DownloadService;
@@ -71,7 +71,7 @@ public class AppContextModule {
     }
 
     @Provides
-    public FetchService provideFetchService(DownloadService downloadService, UnsplashService service,
+    public FetchService provideFetchService(DownloadService downloadService, UnsplashApi service,
                                             PhotoStore photoStore, PrefStore prefStore,
                                             WallpaperManager wallpaperManager, FirebaseRemoteConfig remoteConfig) {
         return new FetchService(downloadService, service, photoStore, prefStore,
