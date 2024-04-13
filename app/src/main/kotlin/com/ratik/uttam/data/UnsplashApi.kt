@@ -1,6 +1,6 @@
-package com.ratik.uttam.api
+package com.ratik.uttam.data
 
-import com.ratik.uttam.api.model.PhotoApiModel
+import com.ratik.uttam.data.model.PhotoApiModel
 import io.reactivex.Observable
 import retrofit2.Response
 import retrofit2.http.GET
@@ -23,7 +23,7 @@ interface UnsplashApi {
     suspend fun getRandomPhotoSus(
         @Query("client_id") clientId: String?,
         @Query("collections") collections: String?,
-        @Query("w") w: Int,
-        @Query("h") h: Int
+        @Query("w") w: Int? = null,
+        @Query("h") h: Int? = null,
     ): Response<PhotoApiModel>
 }

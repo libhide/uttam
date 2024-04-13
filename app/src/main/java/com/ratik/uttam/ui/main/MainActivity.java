@@ -34,7 +34,7 @@ import com.ratik.uttam.R;
 import com.ratik.uttam.data.PhotoStore;
 import com.ratik.uttam.data.PrefStore;
 import com.ratik.uttam.di.Injector;
-import com.ratik.uttam.data.model.Photo;
+import com.ratik.uttam.domain.model.Photo;
 import com.ratik.uttam.ui.settings.SettingsActivity;
 import com.ratik.uttam.util.BitmapHelper;
 import com.ratik.uttam.util.FileHelper;

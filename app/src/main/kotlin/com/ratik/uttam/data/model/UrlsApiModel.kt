@@ -1,4 +1,4 @@
-package com.ratik.uttam.api.model
+package com.ratik.uttam.data.model
 
 import com.google.gson.annotations.SerializedName
 

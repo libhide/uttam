@@ -6,7 +6,7 @@ import android.util.Log;
 
 import com.ratik.uttam.data.PhotoStore;
 import com.ratik.uttam.di.Injector;
-import com.ratik.uttam.data.model.Photo;
+import com.ratik.uttam.domain.model.Photo;
 import com.ratik.uttam.util.NotificationHelper;
 
 import javax.inject.Inject;

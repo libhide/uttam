@@ -1,7 +1,7 @@
 package com.ratik.uttam.network;
 
-import com.ratik.uttam.api.model.PhotoApiModel;
-import com.ratik.uttam.data.model.PhotoType;
+import com.ratik.uttam.data.model.PhotoApiModel;
+import com.ratik.uttam.domain.model.PhotoType;
 
 import java.io.File;
 import java.io.FileOutputStream;

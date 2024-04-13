@@ -5,7 +5,7 @@ import android.util.Log;
 
 import com.ratik.uttam.Constants;
 import com.ratik.uttam.data.PhotoStore;
-import com.ratik.uttam.data.model.Photo;
+import com.ratik.uttam.domain.model.Photo;
 
 import io.reactivex.Completable;
 import io.reactivex.Single;

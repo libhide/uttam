@@ -6,6 +6,7 @@ import com.ratik.uttam.core.MessageState
 import com.ratik.uttam.core.MessageState.Snack
 import com.ratik.uttam.core.contract.ViewEvent
 import com.ratik.uttam.core.contract.ViewEvent.DisplayMessage
+import com.ratik.uttam.domain.PhotoRepo
 import com.ratik.uttam.ui.home.HomeAction.RefreshWallpaper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -13,6 +14,7 @@ import javax.inject.Inject
 @HiltViewModel
 internal class HomeViewModel @Inject constructor(
     dispatcherProvider: DispatcherProvider,
+    private val photoRepo: PhotoRepo,
 ) : BaseViewModel<HomeState, HomeAction>(
     HomeState.initialState,
     dispatcherProvider,
@@ -22,6 +24,7 @@ internal class HomeViewModel @Inject constructor(
         when (viewAction) {
             RefreshWallpaper -> {
                 dispatchViewEvent(DisplayMessage(Snack("Refreshing...")))
+                launch { photoRepo.getRandomPhoto() }
             }
         }
     }

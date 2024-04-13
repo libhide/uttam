@@ -2,7 +2,7 @@ package com.ratik.uttam.di.module;
 
 import com.ratik.uttam.BuildConfig;
 import com.ratik.uttam.Constants;
-import com.ratik.uttam.api.UnsplashApi;
+import com.ratik.uttam.data.UnsplashApi;
 
 import javax.inject.Singleton;
 
