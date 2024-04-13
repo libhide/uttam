@@ -3,7 +3,7 @@ package com.ratik.uttam.core
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ratik.uttam.core.contract.BaseState
-import com.fueled.android.core.common.contract.ViewEvent
+import com.ratik.uttam.core.contract.ViewEvent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.BufferOverflow.SUSPEND
