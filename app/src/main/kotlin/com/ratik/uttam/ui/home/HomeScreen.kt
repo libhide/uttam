@@ -10,6 +10,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material.Button
@@ -39,55 +40,55 @@ internal fun HomeScreen() {
             }
         }
 
-    Box {
-        ScrollableImage(
-            painter = wallpaper,
-            contentDescription = null,
-        )
-        Column(
-            modifier = Modifier
-                .safeDrawingPadding()
-                .padding(horizontal = SpacingNormal),
-        ) {
-            Button(
-                onClick = {
-                    // Setting with intent
-                    val drawable = ContextCompat.getDrawable(context, R.drawable.uttam_hero)
+    ScrollableImage(
+        painter = wallpaper,
+        contentDescription = null,
+    )
 
-                    val bitmap = (drawable?.mutate() as BitmapDrawable).bitmap.copy(
-                        Bitmap.Config.ARGB_8888,
-                        true
-                    )
+    Column(
+        modifier = Modifier
+            .safeDrawingPadding()
+            .padding(horizontal = SpacingNormal),
+    ) {
+        Button(
+            onClick = {
+                // Setting with intent
+                val drawable = ContextCompat.getDrawable(context, R.drawable.uttam_hero)
 
-                    val canvas = Canvas(bitmap)
+                val bitmap = (drawable?.mutate() as BitmapDrawable).bitmap.copy(
+                    Bitmap.Config.ARGB_8888,
+                    true
+                )
 
-                    drawable.setBounds(0, 0, drawable.intrinsicWidth, drawable.intrinsicHeight)
+                val canvas = Canvas(bitmap)
 
-                    drawable.draw(canvas)
+                drawable.setBounds(0, 0, drawable.intrinsicWidth, drawable.intrinsicHeight)
 
-                    val tempFile = File.createTempFile(
-                        "wallpaper",
-                        ".jpg",
-                        context.cacheDir
-                    )
+                drawable.draw(canvas)
 
-                    val outputStream = tempFile.outputStream()
+                val tempFile = File.createTempFile(
+                    "wallpaper",
+                    ".jpg",
+                    context.cacheDir
+                )
 
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+                val outputStream = tempFile.outputStream()
 
-                    outputStream.close()
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
 
-                    val uri = FileProvider.getUriForFile(
-                        context,
-                        "${context.packageName}.provider",
-                        tempFile
-                    )
+                outputStream.close()
 
-                    val wallpaperSetIntent = wallpaperManager.getCropAndSetWallpaperIntent(uri)
+                val uri = FileProvider.getUriForFile(
+                    context,
+                    "${context.packageName}.provider",
+                    tempFile
+                )
 
-                    launcher.launch(wallpaperSetIntent)
+                val wallpaperSetIntent = wallpaperManager.getCropAndSetWallpaperIntent(uri)
 
-                    // Setting directly
+                launcher.launch(wallpaperSetIntent)
+
+                // Setting directly
 //                        val drawable = ContextCompat.getDrawable(context, R.drawable.uttam_hero)
 //
 //                        val bitmap = (drawable?.mutate() as BitmapDrawable).bitmap.copy(
@@ -96,14 +97,13 @@ internal fun HomeScreen() {
 //                        )
 //
 //                        wallpaperManager.setBitmap(bitmap)
-                },
-            ) {
-                Text(
-                    text = "Uttam",
-                    color = Color.White,
-                    fontSize = TextSizeXXLarge,
-                )
-            }
+            },
+        ) {
+            Text(
+                text = "Uttam",
+                color = Color.White,
+                fontSize = TextSizeXXLarge,
+            )
         }
     }
 }

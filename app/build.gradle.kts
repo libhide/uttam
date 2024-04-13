@@ -7,6 +7,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.google.services)
+    kotlin("kapt")
+    alias(libs.plugins.hilt)
 }
 
 fun getProperty(filename: String, propName: String): String? {
@@ -40,7 +42,15 @@ android {
         versionCode = 21
         versionName = "4.4"
 
-        buildConfigField("String", "CLIENT_ID", "\"${getProperty("local.properties", "client_id")}\"")
+        buildConfigField(
+            "String",
+            "CLIENT_ID",
+            "\"${getProperty("local.properties", "client_id")}\""
+        )
+
+        // TODO: remove this after migration to Hilt
+        javaCompileOptions.annotationProcessorOptions.arguments["dagger.hilt.disableModulesHaveInstallInCheck"] =
+            "true"
     }
 
     val keystorePropertiesFile = rootProject.file("keystore.properties")
@@ -59,7 +69,10 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android.txt"), file("proguard-rules.pro"))
+            proguardFiles(
+                getDefaultProguardFile("proguard-android.txt"),
+                file("proguard-rules.pro")
+            )
             signingConfig = signingConfigs["config"]
         }
     }
@@ -68,6 +81,10 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+}
+
+kapt {
+    correctErrorTypes = true
 }
 
 dependencies {
@@ -108,6 +125,8 @@ dependencies {
     // DI
     implementation(libs.dagger)
     annotationProcessor(libs.dagger.compiler)
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
 
     // App Tour
     implementation(libs.app.tour)
