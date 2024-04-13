@@ -1,7 +1,7 @@
 package com.ratik.uttam.network;
 
-import com.ratik.uttam.model.PhotoResponse;
-import com.ratik.uttam.model.PhotoType;
+import com.ratik.uttam.api.model.PhotoApiModel;
+import com.ratik.uttam.data.model.PhotoType;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -35,16 +35,14 @@ public class DownloadService {
         return imageFile.getAbsolutePath();
     }
 
-    private URL getDownloadUrl(PhotoResponse photoResponse, PhotoType type) throws MalformedURLException {
+    private URL getDownloadUrl(PhotoApiModel photoApiModel, PhotoType type) throws MalformedURLException {
         switch (type) {
-            case FULL:
-                return new URL(photoResponse.getUrls().getFullUrl());
             case REGULAR:
-                return new URL(photoResponse.getUrls().getRegularUrl());
+                return new URL(photoApiModel.getUrls().getRegularUrl());
             case THUMB:
-                return new URL(photoResponse.getUrls().getThumbUrl());
+                return new URL(photoApiModel.getUrls().getThumbUrl());
             default:
-                return new URL(photoResponse.getUrls().getFullUrl());
+                return new URL(photoApiModel.getUrls().getFullUrl());
         }
     }
 
@@ -56,8 +54,8 @@ public class DownloadService {
         return connection.getInputStream();
     }
 
-    public Single<String> downloadWallpaper(PhotoResponse photoResponse, PhotoType type) throws IOException {
-        URL wallpaperUrl = getDownloadUrl(photoResponse, type);
+    public Single<String> downloadWallpaper(PhotoApiModel photoApiModel, PhotoType type) throws IOException {
+        URL wallpaperUrl = getDownloadUrl(photoApiModel, type);
         InputStream imageInputStream = downloadImage(wallpaperUrl);
         String wallpaperPath = getWallpaperFilePath(imageInputStream, type);
         return Single.just(wallpaperPath);

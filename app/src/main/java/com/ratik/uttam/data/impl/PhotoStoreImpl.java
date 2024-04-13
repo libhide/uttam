@@ -5,7 +5,7 @@ import android.util.Log;
 
 import com.ratik.uttam.Constants;
 import com.ratik.uttam.data.PhotoStore;
-import com.ratik.uttam.model.Photo;
+import com.ratik.uttam.data.model.Photo;
 
 import io.reactivex.Completable;
 import io.reactivex.Single;
@@ -42,17 +42,19 @@ public class PhotoStoreImpl implements PhotoStore {
 
     @Override
     public Single<Photo> getPhoto() {
-        return Single.fromCallable(() -> new Photo.Builder()
-                .setId(prefs.getString(Constants.Data.PHOTO_ID, ""))
-                .setPhotoUri(prefs.getString(Constants.Data.PHOTO_URI, ""))
-                .setRegularPhotoUri(prefs.getString(Constants.Data.PHOTO_REGULAR_URI, ""))
-                .setThumbPhotoUri(prefs.getString(Constants.Data.PHOTO_THUMB_URI, ""))
-                .setPhotographerName(prefs.getString(Constants.Data.PHOTOGRAPHER_NAME, ""))
-                .setPhotographerUserName(prefs.getString(Constants.Data.PHOTOGRAPHER_USERNAME, ""))
-                .setPhotoFullUrl(prefs.getString(Constants.Data.FULL_URL, ""))
-                .setPhotoDownloadUrl(prefs.getString(Constants.Data.DOWNLOAD_URL, ""))
-                .setPhotoDownloadEndpoint(prefs.getString(Constants.Data.DOWNLOAD_ENDPOINT, ""))
-                .setPhotoHtmlUrl(prefs.getString(Constants.Data.HTML_URL, ""))
-                .build());
+        Photo photo = new Photo(
+                prefs.getString(Constants.Data.PHOTO_ID, ""),
+                prefs.getString(Constants.Data.PHOTO_URI, ""),
+                prefs.getString(Constants.Data.PHOTO_REGULAR_URI, ""),
+                prefs.getString(Constants.Data.PHOTO_THUMB_URI, ""),
+                prefs.getString(Constants.Data.PHOTOGRAPHER_NAME, ""),
+                prefs.getString(Constants.Data.PHOTOGRAPHER_USERNAME, ""),
+                prefs.getString(Constants.Data.FULL_URL, ""),
+                prefs.getString(Constants.Data.DOWNLOAD_URL, ""),
+                prefs.getString(Constants.Data.DOWNLOAD_ENDPOINT, ""),
+                prefs.getString(Constants.Data.HTML_URL, "")
+        );
+
+        return Single.fromCallable(() -> photo);
     }
 }
