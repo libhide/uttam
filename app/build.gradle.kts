@@ -105,6 +105,7 @@ dependencies {
     androidTestImplementation(composeBom)
     api(libs.bundles.compose.core)
     implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.hilt.navigation.compose)
 
     // Okhttp
     implementation(libs.okhttp.logging.inspector)
