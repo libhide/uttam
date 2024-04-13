@@ -1,4 +1,7 @@
 <resources>
+    <!-- Common -->
+    <string name="common_error">Something went wrong!</string>
+
     <!-- General -->
     <string name="app_name">Uttam</string>
     <string name="get_started_text">Get Started</string>
