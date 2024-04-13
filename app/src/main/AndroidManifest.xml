@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/UttamTheme">
         <activity
-            android:name=".MainActivity$MainActivity"
+            android:name=".MainActivity"
             android:exported="true"
             android:theme="@style/UttamTheme">
             <intent-filter>
