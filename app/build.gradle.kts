@@ -31,12 +31,12 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.3.1"
+        kotlinCompilerExtensionVersion = "1.4.1"
     }
 
     defaultConfig {
         applicationId = "com.ratik.uttam.prod"
-        minSdk = 21
+        minSdk = 24
         versionCode = 21
         versionName = "4.4"
 
@@ -72,7 +72,6 @@ android {
 
 dependencies {
     // Kotlin
-    implementation(libs.kotlin.stdlib)
     // TODO: figure out how to use this BOM correctly
     implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))
 
