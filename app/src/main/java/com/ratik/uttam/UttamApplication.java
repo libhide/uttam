@@ -2,7 +2,6 @@ package com.ratik.uttam;
 
 import android.app.Application;
 
-import com.google.firebase.FirebaseApp;
 import com.ratik.uttam.di.Injector;
 
 /**

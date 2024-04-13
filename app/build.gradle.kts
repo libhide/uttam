@@ -120,6 +120,9 @@ dependencies {
     implementation(libs.firebase.core)
     implementation(libs.firebase.config)
 
+    // Logging
+    api(libs.timber)
+
     // Testing
     testImplementation(libs.junit)
     testImplementation(libs.mockito)
