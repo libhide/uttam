@@ -1,20 +1,19 @@
 [versions]
 # Core
-kotlin = "1.7.10"
+kotlin = "1.8.0"
 android-gradle-plugin = "7.4.2"
 google-services = "4.4.1"
 
 # AppCompat
-appcompat = "1.5.1"
+appcompat = "1.6.1"
 vectordrawable-animated = "1.1.0"
-media = "1.6.0"
+media = "1.7.0"
 legacy-support = "1.0.0"
-material = "1.7.0"
+material = "1.11.0"
 
 # Compose
-accompanist = "0.32.0"
-androidx-compose-bom = "2023.10.00"
-androidx-activity = "1.7.2"
+androidx-compose-bom = "2024.04.00"
+androidx-activity = "1.8.2"
 
 # UI
 butterknife = "10.2.3"
@@ -57,7 +56,6 @@ legacy-support = { group = "androidx.legacy", name = "legacy-support-v4", versio
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
 # Compose
-accompanist-systemuicontroller = { group = "com.google.accompanist", name = "accompanist-systemuicontroller", version.ref = "accompanist" }
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "androidx-compose-bom" }
 androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation" }
 androidx-compose-foundation-layout = { group = "androidx.compose.foundation", name = "foundation-layout" }
