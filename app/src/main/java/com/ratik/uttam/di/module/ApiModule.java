@@ -2,7 +2,7 @@ package com.ratik.uttam.di.module;
 
 import com.ratik.uttam.BuildConfig;
 import com.ratik.uttam.Constants;
-import com.ratik.uttam.api.UnsplashService;
+import com.ratik.uttam.api.UnsplashApi;
 
 import javax.inject.Singleton;
 
@@ -50,7 +50,7 @@ public class ApiModule {
     }
 
     @Provides
-    public UnsplashService provideUnsplashService(Retrofit retrofit) {
-        return retrofit.create(UnsplashService.class);
+    public UnsplashApi provideUnsplashService(Retrofit retrofit) {
+        return retrofit.create(UnsplashApi.class);
     }
 }

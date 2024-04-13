@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.ratik.uttam.Constants;
-import com.ratik.uttam.model.PhotoType;
+import com.ratik.uttam.data.model.PhotoType;
 
 import java.io.File;
 

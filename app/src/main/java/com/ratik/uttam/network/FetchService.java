@@ -8,12 +8,12 @@ import android.util.Log;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.ratik.uttam.BuildConfig;
 import com.ratik.uttam.R;
-import com.ratik.uttam.api.UnsplashService;
+import com.ratik.uttam.api.UnsplashApi;
 import com.ratik.uttam.data.PhotoStore;
 import com.ratik.uttam.data.PrefStore;
-import com.ratik.uttam.model.Photo;
-import com.ratik.uttam.model.PhotoResponse;
-import com.ratik.uttam.model.PhotoType;
+import com.ratik.uttam.data.model.Photo;
+import com.ratik.uttam.api.model.PhotoApiModel;
+import com.ratik.uttam.data.model.PhotoType;
 import com.ratik.uttam.util.StringExtensionsKt;
 
 import java.io.IOException;
@@ -30,7 +30,7 @@ public class FetchService {
     private static final String TAG = FetchService.class.getSimpleName();
     private final String PARAM_COLLECTIONS = "unsplash_collections";
 
-    private UnsplashService service;
+    private UnsplashApi service;
     private PhotoStore photoStore;
     private PrefStore prefStore;
     private WallpaperManager wallpaperManager;
@@ -38,8 +38,7 @@ public class FetchService {
     private FirebaseRemoteConfig remoteConfig;
 
     @Inject
-    public FetchService(DownloadService downloadService, UnsplashService service, PhotoStore photoStore,
-                        PrefStore prefStore, WallpaperManager wallpaperManager, FirebaseRemoteConfig remoteConfig) {
+    public FetchService(DownloadService downloadService, UnsplashApi service, PhotoStore photoStore, PrefStore prefStore, WallpaperManager wallpaperManager, FirebaseRemoteConfig remoteConfig) {
         this.downloadService = downloadService;
         this.service = service;
         this.photoStore = photoStore;
@@ -50,51 +49,40 @@ public class FetchService {
     }
 
     public Completable getFetchPhotoCompletable() {
-        return getRemoteConfigFetchSingle()
-                .flatMapCompletable(this::getFetchPhotoCompletable);
+        return getRemoteConfigFetchSingle().flatMapCompletable(this::getFetchPhotoCompletable);
     }
 
     private Single<String> getRemoteConfigFetchSingle() {
-        remoteConfig.fetch()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        remoteConfig.fetchAndActivate();
-                    }
-                });
+        remoteConfig.fetch().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                remoteConfig.fetchAndActivate();
+            }
+        });
         return Single.just(remoteConfig.getString(PARAM_COLLECTIONS));
     }
 
     private Completable getFetchPhotoCompletable(String collections) {
-        Observable<PhotoResponse> photoResponseObservable = service.getRandomPhoto(
-                BuildConfig.CLIENT_ID,
-                collections,
-                prefStore.getDesiredWallpaperWidth(),
-                prefStore.getDesiredWallpaperHeight()
-        );
+        Observable<PhotoApiModel> photoResponseObservable = service.getRandomPhoto(BuildConfig.CLIENT_ID, collections, prefStore.getDesiredWallpaperWidth(), prefStore.getDesiredWallpaperHeight());
 
-        return photoResponseObservable
-                .flatMapSingle(this::getPhotoSingle)
-                .flatMapSingle(this::increaseDownloadCountForWallpaper)
-                .flatMapCompletable(photo -> {
-                    Completable putCompletable = photoStore.putPhoto(photo);
-                    if (prefStore.isAutoSetEnabled()) {
-                        return getPostSaveSetWallpaperCompletable(putCompletable, photo);
-                    } else {
-                        return putCompletable;
-                    }
-                });
+        return photoResponseObservable.flatMapSingle(this::getPhotoSingle).flatMapSingle(this::increaseDownloadCountForWallpaper).flatMapCompletable(photo -> {
+            Completable putCompletable = photoStore.putPhoto(photo);
+            if (prefStore.isAutoSetEnabled()) {
+                return getPostSaveSetWallpaperCompletable(putCompletable, photo);
+            } else {
+                return putCompletable;
+            }
+        });
     }
 
-    private Single<Photo> getPhotoSingle(PhotoResponse response) throws IOException {
+    private Single<Photo> getPhotoSingle(PhotoApiModel response) throws IOException {
         Single<String> fullSingle = downloadService.downloadWallpaper(response, PhotoType.FULL);
         Single<String> regularSingle = downloadService.downloadWallpaper(response, PhotoType.REGULAR);
         Single<String> thumbSingle = downloadService.downloadWallpaper(response, PhotoType.THUMB);
 
-        return Single.zip(fullSingle, regularSingle, thumbSingle,
-                (fullUri, regularUri, thumbUri) -> {
-                    Log.i(TAG, "Images downloaded");
-                    return getPhoto(response, fullUri, regularUri, thumbUri);
-                });
+        return Single.zip(fullSingle, regularSingle, thumbSingle, (fullUri, regularUri, thumbUri) -> {
+            Log.i(TAG, "Images downloaded");
+            return getPhoto(response, fullUri, regularUri, thumbUri);
+        });
     }
 
     private Single<Photo> increaseDownloadCountForWallpaper(Photo photo) throws IOException {
@@ -111,10 +99,7 @@ public class FetchService {
     }
 
     private Completable getPostSaveSetWallpaperCompletable(Completable photoStorePutCompletable, Photo photo) {
-        return photoStorePutCompletable
-                .andThen(getWallpaperPath(photo))
-                .map(BitmapFactory::decodeFile)
-                .flatMapCompletable(this::setWall);
+        return photoStorePutCompletable.andThen(getWallpaperPath(photo)).map(BitmapFactory::decodeFile).flatMapCompletable(this::setWall);
     }
 
     private Single<String> getWallpaperPath(Photo photo) {
@@ -125,19 +110,18 @@ public class FetchService {
         return Completable.fromAction(() -> wallpaperManager.setBitmap(bitmap));
     }
 
-    private Photo getPhoto(PhotoResponse response, String fullUri, String regularUri,
-                           String thumbUri) {
-        return new Photo.Builder()
-                .setId(response.getId())
-                .setPhotoUri(fullUri)
-                .setRegularPhotoUri(regularUri)
-                .setThumbPhotoUri(thumbUri)
-                .setPhotoFullUrl(response.getUrls().getFullUrl())
-                .setPhotoHtmlUrl(response.getLinks().getHtmlLink())
-                .setPhotoDownloadUrl(response.getLinks().getDownloadLink())
-                .setPhotoDownloadEndpoint(response.getLinks().getDownloadEndpoint())
-                .setPhotographerUserName(response.getPhotographer().getUsername())
-                .setPhotographerName(StringExtensionsKt.toTitleCase(response.getPhotographer().getName()))
-                .build();
+    private Photo getPhoto(PhotoApiModel response, String fullUri, String regularUri, String thumbUri) {
+        return new Photo(
+                response.getId(),
+                fullUri,
+                regularUri,
+                thumbUri,
+                StringExtensionsKt.toTitleCase(response.getPhotographer().getName()),
+                response.getPhotographer().getUsername(),
+                response.getUrls().getFullUrl(),
+                response.getLinks().getDownloadLink(),
+                response.getLinks().getDownloadEndpoint(),
+                response.getLinks().getHtmlLink()
+        );
     }
 }
