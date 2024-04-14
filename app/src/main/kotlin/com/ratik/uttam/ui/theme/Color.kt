@@ -25,3 +25,6 @@ val ProjectDarkColors = darkColors(
     onPrimary = Color.White,
     onSecondary = Color.White,
 )
+
+val ShimmerColorLight = Color(color = 0xFFF0F2F5)
+val ShimmerColorMedium = Color(color = 0xFFDEE2E9)
