@@ -1,7 +1,7 @@
 package com.ratik.uttam.ui.main;
 
 import com.ratik.uttam.data.PhotoStore;
-import com.ratik.uttam.domain.model.Photo;
+import com.ratik.uttam.domain.model.PhotoOld;
 import com.ratik.uttam.network.FetchService;
 
 import org.junit.Before;
@@ -40,14 +40,14 @@ public class MainPresenterImplTest {
     private FetchService service;
 
     private MainPresenterImpl presenter;
-    private Photo testPhoto;
+    private PhotoOld testPhoto;
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         presenter = new MainPresenterImpl(photoStore, service);
         presenter.setView(view);
-        testPhoto = new Photo.Builder().build();
+        testPhoto = new PhotoOld.Builder().build();
     }
 
     @Test

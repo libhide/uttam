@@ -107,6 +107,8 @@ dependencies {
     api(libs.bundles.compose.core)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.hilt.navigation.compose)
+    implementation(libs.coil)
+    implementation(libs.coil.compose)
 
     // Networking
     implementation(libs.okhttp.logging.inspector)

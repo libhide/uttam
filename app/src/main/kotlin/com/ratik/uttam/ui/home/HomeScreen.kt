@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material.Button
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -25,6 +26,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.rememberAsyncImagePainter
+import coil.compose.rememberImagePainter
+import coil.request.ImageRequest
 import com.fueled.android.core.ui.extensions.collectAsEffect
 import com.fueled.android.core.ui.extensions.rememberFlowOnLifecycle
 import com.ratik.uttam.R
@@ -44,7 +48,6 @@ internal fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
-    val wallpaper = painterResource(id = R.drawable.uttam_hero)
     val wallpaperManager = WallpaperManager.getInstance(context)
     val launcher =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult ->
@@ -73,9 +76,16 @@ internal fun HomeScreen(
     }
 
     ScrollableImage(
-        painter = wallpaper,
+        model = ImageRequest.Builder(context)
+            .data(state.currentWallpaper?.localUri ?: R.drawable.uttam_hero)
+            .crossfade(true)
+            .build(),
         contentDescription = null,
     )
+
+    if (state.isLoading) {
+        CircularProgressIndicator(color = Color.White)
+    }
 
     Column(
         modifier = Modifier
@@ -133,7 +143,7 @@ internal fun HomeScreen(
             },
         ) {
             Text(
-                text = "Uttam",
+                text = "Refresh Wallpaper",
                 color = Color.White,
                 fontSize = TextSizeXXLarge,
             )
