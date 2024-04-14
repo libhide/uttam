@@ -3,6 +3,7 @@ package com.ratik.uttam.core.contract
 import com.fueled.android.core.common.contract.NavigationTarget
 import com.fueled.android.core.common.contract.SideEffect
 import com.ratik.uttam.core.MessageState
+import com.ratik.uttam.ui.home.HomeEffect
 
 sealed class ViewEvent {
     data class Navigate(val target: NavigationTarget) : ViewEvent()
