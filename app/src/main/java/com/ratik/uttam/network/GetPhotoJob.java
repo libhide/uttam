@@ -6,7 +6,7 @@ import android.util.Log;
 
 import com.ratik.uttam.data.PhotoStore;
 import com.ratik.uttam.di.Injector;
-import com.ratik.uttam.domain.model.Photo;
+import com.ratik.uttam.domain.model.PhotoOld;
 import com.ratik.uttam.util.NotificationHelper;
 
 import javax.inject.Inject;
@@ -72,7 +72,7 @@ public class GetPhotoJob extends JobService {
         );
     }
 
-    private void onSuccessfulNotificationPush(Photo photo) {
+    private void onSuccessfulNotificationPush(PhotoOld photo) {
         notificationHelper.pushNewNotification(photo);
         isWorking = false;
         compositeDisposable.dispose();

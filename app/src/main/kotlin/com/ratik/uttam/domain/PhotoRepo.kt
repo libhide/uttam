@@ -5,27 +5,42 @@ import com.ratik.uttam.core.DispatcherProvider
 import com.ratik.uttam.data.ApiConstants
 import com.ratik.uttam.data.UnsplashApi
 import com.ratik.uttam.data.extensions.asResult
+import com.ratik.uttam.data.storage.WallpaperDownloader
 import com.ratik.uttam.data.whenError
 import com.ratik.uttam.data.whenSuccess
+import com.ratik.uttam.domain.exceptions.WallpaperrDownloadFailedException
 import com.ratik.uttam.domain.model.Photo
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import timber.log.Timber
 import javax.inject.Inject
 
 internal class PhotoRepo @Inject constructor(
     private val unsplashApi: UnsplashApi,
     private val dispatcherProvider: DispatcherProvider,
+    private val wallpaperDownloader: WallpaperDownloader,
+    private val mapper: PhotoMapper,
 ) {
-    suspend fun getRandomPhoto() {
-        withContext(dispatcherProvider.io) {
-            unsplashApi.getRandomPhotoSus(
-                clientId = BuildConfig.CLIENT_ID,
-                collections = ApiConstants.DEFAULT_COLLECTIONS,
-            ).asResult().whenSuccess { photoApiModel ->
-                Timber.d("Photo fetched: ${photoApiModel.urls.fullUrl}")
-            }.whenError { error ->
-                Timber.e("Error fetching photo: $error")
+    suspend fun fetchRandomPhoto(): Flow<Photo> = flow {
+        unsplashApi.getRandomPhotoSus(
+            clientId = BuildConfig.CLIENT_ID,
+            collections = ApiConstants.DEFAULT_COLLECTIONS,
+        ).asResult()
+            .whenSuccess { photoApiModel ->
+                val localUri = wallpaperDownloader.downloadWallpaper(
+                    photoApiModel.id,
+                    photoApiModel.urls.regularUrl,
+                )
+                if (localUri != null) {
+                    emit(mapper.mapPhoto(photoApiModel, localUri))
+                } else {
+                    throw WallpaperrDownloadFailedException()
+                }
             }
-        }
-    }
+            .whenError { error ->
+                Timber.e("Error fetching photo: $error")
+                throw error
+            }
+    }.flowOn(dispatcherProvider.io)
 }

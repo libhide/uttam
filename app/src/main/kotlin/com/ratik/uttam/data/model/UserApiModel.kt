@@ -7,8 +7,11 @@ import com.google.gson.annotations.SerializedName
  */
 data class UserApiModel(
     @SerializedName("name")
-    val name: String? = null,
+    val name: String,
 
     @SerializedName("username")
-    val username: String? = null
+    val username: String,
+
+    @SerializedName("links")
+    val links: LinksApiModel
 )

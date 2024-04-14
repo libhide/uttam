@@ -34,7 +34,7 @@ import com.ratik.uttam.R;
 import com.ratik.uttam.data.PhotoStore;
 import com.ratik.uttam.data.PrefStore;
 import com.ratik.uttam.di.Injector;
-import com.ratik.uttam.domain.model.Photo;
+import com.ratik.uttam.domain.model.PhotoOld;
 import com.ratik.uttam.ui.settings.SettingsActivity;
 import com.ratik.uttam.util.BitmapHelper;
 import com.ratik.uttam.util.FileHelper;
@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     private FileHelper fileHelper;
     private CompositeDisposable compositeDisposable;
     private RxPermissions rxPermissions;
-    private Photo photo;
+    private PhotoOld photo;
 
     @BindView(R.id.wallpaperScrollView)
     HorizontalScrollView wallpaperScrollView;
@@ -170,7 +170,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     // region VIEW-LOGIC
 
     @Override
-    public void showPhoto(Photo p) {
+    public void showPhoto(PhotoOld p) {
         // save the returned photo
         photo = p;
 

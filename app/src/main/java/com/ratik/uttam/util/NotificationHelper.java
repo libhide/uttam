@@ -15,7 +15,7 @@ import android.util.Log;
 
 import com.ratik.uttam.Constants;
 import com.ratik.uttam.R;
-import com.ratik.uttam.domain.model.Photo;
+import com.ratik.uttam.domain.model.PhotoOld;
 import com.ratik.uttam.ui.main.MainActivity;
 
 import javax.inject.Inject;
@@ -41,7 +41,7 @@ public class NotificationHelper {
                 context.getSystemService(Context.NOTIFICATION_SERVICE);
     }
 
-    public void pushNewNotification(Photo photo) {
+    public void pushNewNotification(PhotoOld photo) {
         notificationManager.notify(WALLPAPER_NOTIF_ID, getWallpaperNotification(photo).build());
     }
 
@@ -49,7 +49,7 @@ public class NotificationHelper {
         Log.e(TAG, t.getMessage());
     }
 
-    private NotificationCompat.Builder getWallpaperNotification(Photo photo) {
+    private NotificationCompat.Builder getWallpaperNotification(PhotoOld photo) {
         Intent intent = new Intent(context, MainActivity.class);
 
         PendingIntent showWallpaperIntent = null;

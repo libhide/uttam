@@ -1,6 +1,6 @@
 package com.ratik.uttam.data;
 
-import com.ratik.uttam.domain.model.Photo;
+import com.ratik.uttam.domain.model.PhotoOld;
 
 import io.reactivex.Completable;
 import io.reactivex.Single;
@@ -11,7 +11,7 @@ import io.reactivex.Single;
  */
 
 public interface PhotoStore {
-    Completable putPhoto(Photo photo);
+    Completable putPhoto(PhotoOld photo);
 
-    Single<Photo> getPhoto();
+    Single<PhotoOld> getPhoto();
 }

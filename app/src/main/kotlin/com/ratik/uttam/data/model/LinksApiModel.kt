@@ -9,9 +9,10 @@ data class LinksApiModel(
     @SerializedName("html")
     val htmlLink: String,
 
+    @Deprecated("Redundant field, will be removed")
     @SerializedName("download")
-    val downloadLink: String,
+    val downloadLink: String? = null,
 
     @SerializedName("download_location")
-    val downloadEndpoint: String,
+    val downloadEndpoint: String? = null,
 )

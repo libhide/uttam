@@ -5,7 +5,7 @@ import android.util.Log;
 
 import com.ratik.uttam.Constants;
 import com.ratik.uttam.data.PhotoStore;
-import com.ratik.uttam.domain.model.Photo;
+import com.ratik.uttam.domain.model.PhotoOld;
 
 import io.reactivex.Completable;
 import io.reactivex.Single;
@@ -19,11 +19,11 @@ public class PhotoStoreImpl implements PhotoStore {
     }
 
     @Override
-    public Completable putPhoto(Photo photo) {
+    public Completable putPhoto(PhotoOld photo) {
         return Completable.fromAction(() -> storePhoto(photo));
     }
 
-    private void storePhoto(Photo photo) {
+    private void storePhoto(PhotoOld photo) {
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(Constants.Data.PHOTO_ID, photo.getId());
         editor.putString(Constants.Data.PHOTO_URI, photo.getFullPhotoUri());
@@ -41,8 +41,8 @@ public class PhotoStoreImpl implements PhotoStore {
     }
 
     @Override
-    public Single<Photo> getPhoto() {
-        Photo photo = new Photo(
+    public Single<PhotoOld> getPhoto() {
+        PhotoOld photo = new PhotoOld(
                 prefs.getString(Constants.Data.PHOTO_ID, ""),
                 prefs.getString(Constants.Data.PHOTO_URI, ""),
                 prefs.getString(Constants.Data.PHOTO_REGULAR_URI, ""),

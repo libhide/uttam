@@ -15,7 +15,7 @@ import com.ratik.uttam.R;
 import com.ratik.uttam.data.PhotoStore;
 import com.ratik.uttam.data.PrefStore;
 import com.ratik.uttam.di.Injector;
-import com.ratik.uttam.domain.model.Photo;
+import com.ratik.uttam.domain.model.PhotoOld;
 import com.ratik.uttam.domain.model.PhotoType;
 import com.ratik.uttam.network.FileProvider;
 import com.ratik.uttam.ui.main.MainActivity;
@@ -175,16 +175,16 @@ public class TourActivity extends AppTour {
         return pictureFile.getAbsolutePath();
     }
 
-    private Photo getHeroPhoto(String fullUri, String regularUri, String thumbUri) {
-        Photo partialHeroPhoto = getPartialHeroPhoto();
+    private PhotoOld getHeroPhoto(String fullUri, String regularUri, String thumbUri) {
+        PhotoOld partialHeroPhoto = getPartialHeroPhoto();
         partialHeroPhoto.setFullPhotoUri(fullUri);
         partialHeroPhoto.setRegularPhotoUri(regularUri);
         partialHeroPhoto.setThumbPhotoUri(thumbUri);
         return partialHeroPhoto;
     }
 
-    public Photo getPartialHeroPhoto() {
-        return new Photo(
+    public PhotoOld getPartialHeroPhoto() {
+        return new PhotoOld(
                 Constants.Fetch.FIRST_WALLPAPER_ID,
                 null,
                 null,
