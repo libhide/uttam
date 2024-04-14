@@ -21,30 +21,65 @@ internal class HomeViewModel @Inject constructor(
     dispatcherProvider,
 ) {
 
+    init {
+        initialize()
+    }
+
+    private fun initialize() {
+        launch {
+            photoRepo.getCurrentWallpaper().collectBy(
+                onStart = {
+                    updateState { currentState ->
+                        currentState.copy(isLoading = true)
+                    }
+                },
+                onEach = { photo ->
+                    updateState { currentState ->
+                        currentState.copy(
+                            isLoading = false,
+                            currentWallpaper = photo,
+                        )
+                    }
+                },
+                onError = {
+                    updateState { currentState ->
+                        currentState.copy(
+                            isLoading = false,
+                        )
+                    }
+                }
+            )
+        }
+    }
+
     override fun onViewAction(viewAction: HomeAction) {
         when (viewAction) {
             RefreshWallpaper -> {
                 launch {
-                    photoRepo.fetchRandomPhoto().collectBy(onStart = {
-                        updateState { currentState ->
-                            currentState.copy(isLoading = true)
+                    photoRepo.fetchRandomPhoto().collectBy(
+                        onStart = {
+                            updateState { currentState ->
+                                currentState.copy(isLoading = true)
+                            }
+                        },
+                        onEach = { photo ->
+                            updateState { currentState ->
+                                currentState.copy(
+                                    isLoading = false,
+                                    currentWallpaper = photo,
+                                )
+                            }
+                            dispatchViewEvent(Effect(ChangeWallpaper))
+                        },
+                        onError = {
+                            updateState { currentState ->
+                                currentState.copy(
+                                    isLoading = false,
+                                )
+                            }
+                            handleError(it)
                         }
-                    }, onEach = { photo ->
-                        updateState { currentState ->
-                            currentState.copy(
-                                isLoading = false,
-                                currentWallpaper = photo,
-                            )
-                        }
-                        dispatchViewEvent(Effect(ChangeWallpaper))
-                    }, onError = {
-                        updateState { currentState ->
-                            currentState.copy(
-                                isLoading = false,
-                            )
-                        }
-                        handleError(it)
-                    })
+                    )
                 }
             }
         }

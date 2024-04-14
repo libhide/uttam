@@ -3,6 +3,7 @@ package com.ratik.uttam.data.storage
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import com.ratik.uttam.R
 import com.ratik.uttam.core.DispatcherProvider
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -15,7 +16,8 @@ class WallpaperDownloader @Inject constructor(
     private val dispatcherProvider: DispatcherProvider,
     context: Context,
 ) {
-    private val appCacheFolder = File(context.filesDir, "Uttam")
+    private val appCacheFolder =
+        File(context.filesDir, context.getString(R.string.app_name).lowercase())
 
     suspend fun downloadWallpaper(wallpaperId: String, wallpaperUrl: String): String? {
         clearCacheFolder()

@@ -5,7 +5,10 @@ import android.app.WallpaperManager
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material.Button
@@ -14,6 +17,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -29,6 +33,7 @@ import com.ratik.uttam.core.contract.ViewEvent.DisplayMessage
 import com.ratik.uttam.core.contract.ViewEvent.Effect
 import com.ratik.uttam.ui.components.ScrollableImage
 import com.ratik.uttam.ui.home.HomeAction.RefreshWallpaper
+import com.ratik.uttam.ui.modifiers.shimmerBackground
 import com.ratik.uttam.ui.theme.Dimens.SpacingNormal
 import com.ratik.uttam.ui.theme.Dimens.TextSizeXXLarge
 import timber.log.Timber
@@ -90,10 +95,6 @@ internal fun HomeScreen(
         contentDescription = null,
     )
 
-    if (state.isLoading) {
-        CircularProgressIndicator(color = Color.White)
-    }
-
     Column(
         modifier = Modifier
             .safeDrawingPadding()
@@ -110,5 +111,13 @@ internal fun HomeScreen(
                 fontSize = TextSizeXXLarge,
             )
         }
+    }
+
+    if (state.isLoading) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .shimmerBackground()
+        )
     }
 }
