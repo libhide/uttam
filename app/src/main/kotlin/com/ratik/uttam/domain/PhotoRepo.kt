@@ -26,11 +26,14 @@ internal class PhotoRepo @Inject constructor(
         unsplashApi.getRandomPhotoSus(
             clientId = BuildConfig.CLIENT_ID,
             collections = ApiConstants.DEFAULT_COLLECTIONS,
+            // TODO: remove hardcoded values
+            w = 1080,
+            h = 2138,
         ).asResult()
             .whenSuccess { photoApiModel ->
                 val localUri = wallpaperDownloader.downloadWallpaper(
                     photoApiModel.id,
-                    photoApiModel.urls.regularUrl,
+                    photoApiModel.urls.fullUrl,
                 )
                 if (localUri != null) {
                     emit(mapper.mapPhoto(photoApiModel, localUri))
