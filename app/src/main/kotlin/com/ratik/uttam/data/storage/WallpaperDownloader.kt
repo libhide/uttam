@@ -50,11 +50,11 @@ class WallpaperDownloader @Inject constructor(
             if (!appCacheFolder.exists()) {
                 appCacheFolder.mkdirs()
             }
-            val file = File(appCacheFolder, "${bitmapId}.png")
+            val file = File(appCacheFolder, "${bitmapId}.jpg")
             val outputStream: FileOutputStream
             try {
                 outputStream = FileOutputStream(file)
-                it.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+                it.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
                 outputStream.close()
                 file.absolutePath
             } catch (e: Exception) {
