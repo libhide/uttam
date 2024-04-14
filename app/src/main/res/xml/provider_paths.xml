@@ -6,4 +6,7 @@
     <cache-path
         name="cache"
         path="." />
+    <files-path
+        name="wallpapers"
+        path="Uttam/" />
 </paths>
