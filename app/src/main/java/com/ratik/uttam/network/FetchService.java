@@ -11,7 +11,7 @@ import com.ratik.uttam.R;
 import com.ratik.uttam.data.UnsplashApi;
 import com.ratik.uttam.data.PhotoStore;
 import com.ratik.uttam.data.PrefStore;
-import com.ratik.uttam.domain.model.Photo;
+import com.ratik.uttam.domain.model.PhotoOld;
 import com.ratik.uttam.data.model.PhotoApiModel;
 import com.ratik.uttam.domain.model.PhotoType;
 import com.ratik.uttam.util.StringExtensionsKt;
@@ -74,7 +74,7 @@ public class FetchService {
         });
     }
 
-    private Single<Photo> getPhotoSingle(PhotoApiModel response) throws IOException {
+    private Single<PhotoOld> getPhotoSingle(PhotoApiModel response) throws IOException {
         Single<String> fullSingle = downloadService.downloadWallpaper(response, PhotoType.FULL);
         Single<String> regularSingle = downloadService.downloadWallpaper(response, PhotoType.REGULAR);
         Single<String> thumbSingle = downloadService.downloadWallpaper(response, PhotoType.THUMB);
@@ -85,7 +85,7 @@ public class FetchService {
         });
     }
 
-    private Single<Photo> increaseDownloadCountForWallpaper(Photo photo) throws IOException {
+    private Single<PhotoOld> increaseDownloadCountForWallpaper(PhotoOld photo) throws IOException {
         String downloadEndpoint = photo.getPhotoDownloadEndpoint();
         downloadEndpoint += "?client_id=" + BuildConfig.CLIENT_ID;
 
@@ -98,11 +98,11 @@ public class FetchService {
         return Single.just(photo);
     }
 
-    private Completable getPostSaveSetWallpaperCompletable(Completable photoStorePutCompletable, Photo photo) {
+    private Completable getPostSaveSetWallpaperCompletable(Completable photoStorePutCompletable, PhotoOld photo) {
         return photoStorePutCompletable.andThen(getWallpaperPath(photo)).map(BitmapFactory::decodeFile).flatMapCompletable(this::setWall);
     }
 
-    private Single<String> getWallpaperPath(Photo photo) {
+    private Single<String> getWallpaperPath(PhotoOld photo) {
         return Single.just(photo.getFullPhotoUri());
     }
 
@@ -110,8 +110,8 @@ public class FetchService {
         return Completable.fromAction(() -> wallpaperManager.setBitmap(bitmap));
     }
 
-    private Photo getPhoto(PhotoApiModel response, String fullUri, String regularUri, String thumbUri) {
-        return new Photo(
+    private PhotoOld getPhoto(PhotoApiModel response, String fullUri, String regularUri, String thumbUri) {
+        return new PhotoOld(
                 response.getId(),
                 fullUri,
                 regularUri,

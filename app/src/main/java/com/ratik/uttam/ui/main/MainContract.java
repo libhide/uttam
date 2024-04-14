@@ -1,6 +1,6 @@
 package com.ratik.uttam.ui.main;
 
-import com.ratik.uttam.domain.model.Photo;
+import com.ratik.uttam.domain.model.PhotoOld;
 
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -11,7 +11,7 @@ import io.reactivex.disposables.CompositeDisposable;
 public interface MainContract {
 
     interface View {
-        void showPhoto(Photo photo);
+        void showPhoto(PhotoOld photo);
 
         void onGetPhotoFailed();
 
