@@ -26,14 +26,14 @@ internal class PhotoRepo @Inject constructor(
         unsplashApi.getRandomPhotoSus(
             clientId = BuildConfig.CLIENT_ID,
             collections = ApiConstants.DEFAULT_COLLECTIONS,
-            // TODO: remove hardcoded values
-            w = 1080,
-            h = 2138,
         ).asResult()
             .whenSuccess { photoApiModel ->
+                // double the height and get a square image to ensure a scrolling wallpaper
+                val wallpaperUrl =
+                    photoApiModel.urls.rawUrl + "&w=4276&h=4276&fit=crop"
                 val localUri = wallpaperDownloader.downloadWallpaper(
                     photoApiModel.id,
-                    photoApiModel.urls.fullUrl,
+                    wallpaperUrl,
                 )
                 if (localUri != null) {
                     emit(mapper.mapPhoto(photoApiModel, localUri))
