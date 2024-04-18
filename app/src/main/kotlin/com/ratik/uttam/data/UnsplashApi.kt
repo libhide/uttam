@@ -26,4 +26,12 @@ interface UnsplashApi {
         @Query("w") w: Int? = null,
         @Query("h") h: Int? = null,
     ): Response<PhotoApiModel>
+
+    @GET("endpoint")
+    suspend fun fakeEndpoint(
+        @Query("client_id") clientId: String?,
+        @Query("collections") collections: String?,
+        @Query("w") w: Int? = null,
+        @Query("h") h: Int? = null,
+    ): Response<PhotoApiModel>
 }
