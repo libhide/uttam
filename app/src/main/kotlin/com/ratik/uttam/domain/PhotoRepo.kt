@@ -25,7 +25,7 @@ internal class PhotoRepo @Inject constructor(
     private val mapper: PhotoMapper,
 ) {
     suspend fun fetchRandomPhoto(): Flow<Photo> = flow {
-        unsplashApi.getRandomPhotoSus(
+        unsplashApi.getRandomPhotoSusNew(
             clientId = BuildConfig.CLIENT_ID,
             collections = ApiConstants.DEFAULT_COLLECTIONS,
         ).asResult().whenSuccess { photoApiModel ->
