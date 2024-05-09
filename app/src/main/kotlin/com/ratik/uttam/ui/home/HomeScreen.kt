@@ -106,7 +106,7 @@ internal fun HomeScreen(
             },
         ) {
             Text(
-                text = "Refresh Wallpaper",
+                text = "Refresh Wallpaper Now",
                 color = Color.White,
                 fontSize = TextSizeXXLarge,
             )
