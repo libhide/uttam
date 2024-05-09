@@ -28,7 +28,7 @@ interface UnsplashApi {
     ): Response<PhotoApiModel>
 
     @GET("photos/random")
-    suspend fun getRandomPhotoSus2(
+    suspend fun getRandomPhotoSus3(
         @Query("client_id") clientId: String?,
         @Query("collections") collections: String?,
         @Query("w") w: Int? = null,
