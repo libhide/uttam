@@ -25,7 +25,7 @@ internal class PhotoRepo @Inject constructor(
     private val mapper: PhotoMapper,
 ) {
     suspend fun fetchRandomPhoto(): Flow<Photo> = flow {
-        unsplashApi.getRandomPhotoSus(
+        unsplashApi.getRandomPhotoSus3(
             clientId = BuildConfig.CLIENT_ID,
             collections = ApiConstants.DEFAULT_COLLECTIONS,
         ).asResult().whenSuccess { photoApiModel ->
@@ -43,7 +43,7 @@ internal class PhotoRepo @Inject constructor(
                 throw WallpaperrDownloadFailedException()
             }
         }.whenError { error ->
-            Timber.e("Error fetching photo: $error")
+            Timber.e("Error fetching: $error")
             throw error
         }
     }.flowOn(dispatcherProvider.io)
