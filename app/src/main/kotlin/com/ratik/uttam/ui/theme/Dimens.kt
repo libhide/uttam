@@ -26,7 +26,9 @@ object Dimens {
     val ElevationLarge = 10.dp
 
     // Text Sizes
-    val TextSizeSmall = 11.sp
+    val TextSizeXXSmall = 10.sp
+    val TextSizeXSmall = 12.sp
+    val TextSizeSmall = 14.sp
     val TextSizeDefault = 16.sp
     val TextSizeLarge = 20.sp
     val TextSizeXLarge = 24.sp
