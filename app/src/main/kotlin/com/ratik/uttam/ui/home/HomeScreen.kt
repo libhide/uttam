@@ -2,32 +2,27 @@ package com.ratik.uttam.ui.home
 
 import android.app.Activity.RESULT_OK
 import android.app.WallpaperManager
+import android.content.Intent
+import android.media.MediaScannerConnection
+import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Arrangement.SpaceBetween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.systemBarsPadding
-import androidx.compose.material.Button
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -45,21 +40,18 @@ import com.ratik.uttam.core.contract.ViewEvent.Effect
 import com.ratik.uttam.ui.components.HorizontalSpacer
 import com.ratik.uttam.ui.components.ScrollableImage
 import com.ratik.uttam.ui.home.HomeAction.RefreshWallpaper
+import com.ratik.uttam.ui.home.HomeAction.SaveWallpaper
 import com.ratik.uttam.ui.home.HomeAction.SetWallpaper
 import com.ratik.uttam.ui.home.HomeEffect.ChangeWallpaper
+import com.ratik.uttam.ui.home.HomeEffect.NotifyWallpaperSaved
 import com.ratik.uttam.ui.modifiers.shimmerBackground
-import com.ratik.uttam.ui.theme.Dimens
 import com.ratik.uttam.ui.theme.Dimens.SpacingLarge
 import com.ratik.uttam.ui.theme.Dimens.SpacingMedium
-import com.ratik.uttam.ui.theme.Dimens.SpacingNormal
-import com.ratik.uttam.ui.theme.Dimens.SpacingXLarge
 import com.ratik.uttam.ui.theme.Dimens.SpacingXSmall
 import com.ratik.uttam.ui.theme.Dimens.TextSizeDefault
-import com.ratik.uttam.ui.theme.Dimens.TextSizeLarge
 import com.ratik.uttam.ui.theme.Dimens.TextSizeSmall
-import com.ratik.uttam.ui.theme.Dimens.TextSizeXXLarge
-import timber.log.Timber
 import java.io.File
+
 
 @Composable
 internal fun HomeScreen(
@@ -68,13 +60,14 @@ internal fun HomeScreen(
     val context = LocalContext.current
     val wallpaperManager = WallpaperManager.getInstance(context)
     val launcher =
-        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult ->
+        rememberLauncherForActivityResult(StartActivityForResult()) { activityResult ->
             if (activityResult.resultCode == RESULT_OK) {
-                // No-op
+                Toast.makeText(context, R.string.wallpaper_set_text, Toast.LENGTH_SHORT).show()
             }
         }
 
-    val state by rememberFlowOnLifecycle(flow = viewModel.state).collectAsState(HomeState.initialState)
+    val state by rememberFlowOnLifecycle(flow = viewModel.state)
+        .collectAsState(HomeState.initialState)
 
     viewModel.events.collectAsEffect { event ->
         when (event) {
@@ -99,6 +92,23 @@ internal fun HomeScreen(
                             wallpaperManager.getCropAndSetWallpaperIntent(wallpaperUri)
                         launcher.launch(wallpaperSetIntent)
                     }
+
+                    is NotifyWallpaperSaved -> {
+                        Toast.makeText(
+                            context,
+                            R.string.wallpaper_saved_message,
+                            Toast.LENGTH_SHORT
+                        ).show()
+
+                        // Informs the system of the newly saved image
+                        val file = File(event.effect.savedWallpaperFilePath)
+                        MediaScannerConnection.scanFile(
+                            context,
+                            arrayOf(file.toString()),
+                            null,
+                            null
+                        )
+                    }
                 }
             }
 
@@ -122,10 +132,21 @@ internal fun HomeScreen(
                 vertical = SpacingLarge,
             ),
     ) {
-        Row {
+        Row(
+            horizontalArrangement = SpaceBetween,
+            verticalAlignment = CenterVertically,
+            modifier = Modifier.fillMaxWidth(),
+        ) {
             Image(
                 painter = painterResource(id = R.drawable.uttam),
                 contentDescription = stringResource(id = R.string.content_desc_app_logo),
+            )
+            Image(
+                painter = painterResource(id = R.drawable.ic_refresh),
+                contentDescription = stringResource(id = R.string.content_desc_refresh_wallpaper),
+                modifier = Modifier.clickable {
+                    viewModel.onViewAction(RefreshWallpaper)
+                },
             )
         }
 
@@ -150,9 +171,9 @@ internal fun HomeScreen(
             Row {
                 Image(
                     painter = painterResource(id = R.drawable.ic_download),
-                    contentDescription = stringResource(id = R.string.content_desc_refresh_wallpaper),
+                    contentDescription = stringResource(id = R.string.content_desc_save_wallpaper),
                     modifier = Modifier.clickable {
-                        viewModel.onViewAction(RefreshWallpaper)
+                        viewModel.onViewAction(SaveWallpaper)
                     },
                 )
                 HorizontalSpacer(size = SpacingXSmall)

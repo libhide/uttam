@@ -11,6 +11,7 @@ class PhotoDao @Inject constructor(
 
     fun savePhoto(photo: Photo) {
         val editor = sharedPreferences.edit()
+        editor.putString("id", photo.id)
         editor.putString("localUri", photo.localUri)
         editor.putString("shareUrl", photo.shareUrl)
         editor.putString("photographerName", photo.photographer.name)
@@ -20,6 +21,7 @@ class PhotoDao @Inject constructor(
     }
 
     fun getPhoto(): Photo? {
+        val id = sharedPreferences.getString("id", "")
         val localUri = sharedPreferences.getString("localUri", "")
         val shareUrl = sharedPreferences.getString("shareUrl", "")
         val photographerName = sharedPreferences.getString("photographerName", "")
@@ -30,6 +32,7 @@ class PhotoDao @Inject constructor(
             null
         } else {
             Photo(
+                id = id!!,
                 localUri = localUri!!,
                 photographer = Photographer(
                     name = photographerName!!,
