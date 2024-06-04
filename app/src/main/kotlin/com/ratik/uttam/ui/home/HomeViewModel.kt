@@ -7,6 +7,7 @@ import com.ratik.uttam.core.contract.ViewEvent.Effect
 import com.ratik.uttam.data.extensions.collectBy
 import com.ratik.uttam.domain.PhotoRepo
 import com.ratik.uttam.ui.home.HomeAction.RefreshWallpaper
+import com.ratik.uttam.ui.home.HomeAction.SetWallpaper
 import com.ratik.uttam.ui.home.HomeEffect.ChangeWallpaper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import timber.log.Timber
@@ -81,6 +82,10 @@ internal class HomeViewModel @Inject constructor(
                         }
                     )
                 }
+            }
+
+            SetWallpaper -> {
+                dispatchViewEvent(Effect(ChangeWallpaper))
             }
         }
     }
