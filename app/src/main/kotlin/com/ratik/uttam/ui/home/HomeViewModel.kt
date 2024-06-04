@@ -2,15 +2,19 @@ package com.ratik.uttam.ui.home
 
 import com.ratik.uttam.core.BaseViewModel
 import com.ratik.uttam.core.DispatcherProvider
-import com.ratik.uttam.core.contract.ViewEvent
+import com.ratik.uttam.core.MessageState.Snack
+import com.ratik.uttam.core.contract.ViewEvent.DisplayMessage
 import com.ratik.uttam.core.contract.ViewEvent.Effect
 import com.ratik.uttam.data.extensions.collectBy
 import com.ratik.uttam.domain.PhotoRepo
 import com.ratik.uttam.ui.home.HomeAction.RefreshWallpaper
+import com.ratik.uttam.ui.home.HomeAction.SaveWallpaper
 import com.ratik.uttam.ui.home.HomeAction.SetWallpaper
 import com.ratik.uttam.ui.home.HomeEffect.ChangeWallpaper
+import com.ratik.uttam.ui.home.HomeEffect.NotifyWallpaperSaved
 import dagger.hilt.android.lifecycle.HiltViewModel
 import timber.log.Timber
+import java.io.File
 import javax.inject.Inject
 
 @HiltViewModel
@@ -70,7 +74,6 @@ internal class HomeViewModel @Inject constructor(
                                     currentWallpaper = photo,
                                 )
                             }
-                            dispatchViewEvent(Effect(ChangeWallpaper))
                         },
                         onError = {
                             updateState { currentState ->
@@ -86,6 +89,38 @@ internal class HomeViewModel @Inject constructor(
 
             SetWallpaper -> {
                 dispatchViewEvent(Effect(ChangeWallpaper))
+            }
+
+            SaveWallpaper -> {
+                launch {
+                    photoRepo.copyFileToExternalStorage(
+                        sourceFile = File(currentState.currentWallpaper!!.localUri),
+                        exportedFileFilename = "${currentState.currentWallpaper!!.id}.png"
+                    ).collectBy(
+                        onStart = {
+                            dispatchViewEvent(
+                                DisplayMessage(
+                                    message = Snack(
+                                        "Saving wallpaper..."
+                                    )
+                                )
+                            )
+                        },
+                        onEach = { savedFile ->
+                            dispatchViewEvent(
+                                Effect(
+                                    NotifyWallpaperSaved(
+                                        savedWallpaperFilePath = savedFile.absolutePath
+                                    )
+                                )
+                            )
+                        },
+                        onError = {
+                            // Handle wallpaper saving error
+                            handleError(it)
+                        }
+                    )
+                }
             }
         }
     }

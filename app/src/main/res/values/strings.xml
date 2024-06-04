@@ -26,6 +26,7 @@
     <string name="content_desc_app_logo">Uttam\'s Logo</string>
     <string name="content_desc_uttam_logo_small">Uttam\'s logo\'s small version.</string>
     <string name="content_desc_refresh_wallpaper">Refresh wallpaper</string>
+    <string name="content_desc_save_wallpaper">Save wallpaper</string>
     <string name="content_desc_set_wallpaper">Set wallpaper</string>
 
     <!-- Main UI -->
