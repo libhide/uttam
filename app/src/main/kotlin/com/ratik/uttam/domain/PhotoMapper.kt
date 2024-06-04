@@ -9,6 +9,7 @@ class PhotoMapper @Inject constructor() {
 
     fun mapPhoto(photoApiModel: PhotoApiModel, localUri: String): Photo {
         return Photo(
+            id = photoApiModel.id,
             localUri = localUri,
             shareUrl = photoApiModel.links.htmlLink,
             photographer = mapPhotographer(photoApiModel),
