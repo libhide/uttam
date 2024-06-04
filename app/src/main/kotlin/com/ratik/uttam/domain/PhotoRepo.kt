@@ -1,6 +1,5 @@
 package com.ratik.uttam.domain
 
-import android.os.Environment
 import com.ratik.uttam.BuildConfig
 import com.ratik.uttam.core.DispatcherProvider
 import com.ratik.uttam.data.ApiConstants
@@ -16,12 +15,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import timber.log.Timber
-import java.io.File
-import java.io.FileInputStream
-import java.io.FileNotFoundException
-import java.io.FileOutputStream
-import java.io.IOException
-import java.nio.channels.FileChannel
 import javax.inject.Inject
 
 internal class PhotoRepo @Inject constructor(
@@ -31,15 +24,6 @@ internal class PhotoRepo @Inject constructor(
     private val photoDao: PhotoDao,
     private val mapper: PhotoMapper,
 ) {
-    private val extStorageDir: File
-        get() {
-            val appName = "Uttam"
-            return File(
-                Environment.getExternalStoragePublicDirectory(
-                    Environment.DIRECTORY_PICTURES
-                ), appName
-            )
-        }
 
     suspend fun fetchRandomPhoto(): Flow<Photo> = flow {
         unsplashApi.getRandomPhotoSus(
@@ -74,38 +58,6 @@ internal class PhotoRepo @Inject constructor(
             // as part of onboarding.
             // TODO: re-work this logic once onboarding is implemented
             throw WallpaperrDownloadFailedException()
-        }
-    }.flowOn(dispatcherProvider.io)
-
-    suspend fun copyFileToExternalStorage(
-        sourceFile: File,
-        exportedFileFilename: String,
-    ): Flow<File> = flow {
-        val destination = extStorageDir
-        if (!destination.exists() && !destination.mkdirs()) {
-            val t = Throwable("Error making directory: " + destination.path)
-            throw t
-        }
-        val exportedFile = File(destination, exportedFileFilename)
-        if (exportedFile.exists()) {
-            emit(exportedFile)
-        } else {
-            var inChannel: FileChannel? = null
-            var outChannel: FileChannel? = null
-            try {
-                inChannel = FileInputStream(sourceFile).channel
-                outChannel = FileOutputStream(exportedFile).channel
-            } catch (e: FileNotFoundException) {
-                e.printStackTrace()
-            }
-            try {
-                inChannel?.transferTo(0, inChannel.size(), outChannel)
-                    ?: throw IOException("inChannel size is null")
-            } finally {
-                inChannel?.close()
-                outChannel?.close()
-            }
-            emit(exportedFile)
         }
     }.flowOn(dispatcherProvider.io)
 }
