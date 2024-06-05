@@ -40,7 +40,6 @@ android {
     defaultConfig {
         applicationId = "com.ratik.uttam.prod"
         minSdk = 24
-        targetSdk = 34
         versionCode = 21
         versionName = "4.4"
 
@@ -100,6 +99,11 @@ dependencies {
     implementation(libs.media)
     implementation(libs.legacy.support)
     implementation(libs.material)
+
+    // Android X
+    implementation(libs.androidx.work.manager)
+    implementation(libs.androidx.hilt.work)
+    kapt(libs.androidx.hilt.compiler)
 
     // Compose
     val composeBom = platform(libs.androidx.compose.bom)
