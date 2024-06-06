@@ -9,7 +9,7 @@ import com.ratik.uttam.data.extensions.asResult
 import com.ratik.uttam.data.storage.WallpaperDownloader
 import com.ratik.uttam.data.whenError
 import com.ratik.uttam.data.whenSuccess
-import com.ratik.uttam.domain.exceptions.WallpaperrDownloadFailedException
+import com.ratik.uttam.domain.exceptions.WallpaperDownloadFailedException
 import com.ratik.uttam.domain.model.Photo
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -41,7 +41,7 @@ internal class PhotoRepo @Inject constructor(
                 photoDao.savePhoto(photo)
                 emit(photo)
             } else {
-                throw WallpaperrDownloadFailedException()
+                throw WallpaperDownloadFailedException()
             }
         }.whenError { error ->
             Timber.e("Error fetching photo: $error")
@@ -57,7 +57,7 @@ internal class PhotoRepo @Inject constructor(
             // Ideally, this situation won't arise as a wallpaper would always be saved
             // as part of onboarding.
             // TODO: re-work this logic once onboarding is implemented
-            throw WallpaperrDownloadFailedException()
+            throw WallpaperDownloadFailedException()
         }
     }.flowOn(dispatcherProvider.io)
 }
