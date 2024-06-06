@@ -40,6 +40,7 @@ android {
     defaultConfig {
         applicationId = "com.ratik.uttam.prod"
         minSdk = 24
+        targetSdk = 34
         versionCode = 21
         versionName = "4.4"
 
