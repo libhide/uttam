@@ -2,9 +2,6 @@ package com.ratik.uttam.ui.home
 
 import android.app.Activity.RESULT_OK
 import android.app.WallpaperManager
-import android.content.Intent
-import android.media.MediaScannerConnection
-import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
@@ -37,17 +34,13 @@ import com.ratik.uttam.core.Ignored
 import com.ratik.uttam.core.MessageState.Snack
 import com.ratik.uttam.core.contract.ViewEvent.DisplayMessage
 import com.ratik.uttam.core.contract.ViewEvent.Effect
-import com.ratik.uttam.ui.components.HorizontalSpacer
 import com.ratik.uttam.ui.components.ScrollableImage
 import com.ratik.uttam.ui.home.HomeAction.RefreshWallpaper
-import com.ratik.uttam.ui.home.HomeAction.SaveWallpaper
 import com.ratik.uttam.ui.home.HomeAction.SetWallpaper
 import com.ratik.uttam.ui.home.HomeEffect.ChangeWallpaper
-import com.ratik.uttam.ui.home.HomeEffect.NotifyWallpaperSaved
 import com.ratik.uttam.ui.modifiers.shimmerBackground
 import com.ratik.uttam.ui.theme.Dimens.SpacingLarge
 import com.ratik.uttam.ui.theme.Dimens.SpacingMedium
-import com.ratik.uttam.ui.theme.Dimens.SpacingXSmall
 import com.ratik.uttam.ui.theme.Dimens.TextSizeDefault
 import com.ratik.uttam.ui.theme.Dimens.TextSizeSmall
 import java.io.File
@@ -91,23 +84,6 @@ internal fun HomeScreen(
                         val wallpaperSetIntent =
                             wallpaperManager.getCropAndSetWallpaperIntent(wallpaperUri)
                         launcher.launch(wallpaperSetIntent)
-                    }
-
-                    is NotifyWallpaperSaved -> {
-                        Toast.makeText(
-                            context,
-                            R.string.wallpaper_saved_message,
-                            Toast.LENGTH_SHORT
-                        ).show()
-
-                        // Informs the system of the newly saved image
-                        val file = File(event.effect.savedWallpaperFilePath)
-                        MediaScannerConnection.scanFile(
-                            context,
-                            arrayOf(file.toString()),
-                            null,
-                            null
-                        )
                     }
                 }
             }
@@ -168,23 +144,13 @@ internal fun HomeScreen(
                 )
             }
 
-            Row {
-                Image(
-                    painter = painterResource(id = R.drawable.ic_download),
-                    contentDescription = stringResource(id = R.string.content_desc_save_wallpaper),
-                    modifier = Modifier.clickable {
-                        viewModel.onViewAction(SaveWallpaper)
-                    },
-                )
-                HorizontalSpacer(size = SpacingXSmall)
-                Image(
-                    painter = painterResource(id = R.drawable.ic_set),
-                    contentDescription = stringResource(id = R.string.content_desc_set_wallpaper),
-                    modifier = Modifier.clickable {
-                        viewModel.onViewAction(SetWallpaper)
-                    },
-                )
-            }
+            Image(
+                painter = painterResource(id = R.drawable.ic_set),
+                contentDescription = stringResource(id = R.string.content_desc_set_wallpaper),
+                modifier = Modifier.clickable {
+                    viewModel.onViewAction(SetWallpaper)
+                },
+            )
         }
     }
 
