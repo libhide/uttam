@@ -37,7 +37,7 @@ class UttamApp : Application(), Configuration.Provider {
             .setRequiredNetworkType(NetworkType.UNMETERED) // requires WiFi
             .build()
 
-        val repeatInterval = TimeUnit.HOURS.toMillis(1)
+        val repeatInterval = TimeUnit.MINUTES.toMillis(16)
         // val initialDelay = TimeUnit.HOURS.toMillis(1)
 
         val workRequest = PeriodicWorkRequest.Builder(
