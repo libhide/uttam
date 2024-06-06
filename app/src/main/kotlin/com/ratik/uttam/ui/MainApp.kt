@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.ratik.uttam.ui.home.HomeScreen
+import com.ratik.uttam.ui.landing.LandingScreen
 import com.ratik.uttam.ui.theme.UttamTheme
 
 @Composable
@@ -13,7 +13,8 @@ internal fun MainApp() {
         Surface(
             modifier = Modifier.fillMaxSize(),
         ) {
-            HomeScreen()
+            // HomeScreen()
+            LandingScreen()
         }
     }
 }

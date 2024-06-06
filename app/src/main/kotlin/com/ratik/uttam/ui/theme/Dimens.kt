@@ -44,4 +44,8 @@ object Dimens {
     val IconXLarge = 56.dp
     val IconXXLarge = 64.dp
     val IconXXXLarge = 96.dp
+
+    // Landing Screen
+    val LandingScreenLogoWidth = 200.dp
+    val LandingScreenLogoTopPadding = 150.dp
 }
