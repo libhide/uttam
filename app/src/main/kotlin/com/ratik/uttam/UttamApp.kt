@@ -24,7 +24,7 @@ class UttamApp : Application(), Configuration.Provider {
     override fun onCreate() {
         super.onCreate()
         initLogging()
-        enqueueRefreshWallpaperRequest()
+        // enqueueRefreshWallpaperRequest()
     }
 
     private fun initLogging() {
