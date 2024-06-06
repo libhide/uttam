@@ -45,6 +45,37 @@ object Dimens {
     val IconXXLarge = 64.dp
     val IconXXXLarge = 96.dp
 
+    // Percents
+    const val PERCENT_HALF = 50
+    const val PERCENT_10 = 0.1F
+    const val PERCENT_20 = 0.2F
+    const val PERCENT_30 = 0.3F
+    const val PERCENT_35 = 0.35F
+    const val PERCENT_40 = 0.4F
+    const val PERCENT_50 = 0.5F
+    const val PERCENT_60 = 0.6F
+    const val PERCENT_70 = 0.7F
+    const val PERCENT_80 = 0.8F
+    const val PERCENT_85 = 0.85F
+    const val PERCENT_90 = 0.9F
+    const val PERCENT_99 = 0.99F
+
+    // Alpha
+    const val ALPHA_10 = PERCENT_10
+    const val ALPHA_20 = PERCENT_20
+    const val ALPHA_30 = PERCENT_30
+    const val ALPHA_35 = PERCENT_35
+    const val ALPHA_40 = PERCENT_40
+    const val ALPHA_50 = PERCENT_50
+    const val ALPHA_60 = PERCENT_60
+    const val ALPHA_70 = PERCENT_70
+    const val ALPHA_80 = PERCENT_80
+    const val ALPHA_90 = PERCENT_90
+
+    // Core
+    val ButtonHeight = 48.dp
+    val ProgressIndicatorSize = 24.dp
+
     // Landing Screen
     val LandingScreenLogoWidth = 200.dp
     val LandingScreenLogoTopPadding = 150.dp

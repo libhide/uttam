@@ -114,6 +114,8 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.coil)
     implementation(libs.coil.compose)
+    implementation(libs.androidx.compose.tooling.preview)
+    debugImplementation(libs.androidx.compose.tooling)
 
     // Networking
     implementation(libs.okhttp.logging.inspector)
