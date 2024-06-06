@@ -24,7 +24,7 @@ import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.core.content.FileProvider
+import androidx.core.content.FileProvider.getUriForFile
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.request.ImageRequest
 import com.fueled.android.core.ui.extensions.collectAsEffect
@@ -45,7 +45,6 @@ import com.ratik.uttam.ui.theme.Dimens.TextSizeDefault
 import com.ratik.uttam.ui.theme.Dimens.TextSizeSmall
 import java.io.File
 
-
 @Composable
 internal fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
@@ -55,7 +54,8 @@ internal fun HomeScreen(
     val launcher =
         rememberLauncherForActivityResult(StartActivityForResult()) { activityResult ->
             if (activityResult.resultCode == RESULT_OK) {
-                Toast.makeText(context, R.string.wallpaper_set_text, Toast.LENGTH_SHORT).show()
+                // No-op
+                // The system shows a toast message when the wallpaper is set
             }
         }
 
@@ -78,7 +78,7 @@ internal fun HomeScreen(
                 when (event.effect) {
                     is ChangeWallpaper -> {
                         val wallpaperFile = File(state.currentWallpaper!!.localUri)
-                        val wallpaperUri = FileProvider.getUriForFile(
+                        val wallpaperUri = getUriForFile(
                             context, "${context.packageName}.provider", wallpaperFile
                         )
                         val wallpaperSetIntent =
