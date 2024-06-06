@@ -3,27 +3,28 @@ package com.ratik.uttam.ui.theme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.White
 
-val TextColor = Color(color = 0xFF2B292C)
-val Primary = Color(color = 0xFFD43C47)
-val PrimaryVariant = Color(color = 0xFFFD9199)
+val ColorPrimary = Color(color = 0xFF2B292C)
+val ColorPrimaryVariant = Color(color = 0xFF646464)
+val TextColor = White
 
 val ProjectLightColors = lightColors(
-    primary = Primary,
-    onPrimary = Color.White,
-    primaryVariant = PrimaryVariant,
+    primary = ColorPrimary,
+    onPrimary = White,
+    primaryVariant = ColorPrimaryVariant,
     secondary = TextColor,
     secondaryVariant = TextColor,
-    onSecondary = Color.White,
+    onSecondary = White,
     onBackground = TextColor,
     onSurface = TextColor,
 )
 
 val ProjectDarkColors = darkColors(
-    primary = Primary,
-    primaryVariant = PrimaryVariant,
-    onPrimary = Color.White,
-    onSecondary = Color.White,
+    primary = ColorPrimary,
+    primaryVariant = ColorPrimaryVariant,
+    onPrimary = White,
+    onSecondary = White,
 )
 
 val ShimmerColorLight = Color(color = 0xFFF0F2F5)
