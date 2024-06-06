@@ -24,7 +24,9 @@ import com.ratik.uttam.ui.theme.Dimens.SpacingXLarge
 import com.ratik.uttam.ui.theme.Dimens.SpacingXXXXXLarge
 
 @Composable
-internal fun LandingScreen() {
+internal fun LandingScreen(
+    onGetStarted: () -> Unit,
+) {
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(id = R.drawable.uttam_hero_splash),
@@ -53,7 +55,7 @@ internal fun LandingScreen() {
             )
 
             UttamButton.Primary(
-                onClick = {},
+                onClick = onGetStarted,
                 text = stringResource(id = R.string.get_started_text),
                 modifier = Modifier
                     .fillMaxWidth()
