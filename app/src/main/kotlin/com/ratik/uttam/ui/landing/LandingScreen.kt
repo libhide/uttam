@@ -22,23 +22,26 @@ import com.ratik.uttam.core.Ignored
 import com.ratik.uttam.core.contract.ViewEvent.Navigate
 import com.ratik.uttam.ui.components.UttamButton
 import com.ratik.uttam.ui.landing.LandingAction.GetStarted
-import com.ratik.uttam.ui.landing.LandingNavTarget.Home
+import com.ratik.uttam.ui.landing.LandingNavTarget.Onboarding
 import com.ratik.uttam.ui.theme.Dimens.LandingScreenLogoTopPadding
 import com.ratik.uttam.ui.theme.Dimens.LandingScreenLogoWidth
 import com.ratik.uttam.ui.theme.Dimens.SpacingNormal
 import com.ratik.uttam.ui.theme.Dimens.SpacingXLarge
 import com.ratik.uttam.ui.theme.Dimens.SpacingXXXXXLarge
+import com.ratik.uttam.ui.theme.setStatusBarColors
 
 @Composable
 internal fun LandingScreen(
     viewModel: LandingViewModel = hiltViewModel(),
-    navigateToHome: () -> Unit,
+    navigateToOnboarding: () -> Unit,
 ) {
+    setStatusBarColors(isDarkIcons = false)
+
     viewModel.events.collectAsEffect { event ->
         when (event) {
             is Navigate -> {
                 when (event.target) {
-                    is Home -> navigateToHome()
+                    is Onboarding -> navigateToOnboarding()
                 }
             }
 

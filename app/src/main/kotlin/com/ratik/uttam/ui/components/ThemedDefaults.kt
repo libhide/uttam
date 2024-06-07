@@ -7,15 +7,16 @@ import androidx.compose.ui.graphics.Color.Companion.White
 import com.ratik.uttam.ui.components.UttamButton.Primary
 import com.ratik.uttam.ui.theme.Dimens.ALPHA_70
 import com.ratik.uttam.ui.theme.ColorPrimary
+import com.ratik.uttam.ui.theme.ColorPrimaryVariant
 
 @Composable
 fun ButtonDefaults.themedDefaults(style: UttamButton): ButtonColors {
     return when (style) {
         Primary -> buttonColors(
             backgroundColor = White,
-            contentColor = ColorPrimary,
+            contentColor = ColorPrimaryVariant,
             disabledBackgroundColor = White.copy(alpha = ALPHA_70),
-            disabledContentColor = ColorPrimary.copy(alpha = ALPHA_70),
+            disabledContentColor = ColorPrimaryVariant.copy(alpha = ALPHA_70),
         )
     }
 }

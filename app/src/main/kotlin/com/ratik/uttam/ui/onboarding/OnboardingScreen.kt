@@ -49,6 +49,7 @@ import com.ratik.uttam.core.Ignored
 import com.ratik.uttam.core.contract.ViewEvent.Navigate
 import com.ratik.uttam.ui.components.UttamText
 import com.ratik.uttam.ui.components.VerticalSpacer
+import com.ratik.uttam.ui.onboarding.OnboardingAction.FinishOnboarding
 import com.ratik.uttam.ui.onboarding.OnboardingAction.NotificationPermissionResponded
 import com.ratik.uttam.ui.onboarding.OnboardingAction.ShowNextStep
 import com.ratik.uttam.ui.onboarding.OnboardingEffect.*
@@ -58,7 +59,7 @@ import com.ratik.uttam.ui.onboarding.model.OnboardingStep.DONE
 import com.ratik.uttam.ui.onboarding.model.OnboardingStep.FULL_CONTROL
 import com.ratik.uttam.ui.onboarding.model.OnboardingStep.NOTIF_PERMISSION
 import com.ratik.uttam.ui.onboarding.model.OnboardingStep.WELCOME
-import com.ratik.uttam.ui.onboarding.model.requiresNotificationPermission
+import com.ratik.uttam.ui.onboarding.model.isLastStep
 import com.ratik.uttam.ui.theme.ColorPrimary
 import com.ratik.uttam.ui.theme.ColorPrimaryVariant
 import com.ratik.uttam.ui.theme.Dimens.IconXXXXSmall
@@ -68,6 +69,7 @@ import com.ratik.uttam.ui.theme.Dimens.SpacingXXSmall
 import com.ratik.uttam.ui.theme.Dimens.SpacingXXXLarge
 import com.ratik.uttam.ui.theme.Dimens.SpacingXXXSmall
 import com.ratik.uttam.ui.theme.Dimens.SpacingXXXXXSmall
+import com.ratik.uttam.ui.theme.OnboardingBackground
 import com.ratik.uttam.ui.theme.setStatusBarColors
 import kotlinx.coroutines.launch
 
@@ -108,13 +110,15 @@ internal fun OnboardingScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(ColorPrimary)
+            .background(OnboardingBackground)
             .navigationBarsPadding()
             .padding(horizontal = SpacingLarge),
         verticalArrangement = SpaceBetween,
     ) {
         HorizontalPager(
-            state = pagerState, userScrollEnabled = false, modifier = Modifier.weight(1F)
+            state = pagerState,
+            userScrollEnabled = false,
+            modifier = Modifier.weight(1F)
         ) { page ->
             OnboardingContent(state.onboardingSteps[page])
         }
@@ -132,7 +136,10 @@ internal fun OnboardingScreen(
                     modifier = Modifier
                         .align(CenterEnd)
                         .padding(vertical = SpacingXXSmall)
-                        .clickable {})
+                        .clickable {
+                            viewModel.onViewAction(FinishOnboarding)
+                        }
+                )
             } else {
                 Icon(painter = painterResource(id = R.drawable.ic_arrow_right),
                     contentDescription = stringResource(R.string.content_desc_right_arrow),
@@ -143,17 +150,24 @@ internal fun OnboardingScreen(
                             vertical = SpacingXXXSmall, horizontal = SpacingSmall
                         )
                         .clickable {
-                            val currentStep = state.onboardingSteps[state.currentStepIndex]
-                            if (currentStep.requiresNotificationPermission()) {
-                                notificationsPermissionState.launchPermissionRequest()
-                            } else {
-                                viewModel.onViewAction(ShowNextStep)
-                                coroutineScope.launch {
-                                    pagerState.animateScrollToPage(
-                                        pagerState.currentPage + 1
-                                    )
-                                }
+//                            val currentStep = state.onboardingSteps[state.currentStepIndex]
+                            viewModel.onViewAction(ShowNextStep)
+                            coroutineScope.launch {
+                                pagerState.animateScrollToPage(
+                                    pagerState.currentPage + 1
+                                )
                             }
+                            // TODO: figure out why permission request is not working
+//                            if (currentStep.requiresNotificationPermission()) {
+//                                notificationsPermissionState.launchPermissionRequest()
+//                            } else {
+//                                viewModel.onViewAction(ShowNextStep)
+//                                coroutineScope.launch {
+//                                    pagerState.animateScrollToPage(
+//                                        pagerState.currentPage + 1
+//                                    )
+//                                }
+//                            }
                         }
                 )
             }

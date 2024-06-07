@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.ratik.uttam.ui.theme.ColorPrimary
+import com.ratik.uttam.ui.theme.ColorPrimaryVariant
 import com.ratik.uttam.ui.theme.Dimens
 import com.ratik.uttam.ui.theme.Dimens.ButtonHeight
 import com.ratik.uttam.ui.theme.Dimens.PERCENT_50
@@ -56,7 +57,7 @@ enum class UttamButton {
         onClick: () -> Unit,
     ) {
         val foregroundColor = when (this) {
-            Primary -> ColorPrimary
+            Primary -> ColorPrimaryVariant
         }
         val border = null
 
