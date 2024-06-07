@@ -104,6 +104,7 @@ dependencies {
     implementation(libs.androidx.work.manager)
     implementation(libs.androidx.hilt.work)
     kapt(libs.androidx.hilt.compiler)
+    implementation(libs.androidx.splashscreen)
 
     // Compose
     val composeBom = platform(libs.androidx.compose.bom)

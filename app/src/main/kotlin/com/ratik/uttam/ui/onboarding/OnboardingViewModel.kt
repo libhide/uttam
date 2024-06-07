@@ -4,6 +4,7 @@ import com.ratik.uttam.core.BaseViewModel
 import com.ratik.uttam.core.DispatcherProvider
 import com.ratik.uttam.core.Ignored
 import com.ratik.uttam.core.contract.ViewEvent.Navigate
+import com.ratik.uttam.domain.UserRepo
 import com.ratik.uttam.ui.onboarding.OnboardingAction.FinishOnboarding
 import com.ratik.uttam.ui.onboarding.OnboardingAction.NotificationPermissionResponded
 import com.ratik.uttam.ui.onboarding.OnboardingAction.ShowNextStep
@@ -14,6 +15,7 @@ import javax.inject.Inject
 @HiltViewModel
 internal class OnboardingViewModel @Inject constructor(
     dispatcherProvider: DispatcherProvider,
+    private val userRepo: UserRepo,
 ) : BaseViewModel<OnboardingState, OnboardingAction>(
     OnboardingState.initialState,
     dispatcherProvider,
@@ -38,7 +40,8 @@ internal class OnboardingViewModel @Inject constructor(
             }
 
             is FinishOnboarding -> {
-                // TODO: set onboarding as complete
+                // TODO: fetch and save first photo
+                userRepo.setHasOnboarded()
                 dispatchViewEvent(Navigate(Home))
             }
         }

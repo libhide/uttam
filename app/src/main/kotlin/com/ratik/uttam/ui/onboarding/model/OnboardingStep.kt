@@ -10,3 +10,7 @@ enum class OnboardingStep {
 fun OnboardingStep.requiresNotificationPermission(): Boolean {
     return this == OnboardingStep.NOTIF_PERMISSION
 }
+
+fun OnboardingStep.isLastStep(): Boolean {
+    return this == OnboardingStep.DONE
+}
