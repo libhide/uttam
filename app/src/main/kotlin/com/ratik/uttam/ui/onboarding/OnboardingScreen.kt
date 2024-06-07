@@ -33,6 +33,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.fueled.android.core.ui.extensions.rememberFlowOnLifecycle
 import com.ratik.uttam.R
+import com.ratik.uttam.ui.components.UttamText
 import com.ratik.uttam.ui.components.VerticalSpacer
 import com.ratik.uttam.ui.onboarding.model.OnboardingStep
 import com.ratik.uttam.ui.onboarding.model.OnboardingStep.DONE
@@ -127,14 +128,14 @@ private fun OnboardingContent(
             modifier = Modifier
                 .align(BottomCenter),
         ) {
-            Text(
+            UttamText.BodyBold(
                 text = getOnboardingTitle(context, onboardingStep),
-                color = Color.White
+                textColor = Color.White,
             )
             VerticalSpacer(SpacingSmall)
-            Text(
+            UttamText.Body(
                 text = getOnboardingMessage(context, onboardingStep),
-                color = Color.White
+                textColor = Color.White,
             )
         }
     }
