@@ -96,7 +96,8 @@ internal fun HomeScreen(
 
     ScrollableImage(
         model = ImageRequest.Builder(context)
-            .data(state.currentWallpaper?.localUri ?: R.drawable.uttam_hero).crossfade(true)
+            .data(state.currentWallpaper?.localUri ?: R.drawable.uttam_hero)
+            .crossfade(true)
             .build(),
         contentDescription = null,
     )

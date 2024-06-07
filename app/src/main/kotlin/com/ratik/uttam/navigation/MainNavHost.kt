@@ -55,7 +55,7 @@ private fun NavGraphBuilder.addAppGraph(
     ) {
         addLandingScreen(
             graph = graph,
-            onGetStarted = {
+            navigateToHome = {
                 navController.navigate(AppDestination.Home.createRoute(graph)) {
                     popUpTo(AppDestination.Landing.createRoute(graph)) {
                         inclusive = true

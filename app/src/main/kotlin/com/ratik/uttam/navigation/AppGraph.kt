@@ -18,13 +18,13 @@ sealed class AppDestination {
 
 fun NavGraphBuilder.addLandingScreen(
     graph: Graph,
-    onGetStarted: () -> Unit,
+    navigateToHome: () -> Unit,
 ) {
     composable(
         route = AppDestination.Landing.createRoute(graph),
     ) {
         LandingScreen(
-            onGetStarted = onGetStarted,
+            navigateToHome = navigateToHome,
         )
     }
 }
