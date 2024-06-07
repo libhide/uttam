@@ -39,7 +39,7 @@ internal fun MainNavHost(
     ) {
         addAppGraph(
             navController = navController,
-            setToolbarTitle = setToolbarTitle
+            setToolbarTitle = setToolbarTitle,
         )
     }
 }
@@ -51,7 +51,7 @@ private fun NavGraphBuilder.addAppGraph(
 ) {
     navigation(
         route = graph.route,
-        startDestination = AppDestination.Landing.createRoute(graph),
+        startDestination = AppDestination.Onboarding.createRoute(graph), // TODO: revert to Landing
     ) {
         addLandingScreen(
             graph = graph,
@@ -61,6 +61,12 @@ private fun NavGraphBuilder.addAppGraph(
                         inclusive = true
                     }
                 }
+            },
+        )
+        addOnboardingScreen(
+            graph = graph,
+            navigateToHome = {
+                navController.navigate(AppDestination.Home.createRoute(graph))
             },
         )
         addHomeScreen(graph)
