@@ -116,6 +116,7 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.androidx.compose.tooling.preview)
     debugImplementation(libs.androidx.compose.tooling)
+    implementation(libs.accompanist.systemuicontroller)
 
     // Networking
     implementation(libs.okhttp.logging.inspector)
