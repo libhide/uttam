@@ -22,6 +22,7 @@ androidx-compose-bom = "2024.04.00"
 androidx-activity = "1.8.2"
 androidx-hilt-navigation-compose = "1.2.0"
 coil = "2.6.0"
+accompanist = "0.35.1-alpha"
 
 # UI
 butterknife = "10.2.3"
@@ -85,6 +86,8 @@ androidx-activity-compose = { group = "androidx.activity", name = "activity-comp
 androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "androidx-hilt-navigation-compose" }
 coil = { group = "io.coil-kt", name = "coil", version.ref = "coil" }
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
+
+accompanist-systemuicontroller = { group = "com.google.accompanist", name = "accompanist-systemuicontroller", version.ref = "accompanist" }
 
 # UI
 butterknife = { group = "com.jakewharton", name = "butterknife", version.ref = "butterknife" }
