@@ -1,4 +1,5 @@
 package com.ratik.uttam.ui.landing
 
-class LandingAction {
+internal sealed class LandingAction {
+    object GetStarted : LandingAction()
 }
