@@ -3,7 +3,11 @@ package com.ratik.uttam.ui.onboarding
 import com.ratik.uttam.core.BaseViewModel
 import com.ratik.uttam.core.DispatcherProvider
 import com.ratik.uttam.core.Ignored
+import com.ratik.uttam.core.MessageState.Snack
+import com.ratik.uttam.core.contract.ViewEvent.DisplayMessage
 import com.ratik.uttam.core.contract.ViewEvent.Navigate
+import com.ratik.uttam.data.extensions.collectBy
+import com.ratik.uttam.domain.PhotoRepo
 import com.ratik.uttam.domain.UserRepo
 import com.ratik.uttam.ui.onboarding.OnboardingAction.FinishOnboarding
 import com.ratik.uttam.ui.onboarding.OnboardingAction.NotificationPermissionResponded
@@ -16,6 +20,7 @@ import javax.inject.Inject
 internal class OnboardingViewModel @Inject constructor(
     dispatcherProvider: DispatcherProvider,
     private val userRepo: UserRepo,
+    private val photoRepo: PhotoRepo,
 ) : BaseViewModel<OnboardingState, OnboardingAction>(
     OnboardingState.initialState,
     dispatcherProvider,
@@ -40,9 +45,30 @@ internal class OnboardingViewModel @Inject constructor(
             }
 
             is FinishOnboarding -> {
-                // TODO: fetch and save first photo
-                userRepo.setHasOnboarded()
-                dispatchViewEvent(Navigate(Home))
+                userRepo.setDeviceHeight(viewAction.deviceHeight)
+                userRepo.setDeviceWidth(viewAction.deviceWidth)
+                launch {
+                    photoRepo.fetchDefaultPhoto().collectBy(
+                        onStart = {
+                            updateState { currentState ->
+                                currentState.copy(isLoading = true)
+                            }
+                        },
+                        onEach = {
+                            userRepo.setHasOnboarded()
+                            dispatchViewEvent(Navigate(Home))
+                        },
+                        onError = {
+                            // TODO: Handle error
+                            dispatchViewEvent(
+                                DisplayMessage(
+                                    Snack("Error fetching photo")
+                                )
+                            )
+                        }
+                    )
+                }
+
             }
         }
     }

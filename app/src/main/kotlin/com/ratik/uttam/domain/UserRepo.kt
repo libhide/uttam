@@ -14,4 +14,12 @@ internal class UserRepo @Inject constructor(
     fun setHasOnboarded() {
         userDao.setHasOnboarded()
     }
+
+    fun setDeviceHeight(height: Int) {
+        userDao.setDeviceHeight(height)
+    }
+
+    fun setDeviceWidth(width: Int) {
+        userDao.setDeviceWidth(width)
+    }
 }
