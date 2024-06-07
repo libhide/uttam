@@ -17,7 +17,7 @@ internal data class OnboardingState(
         FULL_CONTROL,
         DONE,
     ),
-    val currentStep: Int = 0,
+    val currentStepIndex: Int = 0,
 ) : BaseState {
     companion object {
         val initialState = OnboardingState()
