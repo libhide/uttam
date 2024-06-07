@@ -27,7 +27,7 @@ internal class HomeViewModel @Inject constructor(
 
     private fun initialize() {
         launch {
-            photoRepo.getCurrentWallpaper().collectBy(
+            photoRepo.getCurrentPhoto().collectBy(
                 onStart = {
                     updateState { currentState ->
                         currentState.copy(isLoading = true)

@@ -51,7 +51,7 @@ internal fun LandingScreen(
 
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
-            painter = painterResource(id = R.drawable.uttam_hero_splash),
+            painter = painterResource(id = R.drawable.default_wallpaper),
             contentDescription = null,
             modifier = Modifier.fillMaxSize(),
             contentScale = Crop,

@@ -5,8 +5,6 @@ import com.ratik.uttam.core.DispatcherProvider
 import com.ratik.uttam.core.Ignored
 import com.ratik.uttam.core.contract.ViewEvent.Navigate
 import com.ratik.uttam.domain.UserRepo
-import com.ratik.uttam.ui.onboarding.OnboardingAction
-import com.ratik.uttam.ui.onboarding.OnboardingState
 import com.ratik.uttam.ui.splash.SplashNavTarget.Home
 import com.ratik.uttam.ui.splash.SplashNavTarget.Landing
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,14 +15,14 @@ import javax.inject.Inject
 internal class SplashViewModel @Inject constructor(
     dispatcherProvider: DispatcherProvider,
     private val userRepo: UserRepo,
-) : BaseViewModel<OnboardingState, OnboardingAction>(
-    OnboardingState.initialState,
+) : BaseViewModel<SplashState, SplashAction>(
+    SplashState.initialState,
     dispatcherProvider,
 ) {
 
     init {
         launch {
-            delay(SPLASH_DELAY)
+            delay(1000L)
             initialise()
         }
     }
@@ -38,7 +36,7 @@ internal class SplashViewModel @Inject constructor(
         }
     }
 
-    override fun onViewAction(viewAction: OnboardingAction) = Ignored
+    override fun onViewAction(viewAction: SplashAction) = Ignored
 
     override fun handleError(throwable: Throwable) = Ignored
 }
