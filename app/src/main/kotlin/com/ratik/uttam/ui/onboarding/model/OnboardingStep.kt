@@ -6,3 +6,7 @@ enum class OnboardingStep {
     FULL_CONTROL,
     DONE,
 }
+
+fun OnboardingStep.requiresNotificationPermission(): Boolean {
+    return this == OnboardingStep.NOTIF_PERMISSION
+}
