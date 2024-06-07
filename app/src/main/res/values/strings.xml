@@ -14,7 +14,7 @@
     <string name="tour_slide_2_heading">Wallpaper notifications</string>
     <string name="tour_slide_3_heading">Full control</string>
     <string name="tour_slide_4_text">The app needs to know when to push notifications to the device. Take a second to set the refresh interval for the wallpaper notification.</string>
-    <string name="all_done_text">All done! Press done to proceed!</string>
+    <string name="all_done_text">All done! Press done to start using Uttam.</string>
 
     <!-- New wallpaper notification -->
     <string name="wallpaper_notif_title">New Wallpaper!</string>
