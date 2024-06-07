@@ -5,7 +5,7 @@ import androidx.compose.material.lightColors
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.White
 
-val ColorPrimary = Color(color = 0xFF2B292C)
+val ColorPrimary = Color(color = 0xFF838383)
 val ColorPrimaryVariant = Color(color = 0xFF646464)
 val TextColor = White
 
@@ -27,5 +27,9 @@ val ProjectDarkColors = darkColors(
     onSecondary = White,
 )
 
+// Global
 val ShimmerColorLight = Color(color = 0xFFF0F2F5)
 val ShimmerColorMedium = Color(color = 0xFFDEE2E9)
+
+// Onboarding
+val OnboardingBackground = Color(color = 0xFF3D3D3D)

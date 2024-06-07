@@ -51,9 +51,32 @@ private fun NavGraphBuilder.addAppGraph(
 ) {
     navigation(
         route = graph.route,
-        startDestination = AppDestination.Onboarding.createRoute(graph), // TODO: revert to Landing
+        startDestination = AppDestination.Splash.createRoute(graph),
     ) {
+        addSplashScreen(
+            graph = graph,
+            navigateToHome = {
+                navController.navigate(AppDestination.Home.createRoute(graph)) {
+                    popUpTo(AppDestination.Splash.createRoute(graph)) {
+                        inclusive = true
+                    }
+                }
+            },
+            navigateToLanding = {
+                navController.navigate(AppDestination.Landing.createRoute(graph)) {
+                    popUpTo(AppDestination.Splash.createRoute(graph)) {
+                        inclusive = true
+                    }
+                }
+            }
+        )
         addLandingScreen(
+            graph = graph,
+            navigateToOnboarding = {
+                navController.navigate(AppDestination.Onboarding.createRoute(graph))
+            },
+        )
+        addOnboardingScreen(
             graph = graph,
             navigateToHome = {
                 navController.navigate(AppDestination.Home.createRoute(graph)) {
@@ -61,12 +84,6 @@ private fun NavGraphBuilder.addAppGraph(
                         inclusive = true
                     }
                 }
-            },
-        )
-        addOnboardingScreen(
-            graph = graph,
-            navigateToHome = {
-                navController.navigate(AppDestination.Home.createRoute(graph))
             },
         )
         addHomeScreen(graph)
