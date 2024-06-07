@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalFoundationApi::class)
+@file:OptIn(ExperimentalFoundationApi::class, ExperimentalPermissionsApi::class)
 
 package com.ratik.uttam.ui.onboarding
 
@@ -59,8 +59,6 @@ import com.ratik.uttam.ui.onboarding.model.OnboardingStep.DONE
 import com.ratik.uttam.ui.onboarding.model.OnboardingStep.FULL_CONTROL
 import com.ratik.uttam.ui.onboarding.model.OnboardingStep.NOTIF_PERMISSION
 import com.ratik.uttam.ui.onboarding.model.OnboardingStep.WELCOME
-import com.ratik.uttam.ui.onboarding.model.isLastStep
-import com.ratik.uttam.ui.theme.ColorPrimary
 import com.ratik.uttam.ui.theme.ColorPrimaryVariant
 import com.ratik.uttam.ui.theme.Dimens.IconXXXXSmall
 import com.ratik.uttam.ui.theme.Dimens.SpacingLarge
@@ -74,7 +72,6 @@ import com.ratik.uttam.ui.theme.setStatusBarColors
 import kotlinx.coroutines.launch
 
 @SuppressLint("InlinedApi")
-@OptIn(ExperimentalPermissionsApi::class, ExperimentalFoundationApi::class)
 @Composable
 internal fun OnboardingScreen(
     viewModel: OnboardingViewModel = hiltViewModel(),
@@ -82,7 +79,11 @@ internal fun OnboardingScreen(
 ) {
     setStatusBarColors(isDarkIcons = false)
 
-    val state by rememberFlowOnLifecycle(flow = viewModel.state).collectAsState(OnboardingState.initialState)
+    val context = LocalContext.current
+    val displayMetrics = context.resources.displayMetrics
+
+    val state by rememberFlowOnLifecycle(flow = viewModel.state)
+        .collectAsState(OnboardingState.initialState)
 
     val pagerState = rememberPagerState(pageCount = { state.onboardingSteps.size })
 
@@ -137,7 +138,12 @@ internal fun OnboardingScreen(
                         .align(CenterEnd)
                         .padding(vertical = SpacingXXSmall)
                         .clickable {
-                            viewModel.onViewAction(FinishOnboarding)
+                            viewModel.onViewAction(
+                                FinishOnboarding(
+                                    deviceHeight = displayMetrics.heightPixels,
+                                    deviceWidth = displayMetrics.widthPixels,
+                                )
+                            )
                         }
                 )
             } else {
