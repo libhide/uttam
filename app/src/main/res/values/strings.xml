@@ -29,6 +29,8 @@
     <string name="content_desc_save_wallpaper">Save wallpaper</string>
     <string name="content_desc_set_wallpaper">Set wallpaper</string>
     <string name="content_desc_right_arrow">Next</string>
+    <string name="content_desc_back">Back</string>
+    <string name="content_desc_overflow_menu">Show more</string>
 
     <!-- Main UI -->
     <string name="settings_label">Settings</string>

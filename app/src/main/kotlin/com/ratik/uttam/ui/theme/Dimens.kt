@@ -31,8 +31,8 @@ object Dimens {
     val TextSizeSmall = 14.sp
     val TextSizeDefault = 16.sp
     val TextSizeLarge = 20.sp
-    val TextSizeXLarge = 24.sp
-    val TextSizeXXLarge = 32.sp
+    val TextSizeXLarge = 22.sp
+    val TextSizeXXLarge = 24.sp
 
     // Icon Sizes
     val IconXXXXSmall = 8.dp
