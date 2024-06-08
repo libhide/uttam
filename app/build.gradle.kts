@@ -1,5 +1,3 @@
-@file:Suppress("UnstableApiUsage")
-
 import java.util.Properties
 import java.io.FileInputStream
 
@@ -34,7 +32,11 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.1"
+        kotlinCompilerExtensionVersion = "1.5.14"
+    }
+
+    kotlinOptions {
+        jvmTarget = "17"
     }
 
     defaultConfig {
@@ -79,8 +81,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 }
 
@@ -89,17 +91,6 @@ kapt {
 }
 
 dependencies {
-    // Kotlin
-    // TODO: figure out how to use this BOM correctly
-    implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))
-
-    // AppCompat
-    implementation(libs.appcompat)
-    implementation(libs.vectordrawable.animated)
-    implementation(libs.media)
-    implementation(libs.legacy.support)
-    implementation(libs.material)
-
     // Android X
     implementation(libs.androidx.work.manager)
     implementation(libs.androidx.hilt.work)
