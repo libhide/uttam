@@ -2,6 +2,6 @@
 <resources>
 
     <style name="UttamTheme" parent="android:Theme.Material.Light.NoActionBar">
-        <item name="windowSplashScreenIconBackgroundColor">?colorPrimary</item>
+        <item name="windowSplashScreenIconBackgroundColor">@color/colorPrimary</item>
     </style>
 </resources>
