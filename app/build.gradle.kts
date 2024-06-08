@@ -116,32 +116,14 @@ dependencies {
 
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter.gson)
-    implementation(libs.retrofit.adpater.rxjava)
 
     api(libs.moshi.core)
     ksp(libs.moshi.codegen)
     implementation(libs.retrofit.converter.moshi)
 
-    // Rx
-    implementation(libs.rxjava)
-    implementation(libs.rxandroid)
-    implementation(libs.rxbinding)
-
-    // RxPermissions
-    implementation(libs.rxpermissions)
-
     // DI
-    implementation(libs.dagger)
-    annotationProcessor(libs.dagger.compiler)
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
-
-    // App Tour
-    implementation(libs.app.tour)
-
-    // Butter Knife
-    implementation(libs.butterknife)
-    annotationProcessor(libs.butterknife.compiler)
 
     // Firebase
     implementation(libs.firebase.core)
@@ -152,5 +134,4 @@ dependencies {
 
     // Testing
     testImplementation(libs.junit)
-    testImplementation(libs.mockito)
 }

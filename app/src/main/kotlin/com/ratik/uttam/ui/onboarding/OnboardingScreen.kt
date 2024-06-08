@@ -76,7 +76,6 @@ import com.ratik.uttam.ui.theme.setStatusBarColors
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.concurrent.TimeUnit
-import java.util.concurrent.TimeUnit.DAYS
 import java.util.concurrent.TimeUnit.MILLISECONDS
 
 @SuppressLint("InlinedApi")
@@ -141,7 +140,8 @@ internal fun OnboardingScreen(
                 modifier = Modifier.align(Center),
             )
             if (isLastPage) {
-                UttamText.Body(text = stringResource(R.string.appTourDoneButton),
+                UttamText.Body(
+                    text = "Done",
                     modifier = Modifier
                         .align(CenterEnd)
                         .padding(vertical = SpacingXXSmall)
@@ -154,7 +154,7 @@ internal fun OnboardingScreen(
                                     deviceWidth = displayMetrics.widthPixels,
                                 )
                             )
-                        }
+                        },
                 )
             } else {
                 Icon(painter = painterResource(id = R.drawable.ic_arrow_right),

@@ -6,13 +6,6 @@ google-services = "4.4.2"
 hilt = "2.49"
 ksp = "1.9.24-1.0.20"
 
-# AppCompat
-appcompat = "1.6.1"
-vectordrawable-animated = "1.1.0"
-media = "1.7.0"
-legacy-support = "1.0.0"
-material = "1.11.0"
-
 # Android X
 work-manager = "2.9.0"
 hilt-work = "1.2.0"
@@ -25,24 +18,11 @@ androidx-hilt-navigation-compose = "1.2.0"
 coil = "2.6.0"
 accompanist = "0.34.0"
 
-# UI
-butterknife = "10.2.3"
-
 # Networking
 okhttp = "4.11.0"
 retrofit = "2.9.0"
 retrofit-converter-gson = "2.8.1"
 moshi = "1.15.0"
-
-# Rx
-rxjava = "2.2.10"
-rxandroid = "2.1.1"
-rxbinding = "2.0.0"
-rxpermissions = "0.11"
-
-# DI
-dagger = "2.38.1"
-dagger-compiler = "2.12"
 
 # Firebase
 firebase-core = "21.1.1"
@@ -55,16 +35,6 @@ junit = "4.13.2"
 timber = "5.0.1"
 
 [libraries]
-# Core
-kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib-jdk7", version.ref = "kotlin" }
-
-# AppCompat
-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
-vectordrawable-animated = { group = "androidx.vectordrawable", name = "vectordrawable-animated", version.ref = "vectordrawable-animated" }
-media = { group = "androidx.media", name = "media", version.ref = "media" }
-legacy-support = { group = "androidx.legacy", name = "legacy-support-v4", version.ref = "legacy-support" }
-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
-
 # Android X
 androidx-work-manager = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "work-manager" }
 androidx-hilt-work = { group = "androidx.hilt", name = "hilt-work", version.ref = "hilt-work" }
@@ -88,10 +58,6 @@ coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coi
 accompanist-permissions = { group = "com.google.accompanist", name = "accompanist-permissions", version.ref = "accompanist" }
 accompanist-systemuicontroller = { group = "com.google.accompanist", name = "accompanist-systemuicontroller", version.ref = "accompanist" }
 
-# UI
-butterknife = { group = "com.jakewharton", name = "butterknife", version.ref = "butterknife" }
-butterknife-compiler = { group = "com.jakewharton", name = "butterknife-compiler", version.ref = "butterknife" }
-
 # Networking
 okhttp-logging-inspector = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
@@ -102,16 +68,7 @@ moshi-core = { group = "com.squareup.moshi", name = "moshi", version.ref = "mosh
 moshi-codegen = { group = "com.squareup.moshi", name = "moshi-kotlin-codegen", version.ref = "moshi" }
 retrofit-converter-moshi = { group = "com.squareup.retrofit2", name = "converter-moshi", version.ref = "retrofit" }
 
-# Rx
-rxjava = { group = "io.reactivex.rxjava2", name = "rxjava", version.ref = "rxjava" }
-rxandroid = { group = "io.reactivex.rxjava2", name = "rxandroid", version.ref = "rxandroid" }
-rxbinding = { group = "com.jakewharton.rxbinding2", name = "rxbinding", version.ref = "rxbinding" }
-rxpermissions = { group = "com.github.tbruyelle", name = "rxpermissions", version.ref = "rxpermissions" }
-
 ## DI
-dagger = { group = "com.google.dagger", name = "dagger", version.ref = "dagger" }
-dagger-compiler = { group = "com.google.dagger", name = "dagger-compiler", version.ref = "dagger-compiler" }
-
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
 
@@ -121,13 +78,9 @@ firebase-config = { group = "com.google.firebase", name = "firebase-config", ver
 
 # Testing
 junit = { group = "junit", name = "junit", version.ref = "junit" }
-mockito = { group = "org.mockito", name = "mockito-core", version.ref = "mockito" }
 
 # Logging
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
-
-# Misc.
-app-tour = { group = "com.vlonjatg.android", name = "app-tour", version.ref = "app-tour" }
 
 [bundles]
 compose-core = ["androidx-compose-foundation", "androidx-compose-foundation-layout", "androidx-compose-runtime", "androidx-compose-ui", "androidx-compose-material"]
