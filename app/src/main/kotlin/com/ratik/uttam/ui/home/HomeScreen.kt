@@ -50,6 +50,7 @@ import com.ratik.uttam.core.MessageState.Snack
 import com.ratik.uttam.core.contract.ViewEvent.DisplayMessage
 import com.ratik.uttam.core.contract.ViewEvent.Effect
 import com.ratik.uttam.ui.components.ScrollableImage
+import com.ratik.uttam.ui.components.UttamText
 import com.ratik.uttam.ui.home.HomeAction.RefreshWallpaper
 import com.ratik.uttam.ui.home.HomeAction.SetWallpaper
 import com.ratik.uttam.ui.home.HomeEffect.ChangeWallpaper
@@ -58,8 +59,6 @@ import com.ratik.uttam.ui.theme.ColorPrimary
 import com.ratik.uttam.ui.theme.ColorPrimaryVariant
 import com.ratik.uttam.ui.theme.Dimens.PERCENT_10
 import com.ratik.uttam.ui.theme.Dimens.SpacingNormal
-import com.ratik.uttam.ui.theme.Dimens.TextSizeDefault
-import com.ratik.uttam.ui.theme.Dimens.TextSizeSmall
 import com.ratik.uttam.ui.theme.setNavigationBarColors
 import com.ratik.uttam.ui.theme.setStatusBarColors
 import java.io.File
@@ -158,15 +157,13 @@ internal fun HomeScreen(
                 ),
         ) {
             Column {
-                Text(
+                UttamText.BodySmall(
                     text = stringResource(id = R.string.photographer_label),
-                    color = White,
-                    fontSize = TextSizeSmall,
+                    textColor = White,
                 )
-                Text(
+                UttamText.Body(
                     text = state.currentWallpaper?.photographer?.name.orEmpty(),
-                    color = White,
-                    fontSize = TextSizeDefault,
+                    textColor = White,
                 )
             }
 
