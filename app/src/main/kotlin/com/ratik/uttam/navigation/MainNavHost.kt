@@ -28,7 +28,6 @@ import com.ratik.uttam.navigation.model.GraphSaver
 internal fun MainNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    setToolbarTitle: (String) -> Unit,
 ) {
     val rootGraph by rememberSaveable(stateSaver = GraphSaver) { mutableStateOf(AppGraph) }
 
@@ -39,7 +38,6 @@ internal fun MainNavHost(
     ) {
         addAppGraph(
             navController = navController,
-            setToolbarTitle = setToolbarTitle,
         )
     }
 }
@@ -47,7 +45,6 @@ internal fun MainNavHost(
 private fun NavGraphBuilder.addAppGraph(
     graph: Graph = AppGraph,
     navController: NavHostController,
-    setToolbarTitle: (String) -> Unit,
 ) {
     navigation(
         route = graph.route,
