@@ -69,7 +69,7 @@ internal fun LandingScreen(
                 ),
         ) {
             Image(
-                painter = painterResource(id = R.drawable.ty_logo),
+                painter = painterResource(id = R.drawable.uttam_logo),
                 contentDescription = stringResource(id = R.string.content_desc_app_logo),
                 modifier = Modifier
                     .width(LandingScreenLogoWidth)
