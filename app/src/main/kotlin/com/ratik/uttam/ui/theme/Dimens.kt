@@ -30,7 +30,7 @@ object Dimens {
     val TextSizeXSmall = 12.sp
     val TextSizeSmall = 14.sp
     val TextSizeDefault = 16.sp
-    val TextSizeLarge = 20.sp
+    val TextSizeLarge = 18.sp
     val TextSizeXLarge = 22.sp
     val TextSizeXXLarge = 24.sp
 

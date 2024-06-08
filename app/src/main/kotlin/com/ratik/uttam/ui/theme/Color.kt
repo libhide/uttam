@@ -13,11 +13,12 @@ val ProjectLightColors = lightColors(
     primary = ColorPrimary,
     onPrimary = White,
     primaryVariant = ColorPrimaryVariant,
-    secondary = TextColor,
-    secondaryVariant = TextColor,
+    secondary = ColorPrimary,
+    secondaryVariant = ColorPrimaryVariant,
     onSecondary = White,
     onBackground = TextColor,
-    onSurface = TextColor,
+    surface = White,
+    onSurface = ColorPrimaryVariant,
 )
 
 val ProjectDarkColors = darkColors(

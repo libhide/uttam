@@ -23,7 +23,7 @@ fun UttamTheme(
     content: @Composable () -> Unit,
 ) {
     val colorScheme = when {
-        darkTheme -> ProjectDarkColors
+        darkTheme -> ProjectLightColors // TODO: implement dark mode colours
         else -> ProjectLightColors
     }
     val view = LocalView.current
