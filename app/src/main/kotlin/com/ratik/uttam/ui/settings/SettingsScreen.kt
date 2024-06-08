@@ -16,19 +16,20 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.Switch
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.fueled.android.core.ui.extensions.rememberFlowOnLifecycle
 import com.ratik.uttam.R
 import com.ratik.uttam.ui.components.UttamText
 import com.ratik.uttam.ui.components.VerticalSpacer
+import com.ratik.uttam.ui.settings.SettingsAction.ToggleSetWallpaperAutomatically
 import com.ratik.uttam.ui.theme.ColorPrimary
 import com.ratik.uttam.ui.theme.ColorPrimaryVariant
 import com.ratik.uttam.ui.theme.Dimens.PERCENT_60
@@ -41,12 +42,13 @@ import com.ratik.uttam.ui.theme.setNavigationBarColors
 import com.ratik.uttam.ui.theme.setStatusBarColors
 
 @Composable
-fun SettingsScreen(
+internal fun SettingsScreen(
+    viewModel: SettingsViewModel = hiltViewModel(),
     navigateUp: () -> Unit,
 ) {
     setStatusBarColors(
         isDarkIcons = false,
-        color = ColorPrimaryVariant
+        color = ColorPrimary
     )
     setNavigationBarColors(
         isDarkIcons = false,
@@ -54,7 +56,9 @@ fun SettingsScreen(
     )
 
     val listState = rememberLazyListState()
-    var setWallpaperAutomatically by remember { mutableStateOf(true) }
+
+    val state by rememberFlowOnLifecycle(flow = viewModel.state)
+        .collectAsState(SettingsState.initialState)
 
     Column(
         modifier = Modifier.fillMaxSize()
@@ -63,12 +67,12 @@ fun SettingsScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .systemBarsPadding(),
-            navigateUp = navigateUp
+            navigateUp = navigateUp,
         )
 
         LazyColumn(
             state = listState,
-            contentPadding = PaddingValues(horizontal = SpacingNormal)
+            contentPadding = PaddingValues(horizontal = SpacingNormal),
         ) {
             item {
                 UttamText.CaptionBold(
@@ -82,21 +86,19 @@ fun SettingsScreen(
             }
 
             item {
-                SettingsRowItem(
-                    title = stringResource(id = R.string.title_automatic_wallpaper_set),
+                SettingsRowItem(title = stringResource(id = R.string.title_automatic_wallpaper_set),
                     description = stringResource(id = R.string.summary_automatic_wallpaper_set),
                     onItemClick = {
-                        setWallpaperAutomatically = !setWallpaperAutomatically
+                        viewModel.onViewAction(ToggleSetWallpaperAutomatically)
                     },
                     action = {
                         Switch(
-                            checked = setWallpaperAutomatically,
+                            checked = state.setWallpaperAutomatically,
                             onCheckedChange = { _ ->
-                                setWallpaperAutomatically = !setWallpaperAutomatically
+                                viewModel.onViewAction(ToggleSetWallpaperAutomatically)
                             },
                         )
-                    }
-                )
+                    })
             }
 
             item {
@@ -147,8 +149,7 @@ private fun SettingsAppBar(
         elevation = 0.dp,
         title = {
             UttamText.AppBar(
-                text = stringResource(id = R.string.settings_label),
-                textColor = White
+                text = stringResource(id = R.string.settings_label), textColor = White
             )
         },
         navigationIcon = {
@@ -180,13 +181,11 @@ private fun SettingsRowItem(
             modifier = Modifier.weight(if (action == {}) 1F else PERCENT_60)
         ) {
             UttamText.BodyBig(
-                text = title,
-                textColor = ColorPrimaryVariant
+                text = title, textColor = ColorPrimaryVariant
             )
             VerticalSpacer(SpacingXXXXXXSmall)
             UttamText.BodySmall(
-                text = description,
-                textColor = ColorPrimary
+                text = description, textColor = ColorPrimary
             )
         }
         action()
