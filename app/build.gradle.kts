@@ -42,6 +42,7 @@ android {
     defaultConfig {
         applicationId = "com.ratik.uttam.prod"
         minSdk = 24
+        targetSdk = 34
         versionCode = 21
         versionName = "4.4"
 
@@ -50,10 +51,6 @@ android {
             "CLIENT_ID",
             "\"${getProperty("local.properties", "client_id")}\""
         )
-
-        // TODO: remove this after migration to Hilt
-        javaCompileOptions.annotationProcessorOptions.arguments["dagger.hilt.disableModulesHaveInstallInCheck"] =
-            "true"
     }
 
     val keystorePropertiesFile = rootProject.file("keystore.properties")
