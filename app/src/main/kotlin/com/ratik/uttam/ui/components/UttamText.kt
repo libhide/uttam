@@ -25,7 +25,11 @@ import com.ratik.uttam.ui.theme.TextColor
  */
 enum class UttamText {
     Body,
+    BodySmall,
+    BodyBig,
     BodyBold,
+    Caption,
+    CaptionBold,
     AppBar;
 
     @Composable
