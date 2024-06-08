@@ -63,6 +63,7 @@ import com.ratik.uttam.ui.onboarding.model.OnboardingStep.DONE
 import com.ratik.uttam.ui.onboarding.model.OnboardingStep.FULL_CONTROL
 import com.ratik.uttam.ui.onboarding.model.OnboardingStep.NOTIF_PERMISSION
 import com.ratik.uttam.ui.onboarding.model.OnboardingStep.WELCOME
+import com.ratik.uttam.ui.onboarding.model.requiresNotificationPermission
 import com.ratik.uttam.ui.theme.ColorPrimaryVariant
 import com.ratik.uttam.ui.theme.Dimens.IconXXXXSmall
 import com.ratik.uttam.ui.theme.Dimens.SpacingLarge
@@ -101,6 +102,11 @@ internal fun OnboardingScreen(
     val notificationsPermissionState =
         rememberPermissionState(permission = android.Manifest.permission.POST_NOTIFICATIONS) {
             viewModel.onViewAction(NotificationPermissionResponded)
+            coroutineScope.launch {
+                pagerState.animateScrollToPage(
+                    pagerState.currentPage + 1
+                )
+            }
         }
 
     viewModel.events.collectAsEffect { event ->
@@ -163,27 +169,21 @@ internal fun OnboardingScreen(
                     modifier = Modifier
                         .align(CenterEnd)
                         .padding(
-                            vertical = SpacingXXXSmall, horizontal = SpacingSmall
+                            vertical = SpacingXXXSmall,
+                            horizontal = SpacingSmall,
                         )
                         .clickable {
-//                            val currentStep = state.onboardingSteps[state.currentStepIndex]
-                            viewModel.onViewAction(ShowNextStep)
-                            coroutineScope.launch {
-                                pagerState.animateScrollToPage(
-                                    pagerState.currentPage + 1
-                                )
+                            val currentStep = state.onboardingSteps[state.currentStepIndex]
+                            if (currentStep.requiresNotificationPermission()) {
+                                notificationsPermissionState.launchPermissionRequest()
+                            } else {
+                                viewModel.onViewAction(ShowNextStep)
+                                coroutineScope.launch {
+                                    pagerState.animateScrollToPage(
+                                        pagerState.currentPage + 1
+                                    )
+                                }
                             }
-                            // TODO: figure out why permission request is not working
-//                            if (currentStep.requiresNotificationPermission()) {
-//                                notificationsPermissionState.launchPermissionRequest()
-//                            } else {
-//                                viewModel.onViewAction(ShowNextStep)
-//                                coroutineScope.launch {
-//                                    pagerState.animateScrollToPage(
-//                                        pagerState.currentPage + 1
-//                                    )
-//                                }
-//                            }
                         }
                 )
             }
