@@ -1,10 +1,10 @@
 [versions]
 # Core
-kotlin = "1.8.0"
-android-gradle-plugin = "7.4.2"
-google-services = "4.4.1"
-hilt = "2.44.2"
-ksp = "1.8.0-1.0.9"
+kotlin = "1.9.24"
+android-gradle-plugin = "8.4.1"
+google-services = "4.4.2"
+hilt = "2.49"
+ksp = "1.9.24-1.0.20"
 
 # AppCompat
 appcompat = "1.6.1"
@@ -15,12 +15,12 @@ material = "1.11.0"
 
 # Android X
 work-manager = "2.9.0"
-hilt-work = "1.0.0"
-splashscreen = "1.0.0"
+hilt-work = "1.2.0"
+splashscreen = "1.0.1"
 
 # Compose
-androidx-compose-bom = "2024.04.00"
-androidx-activity = "1.8.2"
+androidx-compose-bom = "2024.05.00"
+androidx-activity = "1.9.0"
 androidx-hilt-navigation-compose = "1.2.0"
 coil = "2.6.0"
 accompanist = "0.34.0"
@@ -29,7 +29,7 @@ accompanist = "0.34.0"
 butterknife = "10.2.3"
 
 # Networking
-okhttp = "4.10.0"
+okhttp = "4.11.0"
 retrofit = "2.9.0"
 retrofit-converter-gson = "2.8.1"
 moshi = "1.15.0"
@@ -46,14 +46,10 @@ dagger-compiler = "2.12"
 
 # Firebase
 firebase-core = "21.1.1"
-firebase-config = "21.2.0"
+firebase-config = "22.0.0"
 
 # Testing
-junit = "4.13.1"
-mockito = "3.2.0"
-
-# Misc.
-app-tour = "1.0"
+junit = "4.13.2"
 
 # Logging
 timber = "5.0.1"
