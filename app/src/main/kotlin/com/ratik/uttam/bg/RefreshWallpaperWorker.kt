@@ -31,21 +31,19 @@ internal class RefreshWallpaperWorker @AssistedInject constructor(
             try {
                 var workResult = Result.failure()
                 photoRepo.fetchRandomPhoto().collect { photo ->
-                    Timber.d("RATIK: Photo fetched.")
-//                    val builder = NotificationCompat.Builder(appContext, NOTIF_CHANNEL_ID)
-//                        .setSmallIcon(R.drawable.ic_stat_uttam)
-//                        .setContentTitle(appContext.getString(R.string.wallpaper_notif_title))
-//                        .setContentText(appContext.getString(R.string.wallpaper_notif_photo_by) + photo.photographer.name)
-//                        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-//                    with(NotificationManagerCompat.from(appContext)) {
-//                        if (ActivityCompat.checkSelfPermission(
-//                                appContext,
-//                                Manifest.permission.POST_NOTIFICATIONS
-//                            ) == PackageManager.PERMISSION_GRANTED
-//                        ) {
-//                            notify(1, builder.build())
-//                        }
-//                    }
+                    val builder = NotificationCompat.Builder(appContext, NOTIF_CHANNEL_ID)
+                        .setSmallIcon(R.drawable.ic_stat_uttam)
+                        .setContentTitle(appContext.getString(R.string.wallpaper_notif_title))
+                        .setContentText(appContext.getString(R.string.wallpaper_notif_photo_by) + photo.photographer.name)
+                        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                    with(NotificationManagerCompat.from(appContext)) {
+                        if (ActivityCompat.checkSelfPermission(
+                                appContext, Manifest.permission.POST_NOTIFICATIONS
+                            ) == PackageManager.PERMISSION_GRANTED
+                        ) {
+                            notify(1, builder.build())
+                        }
+                    }
                     workResult = Result.success()
                 }
                 workResult
