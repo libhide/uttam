@@ -9,7 +9,6 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.ratik.uttam.Constants.NOTIF_CHANNEL_ID
 import com.ratik.uttam.R
 import com.ratik.uttam.core.DispatcherProvider
 import com.ratik.uttam.domain.PhotoRepo
@@ -31,7 +30,7 @@ internal class RefreshWallpaperWorker @AssistedInject constructor(
             try {
                 var workResult = Result.failure()
                 photoRepo.fetchRandomPhoto().collect { photo ->
-                    val builder = NotificationCompat.Builder(appContext, NOTIF_CHANNEL_ID)
+                    val builder = NotificationCompat.Builder(appContext, "UttamChannel")
                         .setSmallIcon(R.drawable.ic_stat_uttam)
                         .setContentTitle(appContext.getString(R.string.wallpaper_notif_title))
                         .setContentText(appContext.getString(R.string.wallpaper_notif_photo_by) + photo.photographer.name)

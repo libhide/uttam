@@ -1,5 +1,7 @@
 package com.ratik.uttam.ui.settings
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement.SpaceBetween
 import androidx.compose.foundation.layout.Column
@@ -21,11 +23,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.White
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.fueled.android.core.ui.extensions.rememberFlowOnLifecycle
+import com.ratik.uttam.Constants
+import com.ratik.uttam.Constants.EMAIL
 import com.ratik.uttam.R
 import com.ratik.uttam.ui.components.UttamText
 import com.ratik.uttam.ui.components.VerticalSpacer
@@ -47,18 +52,17 @@ internal fun SettingsScreen(
     navigateUp: () -> Unit,
 ) {
     setStatusBarColors(
-        isDarkIcons = false,
-        color = ColorPrimary
+        isDarkIcons = false, color = ColorPrimary
     )
     setNavigationBarColors(
-        isDarkIcons = false,
-        backgroundColor = ColorPrimaryVariant
+        isDarkIcons = false, backgroundColor = ColorPrimaryVariant
     )
+
+    val context = LocalContext.current
 
     val listState = rememberLazyListState()
 
-    val state by rememberFlowOnLifecycle(flow = viewModel.state)
-        .collectAsState(SettingsState.initialState)
+    val state by rememberFlowOnLifecycle(flow = viewModel.state).collectAsState(SettingsState.initialState)
 
     Column(
         modifier = Modifier.fillMaxSize()
@@ -120,7 +124,12 @@ internal fun SettingsScreen(
                 SettingsRowItem(
                     title = stringResource(id = R.string.title_contact),
                     description = stringResource(id = R.string.summary_contact),
-                    onItemClick = {},
+                    onItemClick = {
+                        val intent = Intent(Intent.ACTION_SEND)
+                        intent.type = "message/rfc822"
+                        intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(EMAIL))
+                        context.startActivity(intent)
+                    },
                 )
             }
 
@@ -132,7 +141,14 @@ internal fun SettingsScreen(
                 SettingsRowItem(
                     title = stringResource(id = R.string.title_review),
                     description = stringResource(id = R.string.summary_review),
-                    onItemClick = {},
+                    onItemClick = {
+                        val intent = Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse("market://details?id=${context.packageName}")
+                        )
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        context.startActivity(intent)
+                    },
                 )
             }
         }
