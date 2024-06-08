@@ -146,7 +146,7 @@ internal fun OnboardingScreen(
                         .align(CenterEnd)
                         .padding(vertical = SpacingXXSmall)
                         .clickable {
-                            enqueueDailyRefreshRequest(context)
+                            // enqueueDailyRefreshRequest(context)
 
                             viewModel.onViewAction(
                                 FinishOnboarding(

@@ -86,6 +86,15 @@ private fun NavGraphBuilder.addAppGraph(
                 }
             },
         )
-        addHomeScreen(graph)
+        addHomeScreen(
+            graph = graph,
+            navigateToSettings = {
+                navController.navigate(AppDestination.Settings.createRoute(graph))
+            }
+        )
+        addSettingsScreen(
+            graph = graph,
+            navigateUp = navController::navigateUp,
+        )
     }
 }

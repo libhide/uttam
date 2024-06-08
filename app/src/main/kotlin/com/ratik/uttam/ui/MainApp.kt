@@ -24,11 +24,7 @@ internal fun MainApp() {
     var toolbarText by rememberSaveable { mutableStateOf("") }
 
     UttamTheme {
-        Scaffold(
-            topBar = {
-                // TODO: show top bar only on the Settings screen
-            },
-        ) { _ ->
+        Scaffold { _ ->
             MainNavHost(
                 navController = navController,
                 setToolbarTitle = { title -> toolbarText = title },
