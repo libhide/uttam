@@ -123,7 +123,7 @@ internal fun HomeScreen(
     ) {
         ScrollableImage(
             model = ImageRequest.Builder(context)
-                .data(state.currentWallpaper?.localUri ?: R.drawable.uttam_hero).crossfade(true)
+                .data(state.currentWallpaper?.localUri).crossfade(true)
                 .build(),
             contentDescription = null,
         )
@@ -195,35 +195,41 @@ private fun HomeAppBar(
 ) {
     var showMenu by remember { mutableStateOf(false) }
 
-    TopAppBar(modifier = modifier, backgroundColor = Transparent, elevation = 0.dp, title = {
-        Image(
-            painter = painterResource(id = R.drawable.uttam),
-            contentDescription = stringResource(id = R.string.content_desc_app_logo),
-        )
-    }, actions = {
-        IconButton(
-            onClick = refreshWallpaper,
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.ic_refresh),
-                contentDescription = stringResource(id = R.string.content_desc_refresh_wallpaper),
+    TopAppBar(
+        modifier = modifier,
+        backgroundColor = Transparent,
+        elevation = 0.dp,
+        title = {
+            Image(
+                painter = painterResource(id = R.drawable.uttam),
+                contentDescription = stringResource(id = R.string.content_desc_app_logo),
             )
-        }
-        IconButton(onClick = { showMenu = true }) {
-            Icon(
-                painter = painterResource(id = R.drawable.ic_overflow),
-                contentDescription = stringResource(id = R.string.content_desc_overflow_menu)
-            )
-        }
-        if (showMenu) {
-            DropdownMenu(expanded = true, onDismissRequest = { showMenu = false }) {
-                DropdownMenuItem(onClick = {}) {
-                    Text(text = "Share", color = ColorPrimaryVariant)
-                }
-                DropdownMenuItem(onClick = navigateToSettings) {
-                    Text(text = "Settings", color = ColorPrimaryVariant)
+        },
+        actions = {
+            IconButton(
+                onClick = refreshWallpaper,
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_refresh),
+                    contentDescription = stringResource(id = R.string.content_desc_refresh_wallpaper),
+                )
+            }
+            IconButton(onClick = { showMenu = true }) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_overflow),
+                    contentDescription = stringResource(id = R.string.content_desc_overflow_menu)
+                )
+            }
+            if (showMenu) {
+                DropdownMenu(expanded = true, onDismissRequest = { showMenu = false }) {
+                    DropdownMenuItem(onClick = {}) {
+                        Text(text = "Share", color = ColorPrimaryVariant)
+                    }
+                    DropdownMenuItem(onClick = navigateToSettings) {
+                        Text(text = "Settings", color = ColorPrimaryVariant)
+                    }
                 }
             }
-        }
-    })
+        },
+    )
 }

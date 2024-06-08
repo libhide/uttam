@@ -28,37 +28,6 @@
             android:authorities="${applicationId}.androidx-startup"
             tools:node="remove" />
 
-        <activity
-            android:name="com.ratik.uttam.ui.main.MainActivity"
-            android:configChanges="orientation|screenSize"
-            android:theme="@style/AppTheme" />
-
-        <activity
-            android:name="com.ratik.uttam.ui.settings.SettingsActivity"
-            android:label="@string/settings_label"
-            android:parentActivityName="com.ratik.uttam.ui.main.MainActivity"
-            android:theme="@style/AppTheme" />
-
-        <activity
-            android:name="com.ratik.uttam.ui.tour.TourActivity"
-            android:theme="@style/AppTheme.Fullscreen" />
-
-        <receiver android:name="com.ratik.uttam.receiver.JobSetReceiver" />
-        <receiver
-            android:name="com.ratik.uttam.receiver.RebootReceiver"
-            android:enabled="true"
-            android:exported="true"
-            android:label="RebootFixer">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
-
-        <service
-            android:name="com.ratik.uttam.network.GetPhotoJob"
-            android:exported="false"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
-
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
