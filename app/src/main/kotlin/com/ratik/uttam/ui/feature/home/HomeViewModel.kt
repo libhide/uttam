@@ -5,9 +5,11 @@ import com.ratik.uttam.core.DispatcherProvider
 import com.ratik.uttam.core.contract.ViewEvent.Effect
 import com.ratik.uttam.data.extensions.collectBy
 import com.ratik.uttam.domain.PhotoRepo
+import com.ratik.uttam.domain.UserRepo
 import com.ratik.uttam.ui.feature.home.HomeAction.RefreshWallpaper
 import com.ratik.uttam.ui.feature.home.HomeAction.SetWallpaper
-import com.ratik.uttam.ui.feature.home.HomeEffect.ChangeWallpaper
+import com.ratik.uttam.ui.feature.home.HomeEffect.LaunchCropAndSetWallpaperFlow
+import com.ratik.uttam.ui.feature.home.HomeEffect.SetWallpaperSilently
 import dagger.hilt.android.lifecycle.HiltViewModel
 import timber.log.Timber
 import javax.inject.Inject
@@ -16,7 +18,11 @@ import javax.inject.Inject
 internal class HomeViewModel @Inject constructor(
   dispatcherProvider: DispatcherProvider,
   private val photoRepo: PhotoRepo,
-) : BaseViewModel<HomeState, HomeAction>(HomeState.initialState, dispatcherProvider) {
+  private val userRepo: UserRepo,
+) : BaseViewModel<HomeState, HomeAction>(
+  HomeState.initialState,
+  dispatcherProvider,
+) {
 
   init {
     initialize()
@@ -50,6 +56,10 @@ internal class HomeViewModel @Inject constructor(
                 updateState { currentState ->
                   currentState.copy(isLoading = false, currentWallpaper = photo)
                 }
+                val shouldSetAutomatically = userRepo.shouldSetWallpaperAutomatically()
+                if (shouldSetAutomatically) {
+                  dispatchViewEvent(Effect(SetWallpaperSilently))
+                }
               },
               onError = {
                 updateState { currentState -> currentState.copy(isLoading = false) }
@@ -60,7 +70,7 @@ internal class HomeViewModel @Inject constructor(
       }
 
       SetWallpaper -> {
-        dispatchViewEvent(Effect(ChangeWallpaper))
+        dispatchViewEvent(Effect(LaunchCropAndSetWallpaperFlow))
       }
     }
   }

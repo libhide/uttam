@@ -1,6 +1,5 @@
 package com.ratik.uttam.ui.feature.home
 
-import android.app.Activity.RESULT_OK
 import android.app.WallpaperManager
 import android.content.Intent
 import android.content.Intent.createChooser
@@ -55,7 +54,8 @@ import com.ratik.uttam.ui.extensions.collectAsEffect
 import com.ratik.uttam.ui.extensions.rememberFlowOnLifecycle
 import com.ratik.uttam.ui.feature.home.HomeAction.RefreshWallpaper
 import com.ratik.uttam.ui.feature.home.HomeAction.SetWallpaper
-import com.ratik.uttam.ui.feature.home.HomeEffect.ChangeWallpaper
+import com.ratik.uttam.ui.feature.home.HomeEffect.LaunchCropAndSetWallpaperFlow
+import com.ratik.uttam.ui.feature.home.HomeEffect.SetWallpaperSilently
 import com.ratik.uttam.ui.modifiers.shimmerBackground
 import com.ratik.uttam.ui.theme.ColorPrimary
 import com.ratik.uttam.ui.theme.ColorPrimaryVariant
@@ -76,15 +76,10 @@ internal fun HomeScreen(
   val context = LocalContext.current
   val wallpaperManager = WallpaperManager.getInstance(context)
   val launcher =
-    rememberLauncherForActivityResult(StartActivityForResult()) { activityResult ->
-      if (activityResult.resultCode == RESULT_OK) {
-        // No-op
-        // The system shows a toast message when the wallpaper is set
-      }
-    }
+    rememberLauncherForActivityResult(StartActivityForResult()) {}
 
-  val state by
-    rememberFlowOnLifecycle(flow = viewModel.state).collectAsState(HomeState.initialState)
+  val state by rememberFlowOnLifecycle(flow = viewModel.state)
+    .collectAsState(HomeState.initialState)
 
   viewModel.events.collectAsEffect { event ->
     when (event) {
@@ -93,27 +88,38 @@ internal fun HomeScreen(
           is Snack -> {
             Toast.makeText(context, event.message.message, Toast.LENGTH_SHORT).show()
           }
+
           else -> Ignored
         }
       }
+
       is Effect -> {
         when (event.effect) {
-          is ChangeWallpaper -> {
+          is LaunchCropAndSetWallpaperFlow -> {
             val wallpaperFile = File(state.currentWallpaper!!.localUri)
             val wallpaperUri =
               getUriForFile(context, "${context.packageName}.provider", wallpaperFile)
             val wallpaperSetIntent = wallpaperManager.getCropAndSetWallpaperIntent(wallpaperUri)
             launcher.launch(wallpaperSetIntent)
           }
+
+          is SetWallpaperSilently -> {
+            val wallpaperFile = File(state.currentWallpaper!!.localUri)
+            val wallpaperUri =
+              getUriForFile(context, "${context.packageName}.provider", wallpaperFile)
+            wallpaperManager.setStream(context.contentResolver.openInputStream(wallpaperUri))
+          }
         }
       }
+
       else -> Ignored
     }
   }
 
   Box(
     modifier =
-    Modifier.fillMaxSize()
+    Modifier
+      .fillMaxSize()
       .background(ColorPrimary), // TODO: Use palette API to generate this at refresh time
   ) {
     ScrollableImage(
@@ -125,10 +131,17 @@ internal fun HomeScreen(
       contentDescription = null,
     )
 
-    Box(modifier = Modifier.fillMaxSize().background(Color.Black.copy(alpha = PERCENT_10)))
+    Box(
+      modifier = Modifier
+        .fillMaxSize()
+        .background(Color.Black.copy(alpha = PERCENT_10)),
+    )
 
     HomeAppBar(
-      modifier = Modifier.fillMaxWidth().align(TopCenter).systemBarsPadding(),
+      modifier = Modifier
+        .fillMaxWidth()
+        .align(TopCenter)
+        .systemBarsPadding(),
       navigateToSettings = navigateToSettings,
       refreshWallpaper = { viewModel.onViewAction(RefreshWallpaper) },
       shareWallpaper = {
@@ -151,7 +164,8 @@ internal fun HomeScreen(
       horizontalArrangement = SpaceBetween,
       verticalAlignment = CenterVertically,
       modifier =
-      Modifier.fillMaxWidth()
+      Modifier
+        .fillMaxWidth()
         .align(BottomCenter)
         .navigationBarsPadding()
         .padding(horizontal = SpacingNormal),
@@ -176,7 +190,11 @@ internal fun HomeScreen(
     }
 
     if (state.isLoading) {
-      Box(modifier = Modifier.fillMaxSize().shimmerBackground())
+      Box(
+        modifier = Modifier
+          .fillMaxSize()
+          .shimmerBackground(),
+      )
     }
   }
 }
