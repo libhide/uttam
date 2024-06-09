@@ -109,21 +109,12 @@ dependencies {
 
   // Networking
   implementation(libs.okhttp.logging.inspector)
-
   implementation(libs.retrofit)
   implementation(libs.retrofit.converter.gson)
-
-  api(libs.moshi.core)
-  ksp(libs.moshi.codegen)
-  implementation(libs.retrofit.converter.moshi)
 
   // DI
   implementation(libs.hilt.android)
   kapt(libs.hilt.compiler)
-
-  // Firebase
-  implementation(libs.firebase.core)
-  implementation(libs.firebase.config)
 
   // Logging
   api(libs.timber)
