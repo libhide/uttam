@@ -2,39 +2,38 @@ name: PR Check
 
 on:
   pull_request:
-    branches:
-      - develop
+    types: [ opened, reopened, synchronize, ready_for_review ]
+
+concurrency:
+  group: ${{ github.head_ref }}
+  cancel-in-progress: true
 
 jobs:
-  pr-checks:
+  pr-check:
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        java-version: [17]
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - name: Checkout Project
+        uses: actions/checkout@v4
 
-      - name: Set up JDK
-        uses: actions/setup-java@v2
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
         with:
-          distribution: 'adopt'
-          java-version: ${{ matrix.java-version }}
+          java-version: '17'
+          distribution: 'zulu'
 
-      - name: Cache Gradle packages
-        uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: ${{ runner.os }}-gradle
+          restore-keys: |
+            ${{ runner.os }}-gradle-
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
+      - name: Generate empty keystore.properties
+        run: touch keystore.properties
 
       - name: Run Spotless Check
         run: ./gradlew spotlessCheck
