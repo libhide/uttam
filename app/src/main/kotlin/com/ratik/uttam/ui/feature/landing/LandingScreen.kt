@@ -16,11 +16,11 @@ import androidx.compose.ui.layout.ContentScale.Companion.Crop
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.fueled.android.core.ui.extensions.collectAsEffect
 import com.ratik.uttam.R
 import com.ratik.uttam.core.Ignored
 import com.ratik.uttam.core.contract.ViewEvent.Navigate
 import com.ratik.uttam.ui.components.UttamButton
+import com.ratik.uttam.ui.extensions.collectAsEffect
 import com.ratik.uttam.ui.feature.landing.LandingAction.GetStarted
 import com.ratik.uttam.ui.feature.landing.LandingNavTarget.Onboarding
 import com.ratik.uttam.ui.theme.Dimens.LandingScreenLogoTopPadding

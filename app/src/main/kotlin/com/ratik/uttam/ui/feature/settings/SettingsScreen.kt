@@ -28,11 +28,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.fueled.android.core.ui.extensions.rememberFlowOnLifecycle
 import com.ratik.uttam.Constants.EMAIL
 import com.ratik.uttam.R
 import com.ratik.uttam.ui.components.UttamText
 import com.ratik.uttam.ui.components.VerticalSpacer
+import com.ratik.uttam.ui.extensions.rememberFlowOnLifecycle
 import com.ratik.uttam.ui.feature.settings.SettingsAction.ToggleSetWallpaperAutomatically
 import com.ratik.uttam.ui.theme.ColorPrimary
 import com.ratik.uttam.ui.theme.ColorPrimaryVariant

@@ -44,8 +44,6 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider.getUriForFile
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.request.ImageRequest
-import com.fueled.android.core.ui.extensions.collectAsEffect
-import com.fueled.android.core.ui.extensions.rememberFlowOnLifecycle
 import com.ratik.uttam.R
 import com.ratik.uttam.core.Ignored
 import com.ratik.uttam.core.MessageState.Snack
@@ -53,6 +51,8 @@ import com.ratik.uttam.core.contract.ViewEvent.DisplayMessage
 import com.ratik.uttam.core.contract.ViewEvent.Effect
 import com.ratik.uttam.ui.components.ScrollableImage
 import com.ratik.uttam.ui.components.UttamText
+import com.ratik.uttam.ui.extensions.collectAsEffect
+import com.ratik.uttam.ui.extensions.rememberFlowOnLifecycle
 import com.ratik.uttam.ui.feature.home.HomeAction.RefreshWallpaper
 import com.ratik.uttam.ui.feature.home.HomeAction.SetWallpaper
 import com.ratik.uttam.ui.feature.home.HomeEffect.ChangeWallpaper
