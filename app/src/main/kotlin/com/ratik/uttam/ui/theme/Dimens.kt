@@ -79,6 +79,6 @@ object Dimens {
     val ProgressIndicatorSize = 24.dp
 
     // Landing Screen
-    val LandingScreenLogoWidth = 200.dp
-    val LandingScreenLogoTopPadding = 150.dp
+    val LandingScreenLogoWidth = 250.dp
+    val LandingScreenLogoTopPadding = 130.dp
 }
