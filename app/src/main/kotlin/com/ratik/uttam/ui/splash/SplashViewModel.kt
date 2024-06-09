@@ -8,37 +8,34 @@ import com.ratik.uttam.domain.UserRepo
 import com.ratik.uttam.ui.splash.SplashNavTarget.Home
 import com.ratik.uttam.ui.splash.SplashNavTarget.Landing
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import javax.inject.Inject
+import kotlinx.coroutines.delay
 
 @HiltViewModel
-internal class SplashViewModel @Inject constructor(
-    dispatcherProvider: DispatcherProvider,
-    private val userRepo: UserRepo,
-) : BaseViewModel<SplashState, SplashAction>(
-    SplashState.initialState,
-    dispatcherProvider,
-) {
+internal class SplashViewModel
+@Inject
+constructor(dispatcherProvider: DispatcherProvider, private val userRepo: UserRepo) :
+  BaseViewModel<SplashState, SplashAction>(SplashState.initialState, dispatcherProvider) {
 
-    init {
-        launch {
-            delay(1000L)
-            initialise()
-        }
+  init {
+    launch {
+      delay(1000L)
+      initialise()
     }
+  }
 
-    private fun initialise() {
-        val hasOnboarded = userRepo.hasOnboarded()
-        if (hasOnboarded) {
-            dispatchViewEvent(Navigate(Home))
-        } else {
-            dispatchViewEvent(Navigate(Landing))
-        }
+  private fun initialise() {
+    val hasOnboarded = userRepo.hasOnboarded()
+    if (hasOnboarded) {
+      dispatchViewEvent(Navigate(Home))
+    } else {
+      dispatchViewEvent(Navigate(Landing))
     }
+  }
 
-    override fun onViewAction(viewAction: SplashAction) = Ignored
+  override fun onViewAction(viewAction: SplashAction) = Ignored
 
-    override fun handleError(throwable: Throwable) = Ignored
+  override fun handleError(throwable: Throwable) = Ignored
 }
 
 private const val SPLASH_DELAY = 1000L

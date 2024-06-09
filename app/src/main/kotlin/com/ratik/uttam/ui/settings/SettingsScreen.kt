@@ -29,7 +29,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.fueled.android.core.ui.extensions.rememberFlowOnLifecycle
-import com.ratik.uttam.Constants
 import com.ratik.uttam.Constants.EMAIL
 import com.ratik.uttam.R
 import com.ratik.uttam.ui.components.UttamText
@@ -48,162 +47,124 @@ import com.ratik.uttam.ui.theme.setStatusBarColors
 
 @Composable
 internal fun SettingsScreen(
-    viewModel: SettingsViewModel = hiltViewModel(),
-    navigateUp: () -> Unit,
+  viewModel: SettingsViewModel = hiltViewModel(),
+  navigateUp: () -> Unit,
 ) {
-    setStatusBarColors(
-        isDarkIcons = false, color = ColorPrimary
-    )
-    setNavigationBarColors(
-        isDarkIcons = false, backgroundColor = ColorPrimaryVariant
-    )
+  setStatusBarColors(isDarkIcons = false, color = ColorPrimary)
+  setNavigationBarColors(isDarkIcons = false, backgroundColor = ColorPrimaryVariant)
 
-    val context = LocalContext.current
+  val context = LocalContext.current
 
-    val listState = rememberLazyListState()
+  val listState = rememberLazyListState()
 
-    val state by rememberFlowOnLifecycle(flow = viewModel.state).collectAsState(SettingsState.initialState)
+  val state by
+    rememberFlowOnLifecycle(flow = viewModel.state).collectAsState(SettingsState.initialState)
 
-    Column(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        SettingsAppBar(
-            modifier = Modifier
-                .fillMaxWidth()
-                .systemBarsPadding(),
-            navigateUp = navigateUp,
+  Column(modifier = Modifier.fillMaxSize()) {
+    SettingsAppBar(modifier = Modifier.fillMaxWidth().systemBarsPadding(), navigateUp = navigateUp)
+
+    LazyColumn(state = listState, contentPadding = PaddingValues(horizontal = SpacingNormal)) {
+      item {
+        UttamText.CaptionBold(
+          text = stringResource(id = R.string.category_general),
+          textColor = ColorPrimaryVariant,
         )
+      }
 
-        LazyColumn(
-            state = listState,
-            contentPadding = PaddingValues(horizontal = SpacingNormal),
-        ) {
-            item {
-                UttamText.CaptionBold(
-                    text = stringResource(id = R.string.category_general),
-                    textColor = ColorPrimaryVariant,
-                )
-            }
+      item { VerticalSpacer(SpacingLarge) }
 
-            item {
-                VerticalSpacer(SpacingLarge)
-            }
+      item {
+        SettingsRowItem(
+          title = stringResource(id = R.string.title_automatic_wallpaper_set),
+          description = stringResource(id = R.string.summary_automatic_wallpaper_set),
+          onItemClick = { viewModel.onViewAction(ToggleSetWallpaperAutomatically) },
+          action = {
+            Switch(
+              checked = state.setWallpaperAutomatically,
+              onCheckedChange = { _ -> viewModel.onViewAction(ToggleSetWallpaperAutomatically) },
+            )
+          },
+        )
+      }
 
-            item {
-                SettingsRowItem(title = stringResource(id = R.string.title_automatic_wallpaper_set),
-                    description = stringResource(id = R.string.summary_automatic_wallpaper_set),
-                    onItemClick = {
-                        viewModel.onViewAction(ToggleSetWallpaperAutomatically)
-                    },
-                    action = {
-                        Switch(
-                            checked = state.setWallpaperAutomatically,
-                            onCheckedChange = { _ ->
-                                viewModel.onViewAction(ToggleSetWallpaperAutomatically)
-                            },
-                        )
-                    })
-            }
+      item { VerticalSpacer(SpacingXXXLarge) }
 
-            item {
-                VerticalSpacer(SpacingXXXLarge)
-            }
+      item {
+        UttamText.CaptionBold(
+          text = stringResource(id = R.string.category_misc),
+          textColor = ColorPrimaryVariant,
+        )
+      }
 
-            item {
-                UttamText.CaptionBold(
-                    text = stringResource(id = R.string.category_misc),
-                    textColor = ColorPrimaryVariant,
-                )
-            }
+      item { VerticalSpacer(SpacingLarge) }
 
-            item {
-                VerticalSpacer(SpacingLarge)
-            }
+      item {
+        SettingsRowItem(
+          title = stringResource(id = R.string.title_contact),
+          description = stringResource(id = R.string.summary_contact),
+          onItemClick = {
+            val intent = Intent(Intent.ACTION_SEND)
+            intent.type = "message/rfc822"
+            intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(EMAIL))
+            context.startActivity(intent)
+          },
+        )
+      }
 
-            item {
-                SettingsRowItem(
-                    title = stringResource(id = R.string.title_contact),
-                    description = stringResource(id = R.string.summary_contact),
-                    onItemClick = {
-                        val intent = Intent(Intent.ACTION_SEND)
-                        intent.type = "message/rfc822"
-                        intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(EMAIL))
-                        context.startActivity(intent)
-                    },
-                )
-            }
+      item { VerticalSpacer(SpacingXLarge) }
 
-            item {
-                VerticalSpacer(SpacingXLarge)
-            }
-
-            item {
-                SettingsRowItem(
-                    title = stringResource(id = R.string.title_review),
-                    description = stringResource(id = R.string.summary_review),
-                    onItemClick = {
-                        val intent = Intent(
-                            Intent.ACTION_VIEW,
-                            Uri.parse("market://details?id=${context.packageName}")
-                        )
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        context.startActivity(intent)
-                    },
-                )
-            }
-        }
+      item {
+        SettingsRowItem(
+          title = stringResource(id = R.string.title_review),
+          description = stringResource(id = R.string.summary_review),
+          onItemClick = {
+            val intent =
+              Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=${context.packageName}"))
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            context.startActivity(intent)
+          },
+        )
+      }
     }
+  }
 }
 
 @Composable
-private fun SettingsAppBar(
-    modifier: Modifier = Modifier,
-    navigateUp: () -> Unit,
-) {
-    TopAppBar(
-        modifier = modifier,
-        elevation = 0.dp,
-        title = {
-            UttamText.AppBar(
-                text = stringResource(id = R.string.settings_label), textColor = White
-            )
-        },
-        navigationIcon = {
-            IconButton(onClick = navigateUp) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_back),
-                    contentDescription = stringResource(id = R.string.content_desc_back)
-                )
-            }
-        },
-    )
+private fun SettingsAppBar(modifier: Modifier = Modifier, navigateUp: () -> Unit) {
+  TopAppBar(
+    modifier = modifier,
+    elevation = 0.dp,
+    title = {
+      UttamText.AppBar(text = stringResource(id = R.string.settings_label), textColor = White)
+    },
+    navigationIcon = {
+      IconButton(onClick = navigateUp) {
+        Icon(
+          painter = painterResource(id = R.drawable.ic_back),
+          contentDescription = stringResource(id = R.string.content_desc_back),
+        )
+      }
+    },
+  )
 }
 
 @Composable
 private fun SettingsRowItem(
-    title: String,
-    description: String,
-    onItemClick: () -> Unit,
-    action: @Composable RowScope.() -> Unit = {},
+  title: String,
+  description: String,
+  onItemClick: () -> Unit,
+  action: @Composable RowScope.() -> Unit = {},
 ) {
-    Row(
-        horizontalArrangement = SpaceBetween,
-        verticalAlignment = CenterVertically,
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onItemClick)
-    ) {
-        Column(
-            modifier = Modifier.weight(if (action == {}) 1F else PERCENT_60)
-        ) {
-            UttamText.BodyBig(
-                text = title, textColor = ColorPrimaryVariant
-            )
-            VerticalSpacer(SpacingXXXXXXSmall)
-            UttamText.BodySmall(
-                text = description, textColor = ColorPrimary
-            )
-        }
-        action()
+  Row(
+    horizontalArrangement = SpaceBetween,
+    verticalAlignment = CenterVertically,
+    modifier = Modifier.fillMaxWidth().clickable(onClick = onItemClick),
+  ) {
+    Column(modifier = Modifier.weight(if (action == {}) 1F else PERCENT_60)) {
+      UttamText.BodyBig(text = title, textColor = ColorPrimaryVariant)
+      VerticalSpacer(SpacingXXXXXXSmall)
+      UttamText.BodySmall(text = description, textColor = ColorPrimary)
     }
+    action()
+  }
 }

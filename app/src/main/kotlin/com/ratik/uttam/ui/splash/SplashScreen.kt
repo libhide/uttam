@@ -16,37 +16,30 @@ import com.ratik.uttam.core.contract.ViewEvent.Navigate
 import com.ratik.uttam.ui.splash.SplashNavTarget.Home
 import com.ratik.uttam.ui.splash.SplashNavTarget.Landing
 import com.ratik.uttam.ui.theme.ColorPrimary
-import com.ratik.uttam.ui.theme.ColorPrimaryVariant
 
 @Composable
 internal fun SplashScreen(
-    viewModel: SplashViewModel = hiltViewModel(),
-    navigateToHome: () -> Unit,
-    navigateToLanding: () -> Unit,
+  viewModel: SplashViewModel = hiltViewModel(),
+  navigateToHome: () -> Unit,
+  navigateToLanding: () -> Unit,
 ) {
-    viewModel.events.collectAsEffect { event ->
-        when (event) {
-            is Navigate -> {
-                when (event.target) {
-                    is Home -> navigateToHome()
-                    is Landing -> navigateToLanding()
-                }
-            }
-
-            else -> Ignored
+  viewModel.events.collectAsEffect { event ->
+    when (event) {
+      is Navigate -> {
+        when (event.target) {
+          is Home -> navigateToHome()
+          is Landing -> navigateToLanding()
         }
+      }
+      else -> Ignored
     }
+  }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(ColorPrimary)
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.splash_logo),
-            contentDescription = null,
-            modifier = Modifier
-                .align(Alignment.Center)
-        )
-    }
+  Box(modifier = Modifier.fillMaxSize().background(ColorPrimary)) {
+    Image(
+      painter = painterResource(id = R.drawable.splash_logo),
+      contentDescription = null,
+      modifier = Modifier.align(Alignment.Center),
+    )
+  }
 }

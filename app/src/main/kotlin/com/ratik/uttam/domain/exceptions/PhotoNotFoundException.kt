@@ -1,3 +1,3 @@
 package com.ratik.uttam.domain.exceptions
 
-class PhotoNotFoundException: Exception()
+class PhotoNotFoundException : Exception()

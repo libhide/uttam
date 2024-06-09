@@ -67,188 +67,160 @@ import java.io.File
 
 @Composable
 internal fun HomeScreen(
-    viewModel: HomeViewModel = hiltViewModel(),
-    navigateToSettings: () -> Unit,
+  viewModel: HomeViewModel = hiltViewModel(),
+  navigateToSettings: () -> Unit,
 ) {
-    setStatusBarColors(
-        isDarkIcons = false, color = Transparent
-    )
-    setNavigationBarColors(
-        isDarkIcons = false, backgroundColor = Transparent
-    )
+  setStatusBarColors(isDarkIcons = false, color = Transparent)
+  setNavigationBarColors(isDarkIcons = false, backgroundColor = Transparent)
 
-    val context = LocalContext.current
-    val wallpaperManager = WallpaperManager.getInstance(context)
-    val launcher = rememberLauncherForActivityResult(StartActivityForResult()) { activityResult ->
-        if (activityResult.resultCode == RESULT_OK) {
-            // No-op
-            // The system shows a toast message when the wallpaper is set
-        }
+  val context = LocalContext.current
+  val wallpaperManager = WallpaperManager.getInstance(context)
+  val launcher =
+    rememberLauncherForActivityResult(StartActivityForResult()) { activityResult ->
+      if (activityResult.resultCode == RESULT_OK) {
+        // No-op
+        // The system shows a toast message when the wallpaper is set
+      }
     }
 
-    val state by rememberFlowOnLifecycle(flow = viewModel.state).collectAsState(HomeState.initialState)
+  val state by
+    rememberFlowOnLifecycle(flow = viewModel.state).collectAsState(HomeState.initialState)
 
-    viewModel.events.collectAsEffect { event ->
-        when (event) {
-            is DisplayMessage -> {
-                when (event.message) {
-                    is Snack -> {
-                        Toast.makeText(context, event.message.message, Toast.LENGTH_SHORT).show()
-                    }
-
-                    else -> Ignored
-                }
-            }
-
-            is Effect -> {
-                when (event.effect) {
-                    is ChangeWallpaper -> {
-                        val wallpaperFile = File(state.currentWallpaper!!.localUri)
-                        val wallpaperUri = getUriForFile(
-                            context, "${context.packageName}.provider", wallpaperFile
-                        )
-                        val wallpaperSetIntent =
-                            wallpaperManager.getCropAndSetWallpaperIntent(wallpaperUri)
-                        launcher.launch(wallpaperSetIntent)
-                    }
-                }
-            }
-
-            else -> Ignored
+  viewModel.events.collectAsEffect { event ->
+    when (event) {
+      is DisplayMessage -> {
+        when (event.message) {
+          is Snack -> {
+            Toast.makeText(context, event.message.message, Toast.LENGTH_SHORT).show()
+          }
+          else -> Ignored
         }
+      }
+      is Effect -> {
+        when (event.effect) {
+          is ChangeWallpaper -> {
+            val wallpaperFile = File(state.currentWallpaper!!.localUri)
+            val wallpaperUri =
+              getUriForFile(context, "${context.packageName}.provider", wallpaperFile)
+            val wallpaperSetIntent = wallpaperManager.getCropAndSetWallpaperIntent(wallpaperUri)
+            launcher.launch(wallpaperSetIntent)
+          }
+        }
+      }
+      else -> Ignored
     }
+  }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(ColorPrimary) // TODO: Use palette API to generate this at refresh time
+  Box(
+    modifier =
+      Modifier.fillMaxSize()
+        .background(ColorPrimary) // TODO: Use palette API to generate this at refresh time
+  ) {
+    ScrollableImage(
+      model =
+        ImageRequest.Builder(context)
+          .data(state.currentWallpaper?.localUri)
+          .crossfade(true)
+          .build(),
+      contentDescription = null,
+    )
+
+    Box(modifier = Modifier.fillMaxSize().background(Color.Black.copy(alpha = PERCENT_10)))
+
+    HomeAppBar(
+      modifier = Modifier.fillMaxWidth().align(TopCenter).systemBarsPadding(),
+      navigateToSettings = navigateToSettings,
+      refreshWallpaper = { viewModel.onViewAction(RefreshWallpaper) },
+      shareWallpaper = {
+        val shareIntent = Intent(Intent.ACTION_SEND)
+        val shareText =
+          String.format(
+            context.getString(R.string.wallpaper_share_text),
+            state.currentWallpaper?.photographer?.name.orEmpty(),
+            state.currentWallpaper?.shareUrl.orEmpty(),
+          )
+        shareIntent.setType("text/plain")
+        shareIntent.putExtra(Intent.EXTRA_TEXT, shareText)
+        context.startActivity(createChooser(shareIntent, context.getString(R.string.share_label)))
+      },
+    )
+
+    Row(
+      horizontalArrangement = SpaceBetween,
+      verticalAlignment = CenterVertically,
+      modifier =
+        Modifier.fillMaxWidth()
+          .align(BottomCenter)
+          .navigationBarsPadding()
+          .padding(horizontal = SpacingNormal),
     ) {
-        ScrollableImage(
-            model = ImageRequest.Builder(context)
-                .data(state.currentWallpaper?.localUri).crossfade(true)
-                .build(),
-            contentDescription = null,
+      Column {
+        UttamText.BodySmall(
+          text = stringResource(id = R.string.photographer_label),
+          textColor = White,
         )
-
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(
-                    Color.Black.copy(alpha = PERCENT_10)
-                )
+        UttamText.Body(
+          text = state.currentWallpaper?.photographer?.name.orEmpty(),
+          textColor = White,
         )
+      }
 
-        HomeAppBar(
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(TopCenter)
-                .systemBarsPadding(),
-            navigateToSettings = navigateToSettings,
-            refreshWallpaper = { viewModel.onViewAction(RefreshWallpaper) },
-            shareWallpaper = {
-                val shareIntent = Intent(Intent.ACTION_SEND)
-                val shareText = String.format(
-                    context.getString(R.string.wallpaper_share_text),
-                    state.currentWallpaper?.photographer?.name.orEmpty(),
-                    state.currentWallpaper?.shareUrl.orEmpty(),
-                )
-                shareIntent.setType("text/plain")
-                shareIntent.putExtra(Intent.EXTRA_TEXT, shareText)
-                context.startActivity(
-                    createChooser(
-                        shareIntent,
-                        context.getString(R.string.share_label),
-                    ),
-                )
-            }
+      IconButton(onClick = { viewModel.onViewAction(SetWallpaper) }) {
+        Icon(
+          painter = painterResource(id = R.drawable.ic_set),
+          contentDescription = stringResource(id = R.string.content_desc_set_wallpaper),
         )
-
-        Row(
-            horizontalArrangement = SpaceBetween,
-            verticalAlignment = CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(BottomCenter)
-                .navigationBarsPadding()
-                .padding(
-                    horizontal = SpacingNormal,
-                ),
-        ) {
-            Column {
-                UttamText.BodySmall(
-                    text = stringResource(id = R.string.photographer_label),
-                    textColor = White,
-                )
-                UttamText.Body(
-                    text = state.currentWallpaper?.photographer?.name.orEmpty(),
-                    textColor = White,
-                )
-            }
-
-            IconButton(
-                onClick = { viewModel.onViewAction(SetWallpaper) },
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_set),
-                    contentDescription = stringResource(id = R.string.content_desc_set_wallpaper),
-                )
-            }
-        }
-
-        if (state.isLoading) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .shimmerBackground()
-            )
-        }
+      }
     }
+
+    if (state.isLoading) {
+      Box(modifier = Modifier.fillMaxSize().shimmerBackground())
+    }
+  }
 }
 
 @Composable
 private fun HomeAppBar(
-    modifier: Modifier = Modifier,
-    navigateToSettings: () -> Unit,
-    refreshWallpaper: () -> Unit,
-    shareWallpaper: () -> Unit,
+  modifier: Modifier = Modifier,
+  navigateToSettings: () -> Unit,
+  refreshWallpaper: () -> Unit,
+  shareWallpaper: () -> Unit,
 ) {
-    var showMenu by remember { mutableStateOf(false) }
+  var showMenu by remember { mutableStateOf(false) }
 
-    TopAppBar(
-        modifier = modifier,
-        backgroundColor = Transparent,
-        elevation = 0.dp,
-        title = {
-            Image(
-                painter = painterResource(id = R.drawable.uttam),
-                contentDescription = stringResource(id = R.string.content_desc_app_logo),
-            )
-        },
-        actions = {
-            IconButton(
-                onClick = refreshWallpaper,
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_refresh),
-                    contentDescription = stringResource(id = R.string.content_desc_refresh_wallpaper),
-                )
-            }
-            IconButton(onClick = { showMenu = true }) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_overflow),
-                    contentDescription = stringResource(id = R.string.content_desc_overflow_menu)
-                )
-            }
-            if (showMenu) {
-                DropdownMenu(expanded = true, onDismissRequest = { showMenu = false }) {
-                    DropdownMenuItem(onClick = shareWallpaper) {
-                        Text(text = "Share", color = ColorPrimaryVariant)
-                    }
-                    DropdownMenuItem(onClick = navigateToSettings) {
-                        Text(text = "Settings", color = ColorPrimaryVariant)
-                    }
-                }
-            }
-        },
-    )
+  TopAppBar(
+    modifier = modifier,
+    backgroundColor = Transparent,
+    elevation = 0.dp,
+    title = {
+      Image(
+        painter = painterResource(id = R.drawable.uttam),
+        contentDescription = stringResource(id = R.string.content_desc_app_logo),
+      )
+    },
+    actions = {
+      IconButton(onClick = refreshWallpaper) {
+        Icon(
+          painter = painterResource(id = R.drawable.ic_refresh),
+          contentDescription = stringResource(id = R.string.content_desc_refresh_wallpaper),
+        )
+      }
+      IconButton(onClick = { showMenu = true }) {
+        Icon(
+          painter = painterResource(id = R.drawable.ic_overflow),
+          contentDescription = stringResource(id = R.string.content_desc_overflow_menu),
+        )
+      }
+      if (showMenu) {
+        DropdownMenu(expanded = true, onDismissRequest = { showMenu = false }) {
+          DropdownMenuItem(onClick = shareWallpaper) {
+            Text(text = "Share", color = ColorPrimaryVariant)
+          }
+          DropdownMenuItem(onClick = navigateToSettings) {
+            Text(text = "Settings", color = ColorPrimaryVariant)
+          }
+        }
+      }
+    },
+  )
 }

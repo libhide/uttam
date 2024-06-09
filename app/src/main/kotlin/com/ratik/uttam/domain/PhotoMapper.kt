@@ -7,20 +7,20 @@ import javax.inject.Inject
 
 class PhotoMapper @Inject constructor() {
 
-    fun mapPhoto(photoApiModel: PhotoApiModel, localUri: String): Photo {
-        return Photo(
-            id = photoApiModel.id,
-            localUri = localUri,
-            shareUrl = photoApiModel.links.htmlLink,
-            photographer = mapPhotographer(photoApiModel),
-        )
-    }
+  fun mapPhoto(photoApiModel: PhotoApiModel, localUri: String): Photo {
+    return Photo(
+      id = photoApiModel.id,
+      localUri = localUri,
+      shareUrl = photoApiModel.links.htmlLink,
+      photographer = mapPhotographer(photoApiModel),
+    )
+  }
 
-    private fun mapPhotographer(photoApiModel: PhotoApiModel): Photographer {
-        return Photographer(
-            name = photoApiModel.photographer.name,
-            username = photoApiModel.photographer.username,
-            profileUrl = photoApiModel.photographer.links.htmlLink,
-        )
-    }
+  private fun mapPhotographer(photoApiModel: PhotoApiModel): Photographer {
+    return Photographer(
+      name = photoApiModel.photographer.name,
+      username = photoApiModel.photographer.username,
+      profileUrl = photoApiModel.photographer.links.htmlLink,
+    )
+  }
 }

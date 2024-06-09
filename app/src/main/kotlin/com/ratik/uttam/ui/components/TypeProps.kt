@@ -16,47 +16,17 @@ import com.ratik.uttam.ui.theme.Dimens.TextSizeDefault
 import com.ratik.uttam.ui.theme.Dimens.TextSizeLarge
 import com.ratik.uttam.ui.theme.Dimens.TextSizeSmall
 import com.ratik.uttam.ui.theme.Dimens.TextSizeXLarge
-import com.ratik.uttam.ui.theme.Dimens.TextSizeXSmall
 
-internal data class TypeProps(
-    val fontWeight: FontWeight,
-    val textSize: TextUnit,
-)
+internal data class TypeProps(val fontWeight: FontWeight, val textSize: TextUnit)
 
 @Composable
-internal fun getTypeProps(text: UttamText): TypeProps = when (text) {
-    Body -> TypeProps(
-        fontWeight = Normal,
-        textSize = TextSizeDefault,
-    )
-
-    BodyBig -> TypeProps(
-        fontWeight = Normal,
-        textSize = TextSizeLarge,
-    )
-
-    BodySmall -> TypeProps(
-        fontWeight = Normal,
-        textSize = TextSizeSmall,
-    )
-
-    BodyBold -> TypeProps(
-        fontWeight = Bold,
-        textSize = TextSizeDefault,
-    )
-
-    AppBar -> TypeProps(
-        fontWeight = Normal,
-        textSize = TextSizeXLarge,
-    )
-
-    Caption -> TypeProps(
-        fontWeight = Normal,
-        textSize = TextSizeSmall,
-    )
-
-    CaptionBold -> TypeProps(
-        fontWeight = Bold,
-        textSize = TextSizeSmall,
-    )
-}
+internal fun getTypeProps(text: UttamText): TypeProps =
+  when (text) {
+    Body -> TypeProps(fontWeight = Normal, textSize = TextSizeDefault)
+    BodyBig -> TypeProps(fontWeight = Normal, textSize = TextSizeLarge)
+    BodySmall -> TypeProps(fontWeight = Normal, textSize = TextSizeSmall)
+    BodyBold -> TypeProps(fontWeight = Bold, textSize = TextSizeDefault)
+    AppBar -> TypeProps(fontWeight = Normal, textSize = TextSizeXLarge)
+    Caption -> TypeProps(fontWeight = Normal, textSize = TextSizeSmall)
+    CaptionBold -> TypeProps(fontWeight = Bold, textSize = TextSizeSmall)
+  }

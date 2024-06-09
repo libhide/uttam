@@ -9,14 +9,14 @@ import com.ratik.uttam.ui.theme.TextColor
 
 @Composable
 fun AppBar(
-    title: @Composable () -> Unit,
-    actions: @Composable RowScope.() -> Unit = {},
-    isTransparent: Boolean,
+  title: @Composable () -> Unit,
+  actions: @Composable RowScope.() -> Unit = {},
+  isTransparent: Boolean,
 ) {
-    TopAppBar(
-        title = title,
-        actions = actions,
-        backgroundColor = if (isTransparent) Transparent else ColorPrimary,
-        contentColor = TextColor,
-    )
+  TopAppBar(
+    title = title,
+    actions = actions,
+    backgroundColor = if (isTransparent) Transparent else ColorPrimary,
+    contentColor = TextColor,
+  )
 }

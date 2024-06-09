@@ -13,80 +13,47 @@ import com.ratik.uttam.ui.splash.SplashScreen
 object AppGraph : Graph("uttam")
 
 sealed class AppDestination {
-    object Splash : Destination("splash")
+  object Splash : Destination("splash")
 
-    object Landing : Destination("landing")
+  object Landing : Destination("landing")
 
-    object Onboarding : Destination("onboarding")
+  object Onboarding : Destination("onboarding")
 
-    object Home : Destination("home")
+  object Home : Destination("home")
 
-    object Settings : Destination("settings")
+  object Settings : Destination("settings")
 }
 
 fun NavGraphBuilder.addSplashScreen(
-    graph: Graph,
-    navigateToHome: () -> Unit,
-    navigateToLanding: () -> Unit,
+  graph: Graph,
+  navigateToHome: () -> Unit,
+  navigateToLanding: () -> Unit,
 ) {
-    composable(
-        route = AppDestination.Splash.createRoute(graph),
-    ) {
-        SplashScreen(
-            navigateToHome = navigateToHome,
-            navigateToLanding = navigateToLanding,
-        )
-    }
+  composable(route = AppDestination.Splash.createRoute(graph)) {
+    SplashScreen(navigateToHome = navigateToHome, navigateToLanding = navigateToLanding)
+  }
 }
 
-fun NavGraphBuilder.addLandingScreen(
-    graph: Graph,
-    navigateToOnboarding: () -> Unit,
-) {
-    composable(
-        route = AppDestination.Landing.createRoute(graph),
-    ) {
-        LandingScreen(
-            navigateToOnboarding = navigateToOnboarding,
-        )
-    }
+fun NavGraphBuilder.addLandingScreen(graph: Graph, navigateToOnboarding: () -> Unit) {
+  composable(route = AppDestination.Landing.createRoute(graph)) {
+    LandingScreen(navigateToOnboarding = navigateToOnboarding)
+  }
 }
 
-fun NavGraphBuilder.addOnboardingScreen(
-    graph: Graph,
-    navigateToHome: () -> Unit,
-) {
-    composable(
-        route = AppDestination.Onboarding.createRoute(graph),
-    ) {
-        OnboardingScreen(
-            navigateToHome = navigateToHome,
-        )
-    }
+fun NavGraphBuilder.addOnboardingScreen(graph: Graph, navigateToHome: () -> Unit) {
+  composable(route = AppDestination.Onboarding.createRoute(graph)) {
+    OnboardingScreen(navigateToHome = navigateToHome)
+  }
 }
 
-fun NavGraphBuilder.addHomeScreen(
-    graph: Graph,
-    navigateToSettings: () -> Unit,
-) {
-    composable(
-        route = AppDestination.Home.createRoute(graph),
-    ) {
-        HomeScreen(
-            navigateToSettings = navigateToSettings,
-        )
-    }
+fun NavGraphBuilder.addHomeScreen(graph: Graph, navigateToSettings: () -> Unit) {
+  composable(route = AppDestination.Home.createRoute(graph)) {
+    HomeScreen(navigateToSettings = navigateToSettings)
+  }
 }
 
-fun NavGraphBuilder.addSettingsScreen(
-    graph: Graph,
-    navigateUp: () -> Unit,
-) {
-    composable(
-        route = AppDestination.Settings.createRoute(graph),
-    ) {
-        SettingsScreen(
-            navigateUp = navigateUp,
-        )
-    }
+fun NavGraphBuilder.addSettingsScreen(graph: Graph, navigateUp: () -> Unit) {
+  composable(route = AppDestination.Settings.createRoute(graph)) {
+    SettingsScreen(navigateUp = navigateUp)
+  }
 }

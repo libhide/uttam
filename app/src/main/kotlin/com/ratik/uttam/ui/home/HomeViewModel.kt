@@ -9,86 +9,62 @@ import com.ratik.uttam.ui.home.HomeAction.RefreshWallpaper
 import com.ratik.uttam.ui.home.HomeAction.SetWallpaper
 import com.ratik.uttam.ui.home.HomeEffect.ChangeWallpaper
 import dagger.hilt.android.lifecycle.HiltViewModel
-import timber.log.Timber
 import javax.inject.Inject
+import timber.log.Timber
 
 @HiltViewModel
-internal class HomeViewModel @Inject constructor(
-    dispatcherProvider: DispatcherProvider,
-    private val photoRepo: PhotoRepo,
-) : BaseViewModel<HomeState, HomeAction>(
-    HomeState.initialState,
-    dispatcherProvider,
-) {
+internal class HomeViewModel
+@Inject
+constructor(dispatcherProvider: DispatcherProvider, private val photoRepo: PhotoRepo) :
+  BaseViewModel<HomeState, HomeAction>(HomeState.initialState, dispatcherProvider) {
 
-    init {
-        initialize()
+  init {
+    initialize()
+  }
+
+  private fun initialize() {
+    launch {
+      photoRepo
+        .getCurrentPhoto()
+        .collectBy(
+          onStart = { updateState { currentState -> currentState.copy(isLoading = true) } },
+          onEach = { photo ->
+            updateState { currentState ->
+              currentState.copy(isLoading = false, currentWallpaper = photo)
+            }
+          },
+          onError = { updateState { currentState -> currentState.copy(isLoading = false) } },
+        )
     }
+  }
 
-    private fun initialize() {
+  override fun onViewAction(viewAction: HomeAction) {
+    when (viewAction) {
+      RefreshWallpaper -> {
         launch {
-            photoRepo.getCurrentPhoto().collectBy(
-                onStart = {
-                    updateState { currentState ->
-                        currentState.copy(isLoading = true)
-                    }
-                },
-                onEach = { photo ->
-                    updateState { currentState ->
-                        currentState.copy(
-                            isLoading = false,
-                            currentWallpaper = photo,
-                        )
-                    }
-                },
-                onError = {
-                    updateState { currentState ->
-                        currentState.copy(
-                            isLoading = false,
-                        )
-                    }
+          photoRepo
+            .fetchRandomPhoto()
+            .collectBy(
+              onStart = { updateState { currentState -> currentState.copy(isLoading = true) } },
+              onEach = { photo ->
+                updateState { currentState ->
+                  currentState.copy(isLoading = false, currentWallpaper = photo)
                 }
+              },
+              onError = {
+                updateState { currentState -> currentState.copy(isLoading = false) }
+                handleError(it)
+              },
             )
         }
+      }
+      SetWallpaper -> {
+        dispatchViewEvent(Effect(ChangeWallpaper))
+      }
     }
+  }
 
-    override fun onViewAction(viewAction: HomeAction) {
-        when (viewAction) {
-            RefreshWallpaper -> {
-                launch {
-                    photoRepo.fetchRandomPhoto().collectBy(
-                        onStart = {
-                            updateState { currentState ->
-                                currentState.copy(isLoading = true)
-                            }
-                        },
-                        onEach = { photo ->
-                            updateState { currentState ->
-                                currentState.copy(
-                                    isLoading = false,
-                                    currentWallpaper = photo,
-                                )
-                            }
-                        },
-                        onError = {
-                            updateState { currentState ->
-                                currentState.copy(
-                                    isLoading = false,
-                                )
-                            }
-                            handleError(it)
-                        }
-                    )
-                }
-            }
-
-            SetWallpaper -> {
-                dispatchViewEvent(Effect(ChangeWallpaper))
-            }
-        }
-    }
-
-    override fun handleError(throwable: Throwable) {
-        Timber.e(throwable)
-    }
+  override fun handleError(throwable: Throwable) {
+    Timber.e(throwable)
+  }
 }
