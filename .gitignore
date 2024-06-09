@@ -87,5 +87,5 @@ proguard/
 keystore.properties
 keystore.jks
 
-## Node things
-node_modules/
+## Firebase
+google-services.json
