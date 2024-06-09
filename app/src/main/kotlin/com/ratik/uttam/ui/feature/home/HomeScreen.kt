@@ -8,6 +8,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement.SpaceBetween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -41,6 +42,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider.getUriForFile
+import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.request.ImageRequest
 import com.ratik.uttam.R
@@ -163,14 +165,20 @@ internal fun HomeScreen(
     Row(
       horizontalArrangement = SpaceBetween,
       verticalAlignment = CenterVertically,
-      modifier =
-      Modifier
+      modifier = Modifier
         .fillMaxWidth()
         .align(BottomCenter)
         .navigationBarsPadding()
         .padding(horizontal = SpacingNormal),
     ) {
-      Column {
+      Column(
+        modifier = Modifier.clickable {
+          val photographerUrl = state.currentWallpaper?.photographer?.profileUrl.orEmpty()
+          if (photographerUrl.isNotEmpty()) {
+            context.startActivity(Intent(Intent.ACTION_VIEW, photographerUrl.toUri()))
+          }
+        },
+      ) {
         UttamText.BodySmall(
           text = stringResource(id = R.string.photographer_label),
           textColor = White,
