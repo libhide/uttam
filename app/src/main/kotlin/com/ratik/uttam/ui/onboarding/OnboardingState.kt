@@ -9,17 +9,12 @@ import com.ratik.uttam.ui.onboarding.model.OnboardingStep.NOTIF_PERMISSION
 import com.ratik.uttam.ui.onboarding.model.OnboardingStep.WELCOME
 
 internal data class OnboardingState(
-    override val isLoading: Boolean = false,
-    override val errorState: MessageState? = null,
-    val onboardingSteps: List<OnboardingStep> = listOf(
-        WELCOME,
-        NOTIF_PERMISSION,
-        FULL_CONTROL,
-        DONE,
-    ),
-    val currentStepIndex: Int = 0,
+  override val isLoading: Boolean = false,
+  override val errorState: MessageState? = null,
+  val onboardingSteps: List<OnboardingStep> = listOf(WELCOME, NOTIF_PERMISSION, FULL_CONTROL, DONE),
+  val currentStepIndex: Int = 0,
 ) : BaseState {
-    companion object {
-        val initialState = OnboardingState()
-    }
+  companion object {
+    val initialState = OnboardingState()
+  }
 }

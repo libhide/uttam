@@ -32,57 +32,49 @@ import com.ratik.uttam.ui.theme.setStatusBarColors
 
 @Composable
 internal fun LandingScreen(
-    viewModel: LandingViewModel = hiltViewModel(),
-    navigateToOnboarding: () -> Unit,
+  viewModel: LandingViewModel = hiltViewModel(),
+  navigateToOnboarding: () -> Unit,
 ) {
-    setStatusBarColors(isDarkIcons = false)
+  setStatusBarColors(isDarkIcons = false)
 
-    viewModel.events.collectAsEffect { event ->
-        when (event) {
-            is Navigate -> {
-                when (event.target) {
-                    is Onboarding -> navigateToOnboarding()
-                }
-            }
-
-            else -> Ignored
+  viewModel.events.collectAsEffect { event ->
+    when (event) {
+      is Navigate -> {
+        when (event.target) {
+          is Onboarding -> navigateToOnboarding()
         }
+      }
+      else -> Ignored
     }
+  }
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        Image(
-            painter = painterResource(id = R.drawable.default_wallpaper),
-            contentDescription = null,
-            modifier = Modifier.fillMaxSize(),
-            contentScale = Crop,
-        )
+  Box(modifier = Modifier.fillMaxSize()) {
+    Image(
+      painter = painterResource(id = R.drawable.default_wallpaper),
+      contentDescription = null,
+      modifier = Modifier.fillMaxSize(),
+      contentScale = Crop,
+    )
 
-        Column(
-            verticalArrangement = SpaceBetween,
-            horizontalAlignment = CenterHorizontally,
-            modifier = Modifier
-                .fillMaxSize()
-                .navigationBarsPadding()
-                .padding(
-                    horizontal = SpacingNormal,
-                    vertical = SpacingXXXXXLarge,
-                ),
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.uttam_logo),
-                contentDescription = stringResource(id = R.string.content_desc_app_logo),
-                modifier = Modifier
-                    .width(LandingScreenLogoWidth)
-                    .padding(top = LandingScreenLogoTopPadding),
-            )
+    Column(
+      verticalArrangement = SpaceBetween,
+      horizontalAlignment = CenterHorizontally,
+      modifier =
+        Modifier.fillMaxSize()
+          .navigationBarsPadding()
+          .padding(horizontal = SpacingNormal, vertical = SpacingXXXXXLarge),
+    ) {
+      Image(
+        painter = painterResource(id = R.drawable.uttam_logo),
+        contentDescription = stringResource(id = R.string.content_desc_app_logo),
+        modifier = Modifier.width(LandingScreenLogoWidth).padding(top = LandingScreenLogoTopPadding),
+      )
 
-            UttamButton.Primary(
-                onClick = { viewModel.onViewAction(GetStarted) },
-                text = stringResource(id = R.string.get_started_text),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = SpacingXXXLarge),
-            )
-        }
+      UttamButton.Primary(
+        onClick = { viewModel.onViewAction(GetStarted) },
+        text = stringResource(id = R.string.get_started_text),
+        modifier = Modifier.fillMaxWidth().padding(horizontal = SpacingXXXLarge),
+      )
     }
+  }
 }

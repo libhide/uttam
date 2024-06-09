@@ -9,38 +9,31 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-internal class SettingsViewModel @Inject constructor(
-    dispatcherProvider: DispatcherProvider,
-    private val userRepo: UserRepo,
-) : BaseViewModel<SettingsState, SettingsAction>(
-    SettingsState.initialState,
-    dispatcherProvider,
-) {
-    init {
-        initialize()
-    }
+internal class SettingsViewModel
+@Inject
+constructor(dispatcherProvider: DispatcherProvider, private val userRepo: UserRepo) :
+  BaseViewModel<SettingsState, SettingsAction>(SettingsState.initialState, dispatcherProvider) {
+  init {
+    initialize()
+  }
 
-    private fun initialize() {
-        val setWallpaperAutomatically = userRepo.shouldSetWallpaperAutomatically()
+  private fun initialize() {
+    val setWallpaperAutomatically = userRepo.shouldSetWallpaperAutomatically()
+    updateState { currentState ->
+      currentState.copy(setWallpaperAutomatically = setWallpaperAutomatically)
+    }
+  }
+
+  override fun onViewAction(viewAction: SettingsAction) {
+    when (viewAction) {
+      is ToggleSetWallpaperAutomatically -> {
         updateState { currentState ->
-            currentState.copy(
-                setWallpaperAutomatically = setWallpaperAutomatically
-            )
+          currentState.copy(setWallpaperAutomatically = !currentState.setWallpaperAutomatically)
         }
+        userRepo.toggleSetWallpaperAutomatically()
+      }
     }
+  }
 
-    override fun onViewAction(viewAction: SettingsAction) {
-        when (viewAction) {
-            is ToggleSetWallpaperAutomatically -> {
-                updateState { currentState ->
-                    currentState.copy(
-                        setWallpaperAutomatically = !currentState.setWallpaperAutomatically
-                    )
-                }
-                userRepo.toggleSetWallpaperAutomatically()
-            }
-        }
-    }
-
-    override fun handleError(throwable: Throwable) = Ignored
+  override fun handleError(throwable: Throwable) = Ignored
 }

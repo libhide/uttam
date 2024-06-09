@@ -1,16 +1,16 @@
 package com.ratik.uttam.ui.onboarding.model
 
 enum class OnboardingStep {
-    WELCOME,
-    NOTIF_PERMISSION,
-    FULL_CONTROL,
-    DONE,
+  WELCOME,
+  NOTIF_PERMISSION,
+  FULL_CONTROL,
+  DONE,
 }
 
 fun OnboardingStep.requiresNotificationPermission(): Boolean {
-    return this == OnboardingStep.NOTIF_PERMISSION
+  return this == OnboardingStep.NOTIF_PERMISSION
 }
 
 fun OnboardingStep.isLastStep(): Boolean {
-    return this == OnboardingStep.DONE
+  return this == OnboardingStep.DONE
 }
