@@ -26,7 +26,7 @@ import com.ratik.uttam.ui.landing.LandingNavTarget.Onboarding
 import com.ratik.uttam.ui.theme.Dimens.LandingScreenLogoTopPadding
 import com.ratik.uttam.ui.theme.Dimens.LandingScreenLogoWidth
 import com.ratik.uttam.ui.theme.Dimens.SpacingNormal
-import com.ratik.uttam.ui.theme.Dimens.SpacingXLarge
+import com.ratik.uttam.ui.theme.Dimens.SpacingXXXLarge
 import com.ratik.uttam.ui.theme.Dimens.SpacingXXXXXLarge
 import com.ratik.uttam.ui.theme.setStatusBarColors
 
@@ -81,7 +81,7 @@ internal fun LandingScreen(
                 text = stringResource(id = R.string.get_started_text),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = SpacingXLarge),
+                    .padding(horizontal = SpacingXXXLarge),
             )
         }
     }

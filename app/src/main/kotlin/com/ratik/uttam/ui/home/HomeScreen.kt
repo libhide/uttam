@@ -2,6 +2,8 @@ package com.ratik.uttam.ui.home
 
 import android.app.Activity.RESULT_OK
 import android.app.WallpaperManager
+import android.content.Intent
+import android.content.Intent.createChooser
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
@@ -142,7 +144,23 @@ internal fun HomeScreen(
                 .align(TopCenter)
                 .systemBarsPadding(),
             navigateToSettings = navigateToSettings,
-            refreshWallpaper = { viewModel.onViewAction(RefreshWallpaper) }
+            refreshWallpaper = { viewModel.onViewAction(RefreshWallpaper) },
+            shareWallpaper = {
+                val shareIntent = Intent(Intent.ACTION_SEND)
+                val shareText = String.format(
+                    context.getString(R.string.wallpaper_share_text),
+                    state.currentWallpaper?.photographer?.name.orEmpty(),
+                    state.currentWallpaper?.shareUrl.orEmpty(),
+                )
+                shareIntent.setType("text/plain")
+                shareIntent.putExtra(Intent.EXTRA_TEXT, shareText)
+                context.startActivity(
+                    createChooser(
+                        shareIntent,
+                        context.getString(R.string.share_label),
+                    ),
+                )
+            }
         )
 
         Row(
@@ -192,6 +210,7 @@ private fun HomeAppBar(
     modifier: Modifier = Modifier,
     navigateToSettings: () -> Unit,
     refreshWallpaper: () -> Unit,
+    shareWallpaper: () -> Unit,
 ) {
     var showMenu by remember { mutableStateOf(false) }
 
@@ -222,7 +241,7 @@ private fun HomeAppBar(
             }
             if (showMenu) {
                 DropdownMenu(expanded = true, onDismissRequest = { showMenu = false }) {
-                    DropdownMenuItem(onClick = {}) {
+                    DropdownMenuItem(onClick = shareWallpaper) {
                         Text(text = "Share", color = ColorPrimaryVariant)
                     }
                     DropdownMenuItem(onClick = navigateToSettings) {

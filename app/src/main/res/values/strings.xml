@@ -35,6 +35,7 @@
     <!-- Main UI -->
     <string name="settings_label">Settings</string>
     <string name="photographer_label">Photo by</string>
+    <string name="share_label">Share</string>
 
     <!-- Preferences -->
     <string name="category_general">General</string>
