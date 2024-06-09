@@ -46,6 +46,10 @@ constructor(
         .asResult()
         .whenSuccess { photoApiModel ->
           val localPhotoUri = downloadPhotoImage(deviceHeight, photoApiModel)
+          unsplashApi.incrementDownloadCount(
+            url = photoApiModel.links.downloadEndpoint,
+            clientId = BuildConfig.CLIENT_ID,
+          )
           if (localPhotoUri != null) {
             val photo = mapper.mapPhoto(photoApiModel, localPhotoUri)
             photoDao.savePhoto(photo)
@@ -76,6 +80,10 @@ constructor(
         .asResult()
         .whenSuccess { photoApiModel ->
           val localPhotoUri = downloadPhotoImage(deviceHeight, photoApiModel)
+          unsplashApi.incrementDownloadCount(
+            url = photoApiModel.links.downloadEndpoint,
+            clientId = BuildConfig.CLIENT_ID,
+          )
           if (localPhotoUri != null) {
             val photo = mapper.mapPhoto(photoApiModel, localPhotoUri)
             photoDao.savePhoto(photo)
