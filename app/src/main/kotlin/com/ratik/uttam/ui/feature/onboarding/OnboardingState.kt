@@ -11,7 +11,8 @@ import com.ratik.uttam.ui.feature.onboarding.model.OnboardingStep.WELCOME
 internal data class OnboardingState(
   override val isLoading: Boolean = false,
   override val errorState: MessageState? = null,
-  val onboardingSteps: List<OnboardingStep> = listOf(WELCOME, NOTIF_PERMISSION, FULL_CONTROL, DONE),
+  val onboardingSteps: List<OnboardingStep> =
+    listOf(WELCOME, NOTIF_PERMISSION, FULL_CONTROL, DONE),
   val currentStepIndex: Int = 0,
 ) : BaseState {
   companion object {

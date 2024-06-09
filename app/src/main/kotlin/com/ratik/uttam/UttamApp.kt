@@ -5,9 +5,9 @@ import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import com.ratik.uttam.logging.ReleaseTree
 import dagger.hilt.android.HiltAndroidApp
-import javax.inject.Inject
 import timber.log.Timber
 import timber.log.Timber.Forest.plant
+import javax.inject.Inject
 
 @HiltAndroidApp
 class UttamApp : Application(), Configuration.Provider {

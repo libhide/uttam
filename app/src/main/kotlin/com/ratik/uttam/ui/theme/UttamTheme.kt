@@ -58,11 +58,14 @@ fun setNavigationBarColors(isDarkIcons: Boolean, backgroundColor: Color) {
 
 object UttamTheme {
   val colors: Colors
-    @Composable @ReadOnlyComposable get() = MaterialTheme.colors
+    @Composable @ReadOnlyComposable
+    get() = MaterialTheme.colors
 
   val typography: Typography
-    @Composable @ReadOnlyComposable get() = UttamTypography
+    @Composable @ReadOnlyComposable
+    get() = UttamTypography
 
   val shapes: Shapes
-    @Composable @ReadOnlyComposable get() = UttamShapes
+    @Composable @ReadOnlyComposable
+    get() = UttamShapes
 }

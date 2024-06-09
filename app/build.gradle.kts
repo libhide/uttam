@@ -11,7 +11,10 @@ plugins {
   alias(libs.plugins.spotless)
 }
 
-fun getProperty(filename: String, propName: String): String? {
+fun getProperty(
+  filename: String,
+  propName: String,
+): String? {
   val propsFile = rootProject.file(filename)
   return if (propsFile.exists()) {
     val props = Properties()
@@ -43,7 +46,11 @@ android {
     versionCode = 21
     versionName = "4.4"
 
-    buildConfigField("String", "CLIENT_ID", "\"${getProperty("local.properties", "client_id")}\"")
+    buildConfigField(
+      "String",
+      "CLIENT_ID",
+      "\"${getProperty("local.properties", "client_id")}\"",
+    )
   }
 
   val keystorePropertiesFile = rootProject.file("keystore.properties")
@@ -62,7 +69,10 @@ android {
   buildTypes {
     release {
       isMinifyEnabled = false
-      proguardFiles(getDefaultProguardFile("proguard-android.txt"), file("proguard-rules.pro"))
+      proguardFiles(
+        getDefaultProguardFile("proguard-android.txt"),
+        file("proguard-rules.pro"),
+      )
       signingConfig = signingConfigs["config"]
     }
   }
@@ -76,13 +86,31 @@ android {
 kapt { correctErrorTypes = true }
 
 spotless {
+  val ktLintVersion = libs.versions.ktlint.get()
   kotlin {
     target("**/*.kt")
-    ktfmt().googleStyle()
+    ktlint(ktLintVersion)
+      .editorConfigOverride(
+        mapOf(
+          "indent_size" to "2",
+          "disabled_rules" to "filename",
+          "ij_kotlin_allow_trailing_comma_on_call_site" to "true",
+          "ij_kotlin_allow_trailing_comma" to "true",
+        ),
+      )
   }
+
   kotlinGradle {
     target("**/*.gradle.kts")
-    ktfmt().googleStyle()
+    ktlint(ktLintVersion)
+      .editorConfigOverride(
+        mapOf(
+          "indent_size" to "2",
+          "disabled_rules" to "filename",
+          "ij_kotlin_allow_trailing_comma_on_call_site" to "true",
+          "ij_kotlin_allow_trailing_comma" to "true",
+        ),
+      )
   }
 }
 

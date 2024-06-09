@@ -8,18 +8,21 @@ import com.ratik.uttam.domain.UserRepo
 import com.ratik.uttam.ui.feature.splash.SplashNavTarget.Home
 import com.ratik.uttam.ui.feature.splash.SplashNavTarget.Landing
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.delay
+import javax.inject.Inject
 
 @HiltViewModel
-internal class SplashViewModel
-@Inject
-constructor(dispatcherProvider: DispatcherProvider, private val userRepo: UserRepo) :
-  BaseViewModel<SplashState, SplashAction>(SplashState.initialState, dispatcherProvider) {
+internal class SplashViewModel @Inject constructor(
+  dispatcherProvider: DispatcherProvider,
+  private val userRepo: UserRepo,
+) : BaseViewModel<SplashState, SplashAction>(
+  SplashState.initialState,
+  dispatcherProvider,
+) {
 
   init {
     launch {
-      delay(1000L)
+      delay(SPLASH_DELAY)
       initialise()
     }
   }

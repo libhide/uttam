@@ -29,10 +29,10 @@ fun Modifier.shimmerBackground(
       initialValue = 0F,
       targetValue = 400F,
       animationSpec =
-        infiniteRepeatable(
-          animation = tween(durationMillis = ANIM_DURATION, easing = LinearOutSlowInEasing),
-          repeatMode = RepeatMode.Reverse,
-        ),
+      infiniteRepeatable(
+        animation = tween(durationMillis = ANIM_DURATION, easing = LinearOutSlowInEasing),
+        repeatMode = RepeatMode.Reverse,
+      ),
       label = "",
     )
   val brush =
