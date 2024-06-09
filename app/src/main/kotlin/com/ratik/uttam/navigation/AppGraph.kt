@@ -4,11 +4,11 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.ratik.uttam.navigation.model.Destination
 import com.ratik.uttam.navigation.model.Graph
-import com.ratik.uttam.ui.home.HomeScreen
-import com.ratik.uttam.ui.landing.LandingScreen
-import com.ratik.uttam.ui.onboarding.OnboardingScreen
-import com.ratik.uttam.ui.settings.SettingsScreen
-import com.ratik.uttam.ui.splash.SplashScreen
+import com.ratik.uttam.ui.feature.home.HomeScreen
+import com.ratik.uttam.ui.feature.landing.LandingScreen
+import com.ratik.uttam.ui.feature.onboarding.OnboardingScreen
+import com.ratik.uttam.ui.feature.settings.SettingsScreen
+import com.ratik.uttam.ui.feature.splash.SplashScreen
 
 object AppGraph : Graph("uttam")
 

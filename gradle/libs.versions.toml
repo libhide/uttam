@@ -22,11 +22,6 @@ accompanist = "0.34.0"
 okhttp = "4.11.0"
 retrofit = "2.9.0"
 retrofit-converter-gson = "2.8.1"
-moshi = "1.15.0"
-
-# Firebase
-firebase-core = "21.1.1"
-firebase-config = "22.0.0"
 
 # Testing
 junit = "4.13.2"
@@ -36,7 +31,6 @@ timber = "5.0.1"
 
 # Linting
 spotless = "7.0.0.BETA1"
-ktfmt = "0.5.0"
 
 [libraries]
 # Android X
@@ -65,20 +59,11 @@ accompanist-systemuicontroller = { group = "com.google.accompanist", name = "acc
 # Networking
 okhttp-logging-inspector = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
-retrofit-adpater-rxjava = { group = "com.squareup.retrofit2", name = "adapter-rxjava2", version.ref = "retrofit" }
 retrofit-converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit-converter-gson" }
-
-moshi-core = { group = "com.squareup.moshi", name = "moshi", version.ref = "moshi" }
-moshi-codegen = { group = "com.squareup.moshi", name = "moshi-kotlin-codegen", version.ref = "moshi" }
-retrofit-converter-moshi = { group = "com.squareup.retrofit2", name = "converter-moshi", version.ref = "retrofit" }
 
 ## DI
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
-
-# Firebase
-firebase-core = { group = "com.google.firebase", name = "firebase-core", version.ref = "firebase-core" }
-firebase-config = { group = "com.google.firebase", name = "firebase-config", version.ref = "firebase-config" }
 
 # Testing
 junit = { group = "junit", name = "junit", version.ref = "junit" }
