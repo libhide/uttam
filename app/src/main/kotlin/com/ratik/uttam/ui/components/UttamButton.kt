@@ -36,7 +36,8 @@ import com.ratik.uttam.ui.theme.UttamTheme
  * ```
  */
 enum class UttamButton {
-  Primary;
+  Primary,
+  ;
 
   /**
    * @param onClick - Is not invoked when [isLoading] is true to prevent clicking on loading buttons
@@ -69,14 +70,20 @@ enum class UttamButton {
               Icon(
                 painter = painterResource(id = leadingIcon),
                 contentDescription = null,
-                tint = if (isEnabled) foregroundColor else foregroundColor.copy(alpha = PERCENT_50),
+                tint =
+                if (isEnabled) {
+                  foregroundColor
+                } else {
+                  foregroundColor.copy(alpha = PERCENT_50)
+                },
               )
               HorizontalSpacer(size = SpacingXXXSmall)
             }
             Text(
               style = UttamTheme.typography.button,
               text = text.uppercase(),
-              color = if (isEnabled) foregroundColor else foregroundColor.copy(alpha = PERCENT_50),
+              color =
+              if (isEnabled) foregroundColor else foregroundColor.copy(alpha = PERCENT_50),
             )
           }
         }

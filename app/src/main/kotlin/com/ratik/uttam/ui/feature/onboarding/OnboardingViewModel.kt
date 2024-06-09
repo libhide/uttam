@@ -17,9 +17,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-internal class OnboardingViewModel
-@Inject
-constructor(
+internal class OnboardingViewModel @Inject constructor(
   dispatcherProvider: DispatcherProvider,
   private val userRepo: UserRepo,
   private val photoRepo: PhotoRepo,

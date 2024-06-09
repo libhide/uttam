@@ -9,9 +9,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-internal class SettingsViewModel
-@Inject
-constructor(dispatcherProvider: DispatcherProvider, private val userRepo: UserRepo) :
+internal class SettingsViewModel @Inject constructor(
+  dispatcherProvider: DispatcherProvider,
+  private val userRepo: UserRepo,
+) :
   BaseViewModel<SettingsState, SettingsAction>(SettingsState.initialState, dispatcherProvider) {
   init {
     initialize()

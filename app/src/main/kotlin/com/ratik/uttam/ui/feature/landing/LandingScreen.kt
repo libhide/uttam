@@ -60,14 +60,15 @@ internal fun LandingScreen(
       verticalArrangement = SpaceBetween,
       horizontalAlignment = CenterHorizontally,
       modifier =
-        Modifier.fillMaxSize()
-          .navigationBarsPadding()
-          .padding(horizontal = SpacingNormal, vertical = SpacingXXXXXLarge),
+      Modifier.fillMaxSize()
+        .navigationBarsPadding()
+        .padding(horizontal = SpacingNormal, vertical = SpacingXXXXXLarge),
     ) {
       Image(
         painter = painterResource(id = R.drawable.uttam_logo),
         contentDescription = stringResource(id = R.string.content_desc_app_logo),
-        modifier = Modifier.width(LandingScreenLogoWidth).padding(top = LandingScreenLogoTopPadding),
+        modifier =
+        Modifier.width(LandingScreenLogoWidth).padding(top = LandingScreenLogoTopPadding),
       )
 
       UttamButton.Primary(

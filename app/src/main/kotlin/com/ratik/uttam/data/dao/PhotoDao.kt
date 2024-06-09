@@ -26,12 +26,11 @@ class PhotoDao @Inject constructor(private val sharedPreferences: SharedPreferen
     val photographerUsername = sharedPreferences.getString("photographerUsername", "")
     val photographerProfileUrl = sharedPreferences.getString("photographerProfileUrl", "")
 
-    return if (
-      localUri == "" ||
-        shareUrl == "" ||
-        photographerName == "" ||
-        photographerUsername == "" ||
-        photographerProfileUrl == ""
+    return if (localUri == "" ||
+      shareUrl == "" ||
+      photographerName == "" ||
+      photographerUsername == "" ||
+      photographerProfileUrl == ""
     ) {
       null
     } else {
@@ -39,11 +38,11 @@ class PhotoDao @Inject constructor(private val sharedPreferences: SharedPreferen
         id = id!!,
         localUri = localUri!!,
         photographer =
-          Photographer(
-            name = photographerName!!,
-            username = photographerUsername!!,
-            profileUrl = photographerProfileUrl!!,
-          ),
+        Photographer(
+          name = photographerName!!,
+          username = photographerUsername!!,
+          profileUrl = photographerProfileUrl!!,
+        ),
         shareUrl = shareUrl!!,
       )
     }

@@ -3,10 +3,10 @@ package com.ratik.uttam.data.extensions
 import com.ratik.uttam.data.ApiResult
 import com.ratik.uttam.data.exceptions.GeneralApiException
 import com.ratik.uttam.data.exceptions.UnauthorizedException
-import java.io.IOException
-import java.net.HttpURLConnection.HTTP_UNAUTHORIZED
 import retrofit2.HttpException
 import retrofit2.Response
+import java.io.IOException
+import java.net.HttpURLConnection.HTTP_UNAUTHORIZED
 
 fun <T : Any> Response<T>.asResult(): ApiResult<T> {
   return try {

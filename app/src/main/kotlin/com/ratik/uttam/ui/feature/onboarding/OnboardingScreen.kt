@@ -73,10 +73,10 @@ import com.ratik.uttam.ui.theme.Dimens.SpacingXXXSmall
 import com.ratik.uttam.ui.theme.Dimens.SpacingXXXXXSmall
 import com.ratik.uttam.ui.theme.OnboardingBackground
 import com.ratik.uttam.ui.theme.setStatusBarColors
+import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeUnit.MILLISECONDS
-import kotlinx.coroutines.launch
 
 @SuppressLint("InlinedApi")
 @Composable
@@ -117,10 +117,10 @@ internal fun OnboardingScreen(
 
   Column(
     modifier =
-      Modifier.fillMaxSize()
-        .background(OnboardingBackground)
-        .navigationBarsPadding()
-        .padding(horizontal = SpacingLarge),
+    Modifier.fillMaxSize()
+      .background(OnboardingBackground)
+      .navigationBarsPadding()
+      .padding(horizontal = SpacingLarge),
     verticalArrangement = SpaceBetween,
   ) {
     HorizontalPager(
@@ -137,16 +137,16 @@ internal fun OnboardingScreen(
         UttamText.Body(
           text = "Done",
           modifier =
-            Modifier.align(CenterEnd).padding(vertical = SpacingXXSmall).clickable {
-              // enqueueDailyRefreshRequest(context)
+          Modifier.align(CenterEnd).padding(vertical = SpacingXXSmall).clickable {
+            // enqueueDailyRefreshRequest(context)
 
-              viewModel.onViewAction(
-                FinishOnboarding(
-                  deviceHeight = displayMetrics.heightPixels,
-                  deviceWidth = displayMetrics.widthPixels,
-                )
-              )
-            },
+            viewModel.onViewAction(
+              FinishOnboarding(
+                deviceHeight = displayMetrics.heightPixels,
+                deviceWidth = displayMetrics.widthPixels,
+              ),
+            )
+          },
         )
       } else {
         Icon(
@@ -154,19 +154,19 @@ internal fun OnboardingScreen(
           contentDescription = stringResource(R.string.content_desc_right_arrow),
           tint = White,
           modifier =
-            Modifier.align(CenterEnd)
-              .padding(vertical = SpacingXXXSmall, horizontal = SpacingSmall)
-              .clickable {
-                val currentStep = state.onboardingSteps[state.currentStepIndex]
-                if (currentStep.requiresNotificationPermission()) {
-                  notificationsPermissionState.launchPermissionRequest()
-                } else {
-                  viewModel.onViewAction(ShowNextStep)
-                  coroutineScope.launch {
-                    pagerState.animateScrollToPage(pagerState.currentPage + 1)
-                  }
+          Modifier.align(CenterEnd)
+            .padding(vertical = SpacingXXXSmall, horizontal = SpacingSmall)
+            .clickable {
+              val currentStep = state.onboardingSteps[state.currentStepIndex]
+              if (currentStep.requiresNotificationPermission()) {
+                notificationsPermissionState.launchPermissionRequest()
+              } else {
+                viewModel.onViewAction(ShowNextStep)
+                coroutineScope.launch {
+                  pagerState.animateScrollToPage(pagerState.currentPage + 1)
                 }
-              },
+              }
+            },
         )
       }
     }
@@ -185,10 +185,10 @@ private fun PageIndicator(modifier: Modifier = Modifier, pagerState: PagerState)
       val color = if (pagerState.currentPage == iteration) Color.Black else ColorPrimaryVariant
       Box(
         modifier =
-          Modifier.padding(SpacingXXXXXSmall)
-            .clip(CircleShape)
-            .background(color)
-            .size(IconXXXXSmall)
+        Modifier.padding(SpacingXXXXXSmall)
+          .clip(CircleShape)
+          .background(color)
+          .size(IconXXXXSmall),
       )
     }
   }
