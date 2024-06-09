@@ -20,29 +20,29 @@ import com.ratik.uttam.ui.theme.ShimmerColorLight
 import com.ratik.uttam.ui.theme.ShimmerColorMedium
 
 fun Modifier.shimmerBackground(
-    shape: Shape = RectangleShape,
-    shimmerColors: List<Color> = listOf(
-        ShimmerColorLight,
-        ShimmerColorMedium,
-    ),
+  shape: Shape = RectangleShape,
+  shimmerColors: List<Color> = listOf(ShimmerColorLight, ShimmerColorMedium),
 ): Modifier = composed {
-    val transition = rememberInfiniteTransition(label = "")
-    val translateAnimation by transition.animateFloat(
-        initialValue = 0F,
-        targetValue = 400F,
-        animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = ANIM_DURATION, easing = LinearOutSlowInEasing),
-            repeatMode = RepeatMode.Reverse,
+  val transition = rememberInfiniteTransition(label = "")
+  val translateAnimation by
+    transition.animateFloat(
+      initialValue = 0F,
+      targetValue = 400F,
+      animationSpec =
+        infiniteRepeatable(
+          animation = tween(durationMillis = ANIM_DURATION, easing = LinearOutSlowInEasing),
+          repeatMode = RepeatMode.Reverse,
         ),
-        label = "",
+      label = "",
     )
-    val brush = Brush.linearGradient(
-        colors = shimmerColors,
-        start = Offset(translateAnimation, translateAnimation),
-        end = Offset(translateAnimation + GRADIENT_OFFSET, translateAnimation + GRADIENT_OFFSET),
-        tileMode = TileMode.Mirror,
+  val brush =
+    Brush.linearGradient(
+      colors = shimmerColors,
+      start = Offset(translateAnimation, translateAnimation),
+      end = Offset(translateAnimation + GRADIENT_OFFSET, translateAnimation + GRADIENT_OFFSET),
+      tileMode = TileMode.Mirror,
     )
-    return@composed this.then(background(brush = brush, shape = shape))
+  return@composed this.then(background(brush = brush, shape = shape))
 }
 
 private const val ANIM_DURATION = 1500

@@ -18,67 +18,51 @@ import androidx.core.view.WindowCompat
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @Composable
-fun UttamTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable () -> Unit,
-) {
-    val colorScheme = when {
-        darkTheme -> ProjectLightColors // TODO: implement dark mode colours
-        else -> ProjectLightColors
+fun UttamTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
+  val colorScheme =
+    when {
+      darkTheme -> ProjectLightColors // TODO: implement dark mode colours
+      else -> ProjectLightColors
     }
-    val view = LocalView.current
-    if (!view.isInEditMode) {
-        SideEffect {
-            val window = (view.context as Activity).window
-            window.statusBarColor = TRANSPARENT
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
-        }
+  val view = LocalView.current
+  if (!view.isInEditMode) {
+    SideEffect {
+      val window = (view.context as Activity).window
+      window.statusBarColor = TRANSPARENT
+      WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
     }
+  }
 
-    MaterialTheme(
-        colors = colorScheme,
-        typography = UttamTypography,
-        shapes = UttamShapes,
-        content = content,
-    )
+  MaterialTheme(
+    colors = colorScheme,
+    typography = UttamTypography,
+    shapes = UttamShapes,
+    content = content,
+  )
 }
 
 @SuppressLint("ComposableNaming")
 @Composable
 fun setStatusBarColors(color: Color = Transparent, isDarkIcons: Boolean) {
-    val uiController = rememberSystemUiController()
-    SideEffect {
-        uiController.setStatusBarColor(
-            color = color,
-            darkIcons = isDarkIcons,
-        )
-    }
+  val uiController = rememberSystemUiController()
+  SideEffect { uiController.setStatusBarColor(color = color, darkIcons = isDarkIcons) }
 }
 
 @Composable
 fun setNavigationBarColors(isDarkIcons: Boolean, backgroundColor: Color) {
-    val uiController = rememberSystemUiController()
-    SideEffect {
-        uiController.setNavigationBarColor(
-            color = backgroundColor,
-            darkIcons = isDarkIcons,
-        )
-    }
+  val uiController = rememberSystemUiController()
+  SideEffect {
+    uiController.setNavigationBarColor(color = backgroundColor, darkIcons = isDarkIcons)
+  }
 }
 
 object UttamTheme {
-    val colors: Colors
-        @Composable
-        @ReadOnlyComposable
-        get() = MaterialTheme.colors
+  val colors: Colors
+    @Composable @ReadOnlyComposable get() = MaterialTheme.colors
 
-    val typography: Typography
-        @Composable
-        @ReadOnlyComposable
-        get() = UttamTypography
+  val typography: Typography
+    @Composable @ReadOnlyComposable get() = UttamTypography
 
-    val shapes: Shapes
-        @Composable
-        @ReadOnlyComposable
-        get() = UttamShapes
+  val shapes: Shapes
+    @Composable @ReadOnlyComposable get() = UttamShapes
 }

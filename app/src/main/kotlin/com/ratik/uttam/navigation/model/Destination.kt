@@ -3,14 +3,13 @@ package com.ratik.uttam.navigation.model
 import com.ratik.uttam.core.SafeAbstractClass
 
 /**
- * A [Destination] represents a single screen within the app. [Destination]s are independent
- * of their parent [Graph] and can be added to multiple [Graph]s within the app. The [createRoute]
+ * A [Destination] represents a single screen within the app. [Destination]s are independent of
+ * their parent [Graph] and can be added to multiple [Graph]s within the app. The [createRoute]
  * function can be used to generate a unique route for that given [Destination] on a specific
  * [Graph]
  *
- * Consider the following example:
- * Home Tab -> Products List Screen -> Product Detail Screen
- * Cart Tab -> Shopping Cart Screen -> Product Detail Screen
+ * Consider the following example: Home Tab -> Products List Screen -> Product Detail Screen Cart
+ * Tab -> Shopping Cart Screen -> Product Detail Screen
  *
  * The Home [Graph] would have the following two destinations:
  * ```
@@ -19,6 +18,7 @@ import com.ratik.uttam.core.SafeAbstractClass
  * object ProductList : Destination() { route = "product_list" }
  * object ProductDetail : Destination() { route = "product_detail/{id}" }
  * ```
+ *
  * The products module would expose a function which adds each destination to a specific graph:
  * ```
  * fun NavGraphBuilder.addProductList(graph: Graph) {
@@ -37,13 +37,15 @@ import com.ratik.uttam.core.SafeAbstractClass
  *     }
  * }
  * ```
- * The Cart [Graph] would have then only one destination
- * (as we can reuse the existing destination define in the home module):
+ *
+ * The Cart [Graph] would have then only one destination (as we can reuse the existing destination
+ * define in the home module):
  * ```
  * object CartGraph : Graph() { route = "cart" }
  *
  * object ShoppingCart : Destination() { route = "shopping_cart" }
  * ```
+ *
  * The cart module would expose a function which adds the destination to any specified graph:
  * ```
  * fun NavGraphBuilder.addShoppingCart(graph: Graph) {
@@ -55,9 +57,8 @@ import com.ratik.uttam.core.SafeAbstractClass
  * }
  * ```
  *
- * When constructing the navigation for these two graphs we can add any screen to any graph,
- * by simply passing the [Graph] into the functions define above:
- *
+ * When constructing the navigation for these two graphs we can add any screen to any graph, by
+ * simply passing the [Graph] into the functions define above:
  * ```
  * private fun NavGraphBuilder.createHomeGraph() {
  *     navigation(
@@ -82,7 +83,7 @@ import com.ratik.uttam.core.SafeAbstractClass
 @SafeAbstractClass
 abstract class Destination(private val route: String) {
 
-    fun createRoute(graph: Graph): String {
-        return "${graph.route}/$route"
-    }
+  fun createRoute(graph: Graph): String {
+    return "${graph.route}/$route"
+  }
 }

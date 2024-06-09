@@ -10,13 +10,7 @@ import com.ratik.uttam.ui.theme.UttamTheme
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 internal fun MainApp() {
-    val navController = rememberNavController()
+  val navController = rememberNavController()
 
-    UttamTheme {
-        Scaffold { _ ->
-            MainNavHost(
-                navController = navController,
-            )
-        }
-    }
+  UttamTheme { Scaffold { _ -> MainNavHost(navController = navController) } }
 }

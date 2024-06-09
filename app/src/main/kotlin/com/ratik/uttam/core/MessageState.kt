@@ -5,6 +5,7 @@ package com.ratik.uttam.core
  * to define multiple types of messages on the view.
  */
 sealed class MessageState {
-    data class SimpleDialog(val message: String) : MessageState()
-    data class Snack(val message: String, val action: (() -> Unit)? = null) : MessageState()
+  data class SimpleDialog(val message: String) : MessageState()
+
+  data class Snack(val message: String, val action: (() -> Unit)? = null) : MessageState()
 }

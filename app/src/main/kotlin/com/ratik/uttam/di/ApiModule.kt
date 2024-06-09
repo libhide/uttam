@@ -12,6 +12,5 @@ import retrofit2.create
 @InstallIn(SingletonComponent::class)
 object ApiModule {
 
-    @Provides
-    fun provideUnsplashApi(retrofit: Retrofit): UnsplashApi = retrofit.create()
+  @Provides fun provideUnsplashApi(retrofit: Retrofit): UnsplashApi = retrofit.create()
 }

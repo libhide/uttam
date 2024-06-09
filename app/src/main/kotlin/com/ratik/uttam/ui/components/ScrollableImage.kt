@@ -10,15 +10,14 @@ import coil.request.ImageRequest
 
 @Composable
 internal fun ScrollableImage(
-    modifier: Modifier = Modifier,
-    model: ImageRequest,
-    contentDescription: String?,
+  modifier: Modifier = Modifier,
+  model: ImageRequest,
+  contentDescription: String?,
 ) {
-    AsyncImage(
-        modifier = modifier
-            .horizontalScroll(rememberScrollState()),
-        model = model,
-        contentDescription = contentDescription,
-        contentScale = ContentScale.Crop,
-    )
+  AsyncImage(
+    modifier = modifier.horizontalScroll(rememberScrollState()),
+    model = model,
+    contentDescription = contentDescription,
+    contentScale = ContentScale.Crop,
+  )
 }
