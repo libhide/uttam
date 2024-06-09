@@ -43,8 +43,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
-import com.fueled.android.core.ui.extensions.collectAsEffect
-import com.fueled.android.core.ui.extensions.rememberFlowOnLifecycle
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
 import com.ratik.uttam.R
@@ -53,6 +51,8 @@ import com.ratik.uttam.core.Ignored
 import com.ratik.uttam.core.contract.ViewEvent.Navigate
 import com.ratik.uttam.ui.components.UttamText
 import com.ratik.uttam.ui.components.VerticalSpacer
+import com.ratik.uttam.ui.extensions.collectAsEffect
+import com.ratik.uttam.ui.extensions.rememberFlowOnLifecycle
 import com.ratik.uttam.ui.feature.onboarding.OnboardingAction.FinishOnboarding
 import com.ratik.uttam.ui.feature.onboarding.OnboardingAction.NotificationPermissionResponded
 import com.ratik.uttam.ui.feature.onboarding.OnboardingAction.ShowNextStep

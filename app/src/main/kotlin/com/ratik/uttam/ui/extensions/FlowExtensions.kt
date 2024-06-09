@@ -1,4 +1,4 @@
-package com.fueled.android.core.ui.extensions
+package com.ratik.uttam.ui.extensions
 
 import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable

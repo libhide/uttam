@@ -36,11 +36,13 @@ constructor(
           currentState.copy(currentStepIndex = currentState.currentStepIndex + 1)
         }
       }
+
       NotificationPermissionResponded -> {
         updateState { currentState ->
           currentState.copy(currentStepIndex = currentState.currentStepIndex + 1)
         }
       }
+
       is FinishOnboarding -> {
         userRepo.setDeviceHeight(viewAction.deviceHeight)
         userRepo.setDeviceWidth(viewAction.deviceWidth)

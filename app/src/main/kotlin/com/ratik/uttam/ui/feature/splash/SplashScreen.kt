@@ -9,10 +9,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.fueled.android.core.ui.extensions.collectAsEffect
 import com.ratik.uttam.R
 import com.ratik.uttam.core.Ignored
 import com.ratik.uttam.core.contract.ViewEvent.Navigate
+import com.ratik.uttam.ui.extensions.collectAsEffect
 import com.ratik.uttam.ui.feature.splash.SplashNavTarget.Home
 import com.ratik.uttam.ui.feature.splash.SplashNavTarget.Landing
 import com.ratik.uttam.ui.theme.ColorPrimary
