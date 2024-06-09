@@ -9,14 +9,14 @@ import com.ratik.uttam.ui.feature.home.HomeAction.RefreshWallpaper
 import com.ratik.uttam.ui.feature.home.HomeAction.SetWallpaper
 import com.ratik.uttam.ui.feature.home.HomeEffect.ChangeWallpaper
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import timber.log.Timber
+import javax.inject.Inject
 
 @HiltViewModel
-internal class HomeViewModel
-@Inject
-constructor(dispatcherProvider: DispatcherProvider, private val photoRepo: PhotoRepo) :
-  BaseViewModel<HomeState, HomeAction>(HomeState.initialState, dispatcherProvider) {
+internal class HomeViewModel @Inject constructor(
+  dispatcherProvider: DispatcherProvider,
+  private val photoRepo: PhotoRepo,
+) : BaseViewModel<HomeState, HomeAction>(HomeState.initialState, dispatcherProvider) {
 
   init {
     initialize()
@@ -58,6 +58,7 @@ constructor(dispatcherProvider: DispatcherProvider, private val photoRepo: Photo
             )
         }
       }
+
       SetWallpaper -> {
         dispatchViewEvent(Effect(ChangeWallpaper))
       }

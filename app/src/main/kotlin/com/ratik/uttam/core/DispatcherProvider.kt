@@ -1,8 +1,8 @@
 package com.ratik.uttam.core
 
-import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import javax.inject.Inject
 
 /**
  * Used to inject DispatcherProvider into business logic code, wherever we need to define the

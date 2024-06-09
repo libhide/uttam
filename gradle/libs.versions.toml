@@ -31,6 +31,7 @@ timber = "5.0.1"
 
 # Linting
 spotless = "7.0.0.BETA1"
+ktlint = "0.50.0"
 
 [libraries]
 # Android X

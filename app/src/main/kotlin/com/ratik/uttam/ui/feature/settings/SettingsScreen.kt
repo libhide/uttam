@@ -81,7 +81,9 @@ internal fun SettingsScreen(
           action = {
             Switch(
               checked = state.setWallpaperAutomatically,
-              onCheckedChange = { _ -> viewModel.onViewAction(ToggleSetWallpaperAutomatically) },
+              onCheckedChange = { _ ->
+                viewModel.onViewAction(ToggleSetWallpaperAutomatically)
+              },
             )
           },
         )
@@ -119,7 +121,10 @@ internal fun SettingsScreen(
           description = stringResource(id = R.string.summary_review),
           onItemClick = {
             val intent =
-              Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=${context.packageName}"))
+              Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse("market://details?id=${context.packageName}"),
+              )
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             context.startActivity(intent)
           },

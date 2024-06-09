@@ -113,15 +113,15 @@ internal fun HomeScreen(
 
   Box(
     modifier =
-      Modifier.fillMaxSize()
-        .background(ColorPrimary) // TODO: Use palette API to generate this at refresh time
+    Modifier.fillMaxSize()
+      .background(ColorPrimary), // TODO: Use palette API to generate this at refresh time
   ) {
     ScrollableImage(
       model =
-        ImageRequest.Builder(context)
-          .data(state.currentWallpaper?.localUri)
-          .crossfade(true)
-          .build(),
+      ImageRequest.Builder(context)
+        .data(state.currentWallpaper?.localUri)
+        .crossfade(true)
+        .build(),
       contentDescription = null,
     )
 
@@ -141,7 +141,9 @@ internal fun HomeScreen(
           )
         shareIntent.setType("text/plain")
         shareIntent.putExtra(Intent.EXTRA_TEXT, shareText)
-        context.startActivity(createChooser(shareIntent, context.getString(R.string.share_label)))
+        context.startActivity(
+          createChooser(shareIntent, context.getString(R.string.share_label)),
+        )
       },
     )
 
@@ -149,10 +151,10 @@ internal fun HomeScreen(
       horizontalArrangement = SpaceBetween,
       verticalAlignment = CenterVertically,
       modifier =
-        Modifier.fillMaxWidth()
-          .align(BottomCenter)
-          .navigationBarsPadding()
-          .padding(horizontal = SpacingNormal),
+      Modifier.fillMaxWidth()
+        .align(BottomCenter)
+        .navigationBarsPadding()
+        .padding(horizontal = SpacingNormal),
     ) {
       Column {
         UttamText.BodySmall(

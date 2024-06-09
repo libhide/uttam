@@ -37,12 +37,12 @@ constructor(
               .setSmallIcon(R.drawable.ic_stat_uttam)
               .setContentTitle(appContext.getString(R.string.wallpaper_notif_title))
               .setContentText(
-                appContext.getString(R.string.wallpaper_notif_photo_by) + photo.photographer.name
+                appContext.getString(R.string.wallpaper_notif_photo_by) +
+                  photo.photographer.name,
               )
               .setPriority(NotificationCompat.PRIORITY_DEFAULT)
           with(NotificationManagerCompat.from(appContext)) {
-            if (
-              ActivityCompat.checkSelfPermission(
+            if (ActivityCompat.checkSelfPermission(
                 appContext,
                 Manifest.permission.POST_NOTIFICATIONS,
               ) == PackageManager.PERMISSION_GRANTED

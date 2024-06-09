@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ratik.uttam.core.contract.BaseState
 import com.ratik.uttam.core.contract.ViewEvent
-import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.BufferOverflow.SUSPEND
@@ -16,6 +15,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import javax.inject.Inject
 
 /** This is the common part of all ViewModels, dealing with ViewState and SideEffect propagation. */
 abstract class BaseViewModel<ViewState : BaseState, Action>(

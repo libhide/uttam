@@ -5,12 +5,12 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import com.ratik.uttam.R
 import com.ratik.uttam.core.DispatcherProvider
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
 import java.net.HttpURLConnection
 import java.net.URL
 import javax.inject.Inject
-import kotlinx.coroutines.withContext
 
 class WallpaperDownloader
 @Inject
@@ -49,7 +49,7 @@ constructor(private val dispatcherProvider: DispatcherProvider, context: Context
       if (!appCacheFolder.exists()) {
         appCacheFolder.mkdirs()
       }
-      val file = File(appCacheFolder, "${bitmapId}.jpg")
+      val file = File(appCacheFolder, "$bitmapId.jpg")
       val outputStream: FileOutputStream
       try {
         outputStream = FileOutputStream(file)

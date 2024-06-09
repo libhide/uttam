@@ -30,7 +30,8 @@ enum class UttamText {
   BodyBold,
   Caption,
   CaptionBold,
-  AppBar;
+  AppBar,
+  ;
 
   @Composable
   operator fun invoke(

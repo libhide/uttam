@@ -14,30 +14,31 @@ import com.ratik.uttam.ui.theme.Dimens.TextSizeXXLarge
 val UttamTypography =
   Typography(
     h1 =
-      TextStyle(
-          fontFamily = FontFamily.Default,
-          fontWeight = FontWeight.Bold,
-          fontSize = TextSizeXXLarge,
-        )
-        .trimPadding(),
+    TextStyle(
+      fontFamily = FontFamily.Default,
+      fontWeight = FontWeight.Bold,
+      fontSize = TextSizeXXLarge,
+    )
+      .trimPadding(),
     body1 =
-      TextStyle(
-          fontFamily = FontFamily.Default,
-          fontWeight = FontWeight.Normal,
-          fontSize = TextSizeDefault,
-        )
-        .trimPadding(),
+    TextStyle(
+      fontFamily = FontFamily.Default,
+      fontWeight = FontWeight.Normal,
+      fontSize = TextSizeDefault,
+    )
+      .trimPadding(),
     button =
-      TextStyle(fontWeight = SemiBold, fontSize = TextSizeSmall, color = ColorPrimary).trimPadding(),
+    TextStyle(fontWeight = SemiBold, fontSize = TextSizeSmall, color = ColorPrimary)
+      .trimPadding(),
   )
 
 fun TextStyle.trimPadding(): TextStyle {
   return this.copy(
     lineHeightStyle =
-      LineHeightStyle(
-        alignment = LineHeightStyle.Alignment.Center,
-        trim = LineHeightStyle.Trim.Both,
-      ),
+    LineHeightStyle(
+      alignment = LineHeightStyle.Alignment.Center,
+      trim = LineHeightStyle.Trim.Both,
+    ),
     platformStyle = PlatformTextStyle(includeFontPadding = false),
   )
 }

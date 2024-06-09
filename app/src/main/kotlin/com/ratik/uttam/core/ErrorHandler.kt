@@ -1,8 +1,8 @@
 package com.ratik.uttam.core
 
 import com.ratik.uttam.R
-import javax.inject.Inject
 import retrofit2.HttpException
+import javax.inject.Inject
 
 interface ErrorHandler {
 
