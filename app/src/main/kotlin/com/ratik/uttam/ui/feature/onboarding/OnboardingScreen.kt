@@ -89,8 +89,7 @@ internal fun OnboardingScreen(
   val context = LocalContext.current
   val displayMetrics = context.resources.displayMetrics
 
-  val state by
-    rememberFlowOnLifecycle(flow = viewModel.state).collectAsState(OnboardingState.initialState)
+  val state by rememberFlowOnLifecycle(flow = viewModel.state).collectAsState(OnboardingState.initialState)
 
   val pagerState = rememberPagerState(pageCount = { state.onboardingSteps.size })
 
@@ -111,13 +110,14 @@ internal fun OnboardingScreen(
           is Home -> navigateToHome()
         }
       }
+
       else -> Ignored
     }
   }
 
   Column(
-    modifier =
-    Modifier.fillMaxSize()
+    modifier = Modifier
+      .fillMaxSize()
       .background(OnboardingBackground)
       .navigationBarsPadding()
       .padding(horizontal = SpacingLarge),
@@ -136,25 +136,27 @@ internal fun OnboardingScreen(
       if (isLastPage) {
         UttamText.Body(
           text = "Done",
-          modifier =
-          Modifier.align(CenterEnd).padding(vertical = SpacingXXSmall).clickable {
-            // enqueueDailyRefreshRequest(context)
+          modifier = Modifier
+            .align(CenterEnd)
+            .padding(vertical = SpacingXXSmall)
+            .clickable {
+              enqueueDailyRefreshRequest(context)
 
-            viewModel.onViewAction(
-              FinishOnboarding(
-                deviceHeight = displayMetrics.heightPixels,
-                deviceWidth = displayMetrics.widthPixels,
-              ),
-            )
-          },
+              viewModel.onViewAction(
+                FinishOnboarding(
+                  deviceHeight = displayMetrics.heightPixels,
+                  deviceWidth = displayMetrics.widthPixels,
+                ),
+              )
+            },
         )
       } else {
         Icon(
           painter = painterResource(id = R.drawable.ic_arrow_right),
           contentDescription = stringResource(R.string.content_desc_right_arrow),
           tint = White,
-          modifier =
-          Modifier.align(CenterEnd)
+          modifier = Modifier
+            .align(CenterEnd)
             .padding(vertical = SpacingXXXSmall, horizontal = SpacingSmall)
             .clickable {
               val currentStep = state.onboardingSteps[state.currentStepIndex]
@@ -184,8 +186,8 @@ private fun PageIndicator(modifier: Modifier = Modifier, pagerState: PagerState)
     repeat(pagerState.pageCount) { iteration ->
       val color = if (pagerState.currentPage == iteration) Color.Black else ColorPrimaryVariant
       Box(
-        modifier =
-        Modifier.padding(SpacingXXXXXSmall)
+        modifier = Modifier
+          .padding(SpacingXXXXXSmall)
           .clip(CircleShape)
           .background(color)
           .size(IconXXXXSmall),
@@ -240,33 +242,31 @@ private fun getOnboardingMessage(context: Context, onboardingStep: OnboardingSte
 }
 
 private fun enqueueDailyRefreshRequest(context: Context) {
-  val repeatInterval = TimeUnit.HOURS.toMillis(5)
-  val initialDelay = calculateInitialDelayToMorning()
+  val repeatInterval = TimeUnit.HOURS.toMillis(2)
+  val initialDelay = TimeUnit.HOURS.toMillis(2)
 
   val workRequest =
     PeriodicWorkRequest.Builder(RefreshWallpaperWorker::class.java, repeatInterval, MILLISECONDS)
       .setInitialDelay(initialDelay, MILLISECONDS)
       .build()
 
-  WorkManager.getInstance(context)
-    .enqueueUniquePeriodicWork(
-      RefreshWallpaperWorker::class.java.simpleName,
-      ExistingPeriodicWorkPolicy.UPDATE,
-      workRequest,
-    )
+  WorkManager.getInstance(context).enqueueUniquePeriodicWork(
+    "RatikUttamRefresh",
+    ExistingPeriodicWorkPolicy.CANCEL_AND_REENQUEUE,
+    workRequest,
+  )
 }
 
 private fun calculateInitialDelayToMorning(): Long {
   val now = Calendar.getInstance()
 
   // Set the target time to 7 AM today
-  val target =
-    Calendar.getInstance().apply {
-      set(Calendar.HOUR_OF_DAY, 7)
-      set(Calendar.MINUTE, 0)
-      set(Calendar.SECOND, 0)
-      set(Calendar.MILLISECOND, 0)
-    }
+  val target = Calendar.getInstance().apply {
+    set(Calendar.HOUR_OF_DAY, 7)
+    set(Calendar.MINUTE, 0)
+    set(Calendar.SECOND, 0)
+    set(Calendar.MILLISECOND, 0)
+  }
 
   // If the target time is before now, set it to 7 AM tomorrow
   if (target.before(now)) {

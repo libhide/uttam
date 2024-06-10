@@ -33,7 +33,7 @@ constructor(
         var workResult = Result.failure()
         photoRepo.fetchRandomPhoto().collect { photo ->
           val builder =
-            NotificationCompat.Builder(appContext, "UttamChannel")
+            NotificationCompat.Builder(appContext, "Uttam")
               .setSmallIcon(R.drawable.ic_stat_uttam)
               .setContentTitle(appContext.getString(R.string.wallpaper_notif_title))
               .setContentText(
