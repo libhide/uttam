@@ -22,6 +22,7 @@ object Dimens {
   val SpacingXXXXXLarge = 56.dp
 
   // Elevation
+  val NoElevation = 0.dp
   val ElevationSmall = 2.dp
   val ElevationLarge = 10.dp
 

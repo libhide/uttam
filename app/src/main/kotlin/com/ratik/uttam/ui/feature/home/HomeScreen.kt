@@ -40,7 +40,6 @@ import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider.getUriForFile
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -61,6 +60,7 @@ import com.ratik.uttam.ui.feature.home.HomeEffect.SetWallpaperSilently
 import com.ratik.uttam.ui.modifiers.shimmerBackground
 import com.ratik.uttam.ui.theme.ColorPrimary
 import com.ratik.uttam.ui.theme.ColorPrimaryVariant
+import com.ratik.uttam.ui.theme.Dimens.NoElevation
 import com.ratik.uttam.ui.theme.Dimens.PERCENT_10
 import com.ratik.uttam.ui.theme.Dimens.SpacingNormal
 import com.ratik.uttam.ui.theme.setNavigationBarColors
@@ -110,6 +110,7 @@ internal fun HomeScreen(
             val wallpaperUri =
               getUriForFile(context, "${context.packageName}.provider", wallpaperFile)
             wallpaperManager.setStream(context.contentResolver.openInputStream(wallpaperUri))
+            Toast.makeText(context, R.string.wallpaper_set_text, Toast.LENGTH_SHORT).show()
           }
         }
       }
@@ -219,7 +220,7 @@ private fun HomeAppBar(
   TopAppBar(
     modifier = modifier,
     backgroundColor = Transparent,
-    elevation = 0.dp,
+    elevation = NoElevation,
     title = {
       Image(
         painter = painterResource(id = R.drawable.uttam),
@@ -242,10 +243,16 @@ private fun HomeAppBar(
       if (showMenu) {
         DropdownMenu(expanded = true, onDismissRequest = { showMenu = false }) {
           DropdownMenuItem(onClick = shareWallpaper) {
-            Text(text = "Share", color = ColorPrimaryVariant)
+            Text(
+              text = stringResource(id = R.string.share_label),
+              color = ColorPrimaryVariant,
+            )
           }
           DropdownMenuItem(onClick = navigateToSettings) {
-            Text(text = "Settings", color = ColorPrimaryVariant)
+            Text(
+              text = stringResource(id = R.string.settings_label),
+              color = ColorPrimaryVariant,
+            )
           }
         }
       }
