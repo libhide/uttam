@@ -7,14 +7,15 @@
     <string name="get_started_text">Get Started</string>
 
     <!-- App tour -->
-    <string name="tour_slide_1_text">Uttam is a wallpaper app that gently updates your wallpaper with perfectly crafted images everyday.</string>
-    <string name="tour_slide_2_text">Uttam pushes rich notifications when a new wallpaper is downloaded for you. In order to receive these, please tap the arrow below and allow Uttam to send notifications to you.</string>
-    <string name="tour_slide_3_text">You have full control over the setting of the wallpaper. You can opt to set it automatically or manually click the notification and set it. The choice is yours!</string>
+    <string name="tour_slide_1_text">Uttam is a wallpaper app that gently refreshes your home screen with a new wallpaper everyday.</string>
+    <string name="tour_slide_2_text">Uttam pushes a rich notification each time a new wallpaper is available for you.</string>
+    <string name="tour_slide_3_text">Uttam provides you full control over how your wallpaper should be set.\n\nYou can choose to set your wallpaper automatically inside the app\'s settings or tap the new wallpaper notification to set your wallpaper manually.</string>
     <string name="tour_slide_1_heading">Welcome to Uttam!</string>
     <string name="tour_slide_2_heading">Wallpaper notifications</string>
     <string name="tour_slide_3_heading">Full control</string>
     <string name="tour_slide_4_text">The app needs to know when to push notifications to the device. Take a second to set the refresh interval for the wallpaper notification.</string>
-    <string name="all_done_text">All done! Press done to start using Uttam.</string>
+    <string name="all_done_text">All done! Tap Done to start using Uttam.</string>
+    <string name="done">Done</string>
 
     <!-- New wallpaper notification -->
     <string name="wallpaper_notif_title">New Wallpaper!</string>

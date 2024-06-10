@@ -23,6 +23,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -34,6 +35,7 @@ import androidx.compose.ui.Alignment.Companion.CenterEnd
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalContext
@@ -65,6 +67,7 @@ import com.ratik.uttam.ui.feature.onboarding.model.OnboardingStep.WELCOME
 import com.ratik.uttam.ui.feature.onboarding.model.requiresNotificationPermission
 import com.ratik.uttam.ui.theme.ColorPrimaryVariant
 import com.ratik.uttam.ui.theme.Dimens.IconXXXXSmall
+import com.ratik.uttam.ui.theme.Dimens.PERCENT_70
 import com.ratik.uttam.ui.theme.Dimens.SpacingLarge
 import com.ratik.uttam.ui.theme.Dimens.SpacingSmall
 import com.ratik.uttam.ui.theme.Dimens.SpacingXXSmall
@@ -134,22 +137,31 @@ internal fun OnboardingScreen(
     Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Center) {
       PageIndicator(pagerState = pagerState, modifier = Modifier.align(Center))
       if (isLastPage) {
-        UttamText.Body(
-          text = "Done",
-          modifier = Modifier
-            .align(CenterEnd)
-            .padding(vertical = SpacingXXSmall)
-            .clickable {
-              enqueueDailyRefreshRequest(context)
+        if (state.isLoading) {
+          CircularProgressIndicator(
+            color = White,
+            modifier = Modifier
+              .align(CenterEnd)
+              .scale(PERCENT_70),
+          )
+        } else {
+          UttamText.Body(
+            text = stringResource(id = R.string.done),
+            modifier = Modifier
+              .align(CenterEnd)
+              .padding(vertical = SpacingXXSmall)
+              .clickable {
+                enqueueDailyRefreshRequest(context)
 
-              viewModel.onViewAction(
-                FinishOnboarding(
-                  deviceHeight = displayMetrics.heightPixels,
-                  deviceWidth = displayMetrics.widthPixels,
-                ),
-              )
-            },
-        )
+                viewModel.onViewAction(
+                  FinishOnboarding(
+                    deviceHeight = displayMetrics.heightPixels,
+                    deviceWidth = displayMetrics.widthPixels,
+                  ),
+                )
+              },
+          )
+        }
       } else {
         Icon(
           painter = painterResource(id = R.drawable.ic_arrow_right),
@@ -219,7 +231,7 @@ private fun getOnboardingImage(onboardingStep: OnboardingStep): Int {
     WELCOME -> R.drawable.tour_graphic_1
     NOTIF_PERMISSION -> R.drawable.tour_graphic_2
     FULL_CONTROL -> R.drawable.tour_graphic_3
-    DONE -> R.drawable.tour_graphic_3
+    DONE -> R.drawable.tour_graphic_done
   }
 }
 
