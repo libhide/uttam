@@ -12,15 +12,14 @@ import java.net.HttpURLConnection
 import java.net.URL
 import javax.inject.Inject
 
-class WallpaperDownloader
-@Inject
-constructor(private val dispatcherProvider: DispatcherProvider, context: Context) {
+class WallpaperDownloader @Inject constructor(
+  private val dispatcherProvider: DispatcherProvider,
+  context: Context,
+) {
   private val appCacheFolder =
     File(context.filesDir, context.getString(R.string.app_name).lowercase())
 
-  suspend fun downloadWallpaper(wallpaperId: String, wallpaperUrl: String): String? {
-    clearCacheFolder()
-
+  suspend fun downloadWallpaper(fileName: String, wallpaperUrl: String): String? {
     return withContext(dispatcherProvider.io) {
       val bitmap: Bitmap?
       try {
@@ -30,7 +29,7 @@ constructor(private val dispatcherProvider: DispatcherProvider, context: Context
         connection.connect()
         val input = connection.inputStream
         bitmap = BitmapFactory.decodeStream(input)
-        saveBitmapToInternalStorage(wallpaperId, bitmap)
+        saveBitmapToInternalStorage(fileName, bitmap)
       } catch (e: Exception) {
         e.printStackTrace()
         throw e
@@ -38,18 +37,18 @@ constructor(private val dispatcherProvider: DispatcherProvider, context: Context
     }
   }
 
-  private fun clearCacheFolder() {
+  fun clearCacheFolder() {
     if (appCacheFolder.exists()) {
       appCacheFolder.listFiles()?.forEach { file -> file.delete() }
     }
   }
 
-  private fun saveBitmapToInternalStorage(bitmapId: String, bitmap: Bitmap?): String? {
+  private fun saveBitmapToInternalStorage(fileName: String, bitmap: Bitmap?): String? {
     return bitmap?.let {
       if (!appCacheFolder.exists()) {
         appCacheFolder.mkdirs()
       }
-      val file = File(appCacheFolder, "$bitmapId.jpg")
+      val file = File(appCacheFolder, "$fileName.jpg")
       val outputStream: FileOutputStream
       try {
         outputStream = FileOutputStream(file)

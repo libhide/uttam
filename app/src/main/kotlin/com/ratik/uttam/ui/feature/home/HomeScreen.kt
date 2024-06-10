@@ -98,7 +98,7 @@ internal fun HomeScreen(
       is Effect -> {
         when (event.effect) {
           is LaunchCropAndSetWallpaperFlow -> {
-            val wallpaperFile = File(state.currentWallpaper!!.localUri)
+            val wallpaperFile = File(state.currentWallpaper!!.rawPhotoUri)
             val wallpaperUri =
               getUriForFile(context, "${context.packageName}.provider", wallpaperFile)
             val wallpaperSetIntent = wallpaperManager.getCropAndSetWallpaperIntent(wallpaperUri)
@@ -106,7 +106,7 @@ internal fun HomeScreen(
           }
 
           is SetWallpaperSilently -> {
-            val wallpaperFile = File(state.currentWallpaper!!.localUri)
+            val wallpaperFile = File(state.currentWallpaper!!.rawPhotoUri)
             val wallpaperUri =
               getUriForFile(context, "${context.packageName}.provider", wallpaperFile)
             wallpaperManager.setStream(context.contentResolver.openInputStream(wallpaperUri))
@@ -127,7 +127,7 @@ internal fun HomeScreen(
     ScrollableImage(
       model =
       ImageRequest.Builder(context)
-        .data(state.currentWallpaper?.localUri)
+        .data(state.currentWallpaper?.rawPhotoUri)
         .crossfade(true)
         .build(),
       contentDescription = null,

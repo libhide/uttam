@@ -3,11 +3,14 @@ package com.ratik.uttam
 import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.content.Context.NOTIFICATION_SERVICE
-import android.os.Build
+import android.os.Build.VERSION.SDK_INT
+import android.os.Build.VERSION_CODES.O
+import androidx.core.app.NotificationManagerCompat
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import com.ratik.uttam.logging.ReleaseTree
+import com.ratik.uttam.util.NotificationHelper.Companion.CHANNEL_ID
+import com.ratik.uttam.util.NotificationHelper.Companion.CHANNEL_NAME
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 import timber.log.Timber.Forest.plant
@@ -18,6 +21,9 @@ class UttamApp : Application(), Configuration.Provider {
 
   @Inject
   lateinit var workerFactory: HiltWorkerFactory
+
+  @Inject
+  lateinit var notificationManager: NotificationManagerCompat
 
   override fun onCreate() {
     super.onCreate()
@@ -34,11 +40,9 @@ class UttamApp : Application(), Configuration.Provider {
     get() = Configuration.Builder().setWorkerFactory(workerFactory).build()
 
   private fun createNotificationChannel() {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+    if (SDK_INT >= O) {
       val importance = NotificationManager.IMPORTANCE_DEFAULT
-      val channel = NotificationChannel("Uttam", "General", importance)
-      val notificationManager: NotificationManager =
-        getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+      val channel = NotificationChannel(CHANNEL_ID, CHANNEL_NAME, importance)
       notificationManager.createNotificationChannel(channel)
     }
   }
