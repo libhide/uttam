@@ -15,7 +15,7 @@ splashscreen = "1.0.1"
 androidx-compose-bom = "2024.06.00"
 androidx-activity = "1.9.0"
 androidx-hilt-navigation-compose = "1.2.0"
-coil = "2.6.0"
+coil = "2.7.0"
 accompanist = "0.34.0"
 
 # Networking
