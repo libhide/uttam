@@ -7,7 +7,7 @@ hilt = "2.51.1"
 ksp = "1.9.25-1.0.20"
 
 # Android X
-work-manager = "2.9.0"
+work-manager = "2.9.1"
 hilt-work = "1.2.0"
 splashscreen = "1.0.1"
 
