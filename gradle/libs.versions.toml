@@ -30,7 +30,7 @@ junit = "4.13.2"
 timber = "5.0.1"
 
 # Linting
-spotless = "7.0.0.BETA1"
+spotless = "7.0.0.BETA2"
 ktlint = "0.50.0"
 
 [libraries]
