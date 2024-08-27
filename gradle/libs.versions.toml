@@ -3,7 +3,7 @@
 kotlin = "1.9.24"
 android-gradle-plugin = "8.5.1"
 google-services = "4.4.2"
-hilt = "2.51.1"
+hilt = "2.52"
 ksp = "1.9.25-1.0.20"
 
 # Android X
