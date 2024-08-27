@@ -1,6 +1,6 @@
 [versions]
 # Core
-kotlin = "1.9.24"
+kotlin = "1.9.25"
 android-gradle-plugin = "8.5.2"
 google-services = "4.4.2"
 hilt = "2.52"
