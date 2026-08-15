@@ -2,6 +2,7 @@ package com.ratik.uttam.ui.feature.settings
 
 import android.content.Intent
 import android.net.Uri
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement.SpaceBetween
 import androidx.compose.foundation.layout.Column
@@ -10,7 +11,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Icon
@@ -64,7 +65,13 @@ internal fun SettingsScreen(
     rememberFlowOnLifecycle(flow = viewModel.state).collectAsState(SettingsState.initialState)
 
   Column(modifier = Modifier.fillMaxSize()) {
-    SettingsAppBar(modifier = Modifier.fillMaxWidth().systemBarsPadding(), navigateUp = navigateUp)
+    SettingsAppBar(
+      modifier = Modifier
+        .fillMaxWidth()
+        .background(ColorPrimary)
+        .statusBarsPadding(),
+      navigateUp = navigateUp,
+    )
 
     LazyColumn(state = listState, contentPadding = PaddingValues(horizontal = SpacingNormal)) {
       item {
