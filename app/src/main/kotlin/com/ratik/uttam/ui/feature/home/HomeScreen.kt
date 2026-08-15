@@ -42,10 +42,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.core.content.FileProvider.getUriForFile
 import androidx.core.net.toUri
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import coil.request.ImageRequest
 import com.ratik.uttam.R
-import com.ratik.uttam.core.Ignored
 import com.ratik.uttam.core.MessageState.Snack
 import com.ratik.uttam.core.contract.ViewEvent.DisplayMessage
 import com.ratik.uttam.core.contract.ViewEvent.Effect
@@ -92,7 +91,7 @@ internal fun HomeScreen(
             Toast.makeText(context, event.message.message, Toast.LENGTH_SHORT).show()
           }
 
-          else -> Ignored
+          else -> Unit
         }
       }
 
@@ -117,9 +116,17 @@ internal fun HomeScreen(
         }
       }
 
-      else -> Ignored
+      else -> Unit
     }
   }
+
+  val wallpaperShareText =
+    stringResource(
+      R.string.wallpaper_share_text,
+      state.currentWallpaper?.photographer?.name.orEmpty(),
+      state.currentWallpaper?.shareUrl.orEmpty(),
+    )
+  val shareLabel = stringResource(R.string.share_label)
 
   Box(
     modifier =
@@ -151,17 +158,9 @@ internal fun HomeScreen(
       refreshWallpaper = { viewModel.onViewAction(RefreshWallpaper) },
       shareWallpaper = {
         val shareIntent = Intent(Intent.ACTION_SEND)
-        val shareText =
-          String.format(
-            context.getString(R.string.wallpaper_share_text),
-            state.currentWallpaper?.photographer?.name.orEmpty(),
-            state.currentWallpaper?.shareUrl.orEmpty(),
-          )
         shareIntent.setType("text/plain")
-        shareIntent.putExtra(Intent.EXTRA_TEXT, shareText)
-        context.startActivity(
-          createChooser(shareIntent, context.getString(R.string.share_label)),
-        )
+        shareIntent.putExtra(Intent.EXTRA_TEXT, wallpaperShareText)
+        context.startActivity(createChooser(shareIntent, shareLabel))
       },
     )
 

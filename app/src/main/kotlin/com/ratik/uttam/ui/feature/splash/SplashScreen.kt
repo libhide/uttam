@@ -8,9 +8,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.ratik.uttam.R
-import com.ratik.uttam.core.Ignored
 import com.ratik.uttam.core.contract.ViewEvent.Navigate
 import com.ratik.uttam.ui.extensions.collectAsEffect
 import com.ratik.uttam.ui.feature.splash.SplashNavTarget.Home
@@ -31,7 +30,7 @@ internal fun SplashScreen(
           is Landing -> navigateToLanding()
         }
       }
-      else -> Ignored
+      else -> Unit
     }
   }
 

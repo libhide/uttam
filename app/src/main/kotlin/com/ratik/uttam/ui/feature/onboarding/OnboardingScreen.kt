@@ -41,11 +41,10 @@ import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
 import com.ratik.uttam.R
-import com.ratik.uttam.core.Ignored
 import com.ratik.uttam.core.contract.ViewEvent.Navigate
 import com.ratik.uttam.ui.components.UttamText
 import com.ratik.uttam.ui.components.VerticalSpacer
@@ -107,7 +106,7 @@ internal fun OnboardingScreen(
         }
       }
 
-      else -> Ignored
+      else -> Unit
     }
   }
 
