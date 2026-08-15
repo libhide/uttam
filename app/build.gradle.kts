@@ -3,10 +3,9 @@ import java.util.Properties
 
 plugins {
   alias(libs.plugins.android.application)
-  alias(libs.plugins.kotlin.android)
-  kotlin("kapt")
-  alias(libs.plugins.hilt)
   alias(libs.plugins.ksp)
+  alias(libs.plugins.kotlin.compose)
+  alias(libs.plugins.hilt)
   alias(libs.plugins.spotless)
 }
 
@@ -27,21 +26,17 @@ fun getProperty(
 
 android {
   namespace = "com.ratik.uttam"
-  compileSdk = 34
+  compileSdk = 37
 
   buildFeatures {
     buildConfig = true
     compose = true
   }
 
-  composeOptions { kotlinCompilerExtensionVersion = "1.5.14" }
-
-  kotlinOptions { jvmTarget = "17" }
-
   defaultConfig {
     applicationId = "com.ratik.uttam.prod"
     minSdk = 24
-    targetSdk = 34
+    targetSdk = 37
     versionCode = 21
     versionName = "4.4"
 
@@ -69,7 +64,7 @@ android {
     release {
       isMinifyEnabled = false
       proguardFiles(
-        getDefaultProguardFile("proguard-android.txt"),
+        getDefaultProguardFile("proguard-android-optimize.txt"),
         file("proguard-rules.pro"),
       )
       signingConfig = signingConfigs["config"]
@@ -81,8 +76,6 @@ android {
     targetCompatibility = JavaVersion.VERSION_17
   }
 }
-
-kapt { correctErrorTypes = true }
 
 spotless {
   val ktLintVersion = libs.versions.ktlint.get()
@@ -117,7 +110,7 @@ dependencies {
   // Android X
   implementation(libs.androidx.work.manager)
   implementation(libs.androidx.hilt.work)
-  kapt(libs.androidx.hilt.compiler)
+  ksp(libs.androidx.hilt.compiler)
   implementation(libs.androidx.splashscreen)
 
   // Compose
@@ -132,7 +125,6 @@ dependencies {
   implementation(libs.androidx.compose.tooling.preview)
   debugImplementation(libs.androidx.compose.tooling)
   implementation(libs.accompanist.permissions)
-  implementation(libs.accompanist.systemuicontroller)
 
   // Networking
   implementation(libs.okhttp.logging.inspector)
@@ -141,7 +133,7 @@ dependencies {
 
   // DI
   implementation(libs.hilt.android)
-  kapt(libs.hilt.compiler)
+  ksp(libs.hilt.compiler)
 
   // Logging
   api(libs.timber)

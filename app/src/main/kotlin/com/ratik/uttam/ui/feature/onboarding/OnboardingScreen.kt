@@ -75,7 +75,7 @@ import com.ratik.uttam.ui.theme.Dimens.SpacingXXXLarge
 import com.ratik.uttam.ui.theme.Dimens.SpacingXXXSmall
 import com.ratik.uttam.ui.theme.Dimens.SpacingXXXXXSmall
 import com.ratik.uttam.ui.theme.OnboardingBackground
-import com.ratik.uttam.ui.theme.setStatusBarColors
+import com.ratik.uttam.ui.theme.SetSystemBarColors
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.concurrent.TimeUnit
@@ -87,7 +87,7 @@ internal fun OnboardingScreen(
   viewModel: OnboardingViewModel = hiltViewModel(),
   navigateToHome: () -> Unit,
 ) {
-  setStatusBarColors(isDarkIcons = false)
+  SetSystemBarColors(statusBarDarkIcons = false)
 
   val context = LocalContext.current
   val displayMetrics = context.resources.displayMetrics

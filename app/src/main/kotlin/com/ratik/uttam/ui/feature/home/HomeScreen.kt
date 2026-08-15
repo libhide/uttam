@@ -63,8 +63,7 @@ import com.ratik.uttam.ui.theme.ColorPrimaryVariant
 import com.ratik.uttam.ui.theme.Dimens.NoElevation
 import com.ratik.uttam.ui.theme.Dimens.PERCENT_10
 import com.ratik.uttam.ui.theme.Dimens.SpacingNormal
-import com.ratik.uttam.ui.theme.setNavigationBarColors
-import com.ratik.uttam.ui.theme.setStatusBarColors
+import com.ratik.uttam.ui.theme.SetSystemBarColors
 import java.io.File
 
 @Composable
@@ -72,8 +71,11 @@ internal fun HomeScreen(
   viewModel: HomeViewModel = hiltViewModel(),
   navigateToSettings: () -> Unit,
 ) {
-  setStatusBarColors(isDarkIcons = false, color = Transparent)
-  setNavigationBarColors(isDarkIcons = false, backgroundColor = Transparent)
+  SetSystemBarColors(
+    statusBarDarkIcons = false,
+    navigationBarDarkIcons = false,
+    navigationBarColor = Transparent,
+  )
 
   val context = LocalContext.current
   val wallpaperManager = WallpaperManager.getInstance(context)

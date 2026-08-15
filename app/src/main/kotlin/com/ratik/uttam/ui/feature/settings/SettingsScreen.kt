@@ -42,16 +42,19 @@ import com.ratik.uttam.ui.theme.Dimens.SpacingNormal
 import com.ratik.uttam.ui.theme.Dimens.SpacingXLarge
 import com.ratik.uttam.ui.theme.Dimens.SpacingXXXLarge
 import com.ratik.uttam.ui.theme.Dimens.SpacingXXXXXXSmall
-import com.ratik.uttam.ui.theme.setNavigationBarColors
-import com.ratik.uttam.ui.theme.setStatusBarColors
+import com.ratik.uttam.ui.theme.SetSystemBarColors
 
 @Composable
 internal fun SettingsScreen(
   viewModel: SettingsViewModel = hiltViewModel(),
   navigateUp: () -> Unit,
 ) {
-  setStatusBarColors(isDarkIcons = false, color = ColorPrimary)
-  setNavigationBarColors(isDarkIcons = false, backgroundColor = ColorPrimaryVariant)
+  SetSystemBarColors(
+    statusBarColor = ColorPrimary,
+    statusBarDarkIcons = false,
+    navigationBarColor = ColorPrimaryVariant,
+    navigationBarDarkIcons = false,
+  )
 
   val context = LocalContext.current
 

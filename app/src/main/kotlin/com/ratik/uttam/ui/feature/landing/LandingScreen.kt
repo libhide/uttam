@@ -28,14 +28,14 @@ import com.ratik.uttam.ui.theme.Dimens.LandingScreenLogoWidth
 import com.ratik.uttam.ui.theme.Dimens.SpacingNormal
 import com.ratik.uttam.ui.theme.Dimens.SpacingXXXLarge
 import com.ratik.uttam.ui.theme.Dimens.SpacingXXXXXLarge
-import com.ratik.uttam.ui.theme.setStatusBarColors
+import com.ratik.uttam.ui.theme.SetSystemBarColors
 
 @Composable
 internal fun LandingScreen(
   viewModel: LandingViewModel = hiltViewModel(),
   navigateToOnboarding: () -> Unit,
 ) {
-  setStatusBarColors(isDarkIcons = false)
+  SetSystemBarColors(statusBarDarkIcons = false)
 
   viewModel.events.collectAsEffect { event ->
     when (event) {
