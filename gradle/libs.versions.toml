@@ -2,7 +2,6 @@
 # Core
 kotlin = "2.2.10"
 android-gradle-plugin = "9.1.1"
-google-services = "4.4.2"
 hilt = "2.60.1"
 ksp = "2.3.7"
 
@@ -79,6 +78,5 @@ compose-core = ["androidx-compose-foundation", "androidx-compose-foundation-layo
 android-application = { id = "com.android.application", version.ref = "android-gradle-plugin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
