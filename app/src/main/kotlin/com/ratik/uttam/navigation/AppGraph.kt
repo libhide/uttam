@@ -1,5 +1,11 @@
 package com.ratik.uttam.navigation
 
+import androidx.compose.animation.AnimatedContentTransitionScope.SlideDirection
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.ratik.uttam.navigation.model.Destination
@@ -47,13 +53,44 @@ fun NavGraphBuilder.addOnboardingScreen(graph: Graph, navigateToHome: () -> Unit
 }
 
 fun NavGraphBuilder.addHomeScreen(graph: Graph, navigateToSettings: () -> Unit) {
-  composable(route = AppDestination.Home.createRoute(graph)) {
+  composable(
+    route = AppDestination.Home.createRoute(graph),
+    exitTransition = {
+      slideOutHorizontally(
+        animationSpec = tween(NAVIGATION_TRANSITION_DURATION),
+        targetOffsetX = { -it / BACKGROUND_SCREEN_OFFSET_DIVISOR },
+      ) + fadeOut(tween(NAVIGATION_TRANSITION_DURATION))
+    },
+    popEnterTransition = {
+      slideInHorizontally(
+        animationSpec = tween(NAVIGATION_TRANSITION_DURATION),
+        initialOffsetX = { -it / BACKGROUND_SCREEN_OFFSET_DIVISOR },
+      ) + fadeIn(tween(NAVIGATION_TRANSITION_DURATION))
+    },
+  ) {
     HomeScreen(navigateToSettings = navigateToSettings)
   }
 }
 
 fun NavGraphBuilder.addSettingsScreen(graph: Graph, navigateUp: () -> Unit) {
-  composable(route = AppDestination.Settings.createRoute(graph)) {
+  composable(
+    route = AppDestination.Settings.createRoute(graph),
+    enterTransition = {
+      slideIntoContainer(
+        towards = SlideDirection.Left,
+        animationSpec = tween(NAVIGATION_TRANSITION_DURATION),
+      ) + fadeIn(tween(NAVIGATION_TRANSITION_DURATION))
+    },
+    popExitTransition = {
+      slideOutOfContainer(
+        towards = SlideDirection.Right,
+        animationSpec = tween(NAVIGATION_TRANSITION_DURATION),
+      ) + fadeOut(tween(NAVIGATION_TRANSITION_DURATION))
+    },
+  ) {
     SettingsScreen(navigateUp = navigateUp)
   }
 }
+
+private const val NAVIGATION_TRANSITION_DURATION = 300
+private const val BACKGROUND_SCREEN_OFFSET_DIVISOR = 4
