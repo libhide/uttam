@@ -1,5 +1,6 @@
 package com.ratik.uttam.ui.feature.onboarding
 
+import com.ratik.uttam.bg.WallpaperRefreshScheduler
 import com.ratik.uttam.core.BaseViewModel
 import com.ratik.uttam.core.DispatcherProvider
 import com.ratik.uttam.core.Ignored
@@ -21,6 +22,7 @@ internal class OnboardingViewModel @Inject constructor(
   dispatcherProvider: DispatcherProvider,
   private val userRepo: UserRepo,
   private val photoRepo: PhotoRepo,
+  private val refreshScheduler: WallpaperRefreshScheduler,
 ) :
   BaseViewModel<OnboardingState, OnboardingAction>(
     OnboardingState.initialState,
@@ -51,6 +53,7 @@ internal class OnboardingViewModel @Inject constructor(
               onStart = { updateState { currentState -> currentState.copy(isLoading = true) } },
               onEach = {
                 userRepo.setHasOnboarded()
+                refreshScheduler.scheduleDailyRefresh()
                 dispatchViewEvent(Navigate(Home))
               },
               onError = {

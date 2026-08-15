@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import timber.log.Timber
 import java.io.File
 import java.util.UUID
@@ -172,15 +173,11 @@ internal class PhotoRepo @Inject constructor(
     )
   }
 
-  suspend fun getCurrentPhoto(): Flow<Photo> =
-    flow {
-      val photo = photoDao.getPhoto()
-      if (photo != null && photo.filesExist()) {
-        emit(photo)
-      } else {
-        throw PhotoNotFoundException()
+  fun getCurrentPhoto(): Flow<Photo> =
+    photoDao.observePhoto()
+      .map { photo ->
+        if (photo != null && photo.filesExist()) photo else throw PhotoNotFoundException()
       }
-    }
       .flowOn(dispatcherProvider.io)
 
   private fun Photo.filesExist(): Boolean =
