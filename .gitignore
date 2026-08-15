@@ -85,7 +85,7 @@ proguard/
 
 ## Files to keep local
 keystore.properties
-keystore.jks
+*.jks
 
 ## Firebase
 google-services.json
