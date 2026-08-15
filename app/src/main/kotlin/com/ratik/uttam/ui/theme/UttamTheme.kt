@@ -1,8 +1,8 @@
 package com.ratik.uttam.ui.theme
 
-import android.annotation.SuppressLint
-import android.app.Activity
-import android.graphics.Color.TRANSPARENT
+import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.Colors
 import androidx.compose.material.MaterialTheme
@@ -13,9 +13,8 @@ import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Transparent
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
-import androidx.core.view.WindowCompat
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @Composable
 fun UttamTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
@@ -24,14 +23,7 @@ fun UttamTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable 
       darkTheme -> ProjectLightColors // TODO: implement dark mode colours
       else -> ProjectLightColors
     }
-  val view = LocalView.current
-  if (!view.isInEditMode) {
-    SideEffect {
-      val window = (view.context as Activity).window
-      window.statusBarColor = TRANSPARENT
-      WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
-    }
-  }
+  SetSystemBarColors(statusBarDarkIcons = darkTheme)
 
   MaterialTheme(
     colors = colorScheme,
@@ -41,20 +33,36 @@ fun UttamTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable 
   )
 }
 
-@SuppressLint("ComposableNaming")
 @Composable
-fun setStatusBarColors(color: Color = Transparent, isDarkIcons: Boolean) {
-  val uiController = rememberSystemUiController()
-  SideEffect { uiController.setStatusBarColor(color = color, darkIcons = isDarkIcons) }
-}
-
-@Composable
-fun setNavigationBarColors(isDarkIcons: Boolean, backgroundColor: Color) {
-  val uiController = rememberSystemUiController()
-  SideEffect {
-    uiController.setNavigationBarColor(color = backgroundColor, darkIcons = isDarkIcons)
+fun SetSystemBarColors(
+  statusBarColor: Color = Transparent,
+  statusBarDarkIcons: Boolean,
+  navigationBarColor: Color? = null,
+  navigationBarDarkIcons: Boolean? = null,
+) {
+  val view = LocalView.current
+  if (!view.isInEditMode) {
+    SideEffect {
+      val activity = view.context as ComponentActivity
+      activity.enableEdgeToEdge(
+        statusBarStyle = statusBarColor.toSystemBarStyle(statusBarDarkIcons),
+        navigationBarStyle =
+        if (navigationBarColor != null && navigationBarDarkIcons != null) {
+          navigationBarColor.toSystemBarStyle(navigationBarDarkIcons)
+        } else {
+          SystemBarStyle.auto(Transparent.toArgb(), Transparent.toArgb())
+        },
+      )
+    }
   }
 }
+
+private fun Color.toSystemBarStyle(darkIcons: Boolean): SystemBarStyle =
+  if (darkIcons) {
+    SystemBarStyle.light(toArgb(), toArgb())
+  } else {
+    SystemBarStyle.dark(toArgb())
+  }
 
 object UttamTheme {
   val colors: Colors

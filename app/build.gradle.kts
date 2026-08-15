@@ -64,7 +64,7 @@ android {
     release {
       isMinifyEnabled = false
       proguardFiles(
-        getDefaultProguardFile("proguard-android.txt"),
+        getDefaultProguardFile("proguard-android-optimize.txt"),
         file("proguard-rules.pro"),
       )
       signingConfig = signingConfigs["config"]
@@ -125,7 +125,6 @@ dependencies {
   implementation(libs.androidx.compose.tooling.preview)
   debugImplementation(libs.androidx.compose.tooling)
   implementation(libs.accompanist.permissions)
-  implementation(libs.accompanist.systemuicontroller)
 
   // Networking
   implementation(libs.okhttp.logging.inspector)
