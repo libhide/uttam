@@ -3,14 +3,14 @@ package com.ratik.uttam.di
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
-import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.ratik.uttam.R
 import com.ratik.uttam.core.ErrorHandler
 import com.ratik.uttam.core.ErrorHandlerImpl
 import com.ratik.uttam.core.StringProvider
 import com.ratik.uttam.core.StringProviderImpl
-import com.ratik.uttam.util.NotificationHelper.Companion.CHANNEL_ID
+import com.ratik.uttam.data.storage.AndroidWallpaperSetter
+import com.ratik.uttam.domain.WallpaperSetter
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -37,9 +37,8 @@ object AppModule {
     )
 
   @Provides
-  fun provideNotificationCompatBuilder(context: Context): NotificationCompat.Builder {
-    return NotificationCompat.Builder(context, CHANNEL_ID)
-  }
+  internal fun provideWallpaperSetter(wallpaperSetter: AndroidWallpaperSetter): WallpaperSetter =
+    wallpaperSetter
 
   @Provides
   fun provideNotificationManagerCompat(context: Context): NotificationManagerCompat {

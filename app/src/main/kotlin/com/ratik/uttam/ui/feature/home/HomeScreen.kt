@@ -56,7 +56,6 @@ import com.ratik.uttam.ui.extensions.rememberFlowOnLifecycle
 import com.ratik.uttam.ui.feature.home.HomeAction.RefreshWallpaper
 import com.ratik.uttam.ui.feature.home.HomeAction.SetWallpaper
 import com.ratik.uttam.ui.feature.home.HomeEffect.LaunchCropAndSetWallpaperFlow
-import com.ratik.uttam.ui.feature.home.HomeEffect.SetWallpaperSilently
 import com.ratik.uttam.ui.modifiers.shimmerBackground
 import com.ratik.uttam.ui.theme.ColorPrimary
 import com.ratik.uttam.ui.theme.ColorPrimaryVariant
@@ -100,19 +99,20 @@ internal fun HomeScreen(
       is Effect -> {
         when (event.effect) {
           is LaunchCropAndSetWallpaperFlow -> {
-            val wallpaperFile = File(state.currentWallpaper!!.rawPhotoUri)
-            val wallpaperUri =
-              getUriForFile(context, "${context.packageName}.provider", wallpaperFile)
-            val wallpaperSetIntent = wallpaperManager.getCropAndSetWallpaperIntent(wallpaperUri)
-            launcher.launch(wallpaperSetIntent)
-          }
-
-          is SetWallpaperSilently -> {
-            val wallpaperFile = File(state.currentWallpaper!!.rawPhotoUri)
-            val wallpaperUri =
-              getUriForFile(context, "${context.packageName}.provider", wallpaperFile)
-            wallpaperManager.setStream(context.contentResolver.openInputStream(wallpaperUri))
-            Toast.makeText(context, R.string.wallpaper_set_text, Toast.LENGTH_SHORT).show()
+            runCatching {
+              check(wallpaperManager.isWallpaperSupported && wallpaperManager.isSetWallpaperAllowed)
+              val wallpaperFile = File(event.effect.wallpaperPath)
+              check(wallpaperFile.isFile && wallpaperFile.length() > 0)
+              val wallpaperUri =
+                getUriForFile(context, "${context.packageName}.provider", wallpaperFile)
+              val wallpaperSetIntent = wallpaperManager
+                .getCropAndSetWallpaperIntent(wallpaperUri)
+                .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+              check(wallpaperSetIntent.resolveActivity(context.packageManager) != null)
+              launcher.launch(wallpaperSetIntent)
+            }.onFailure {
+              Toast.makeText(context, R.string.generic_error, Toast.LENGTH_SHORT).show()
+            }
           }
         }
       }
@@ -192,7 +192,10 @@ internal fun HomeScreen(
         )
       }
 
-      IconButton(onClick = { viewModel.onViewAction(SetWallpaper) }) {
+      IconButton(
+        enabled = state.currentWallpaper != null,
+        onClick = { viewModel.onViewAction(SetWallpaper) },
+      ) {
         Icon(
           painter = painterResource(id = R.drawable.ic_set),
           contentDescription = stringResource(id = R.string.content_desc_set_wallpaper),
