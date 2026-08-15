@@ -42,13 +42,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.PeriodicWorkRequest
-import androidx.work.WorkManager
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
 import com.ratik.uttam.R
-import com.ratik.uttam.bg.RefreshWallpaperWorker
 import com.ratik.uttam.core.Ignored
 import com.ratik.uttam.core.contract.ViewEvent.Navigate
 import com.ratik.uttam.ui.components.UttamText
@@ -77,9 +73,6 @@ import com.ratik.uttam.ui.theme.Dimens.SpacingXXXXXSmall
 import com.ratik.uttam.ui.theme.OnboardingBackground
 import com.ratik.uttam.ui.theme.SetSystemBarColors
 import kotlinx.coroutines.launch
-import java.util.Calendar
-import java.util.concurrent.TimeUnit
-import java.util.concurrent.TimeUnit.MILLISECONDS
 
 @SuppressLint("InlinedApi")
 @Composable
@@ -151,8 +144,6 @@ internal fun OnboardingScreen(
               .align(CenterEnd)
               .padding(vertical = SpacingXXSmall)
               .clickable {
-                enqueueDailyRefreshRequest(context)
-
                 viewModel.onViewAction(
                   FinishOnboarding(
                     deviceHeight = displayMetrics.heightPixels,
@@ -251,40 +242,4 @@ private fun getOnboardingMessage(context: Context, onboardingStep: OnboardingSte
     FULL_CONTROL -> context.getString(R.string.tour_slide_3_text)
     DONE -> context.getString(R.string.all_done_text)
   }
-}
-
-private fun enqueueDailyRefreshRequest(context: Context) {
-  val repeatInterval = TimeUnit.HOURS.toMillis(2)
-  val initialDelay = TimeUnit.HOURS.toMillis(2)
-
-  val workRequest =
-    PeriodicWorkRequest.Builder(RefreshWallpaperWorker::class.java, repeatInterval, MILLISECONDS)
-      .setInitialDelay(initialDelay, MILLISECONDS)
-      .build()
-
-  WorkManager.getInstance(context).enqueueUniquePeriodicWork(
-    "RatikUttamRefresh",
-    ExistingPeriodicWorkPolicy.CANCEL_AND_REENQUEUE,
-    workRequest,
-  )
-}
-
-private fun calculateInitialDelayToMorning(): Long {
-  val now = Calendar.getInstance()
-
-  // Set the target time to 7 AM today
-  val target = Calendar.getInstance().apply {
-    set(Calendar.HOUR_OF_DAY, 7)
-    set(Calendar.MINUTE, 0)
-    set(Calendar.SECOND, 0)
-    set(Calendar.MILLISECOND, 0)
-  }
-
-  // If the target time is before now, set it to 7 AM tomorrow
-  if (target.before(now)) {
-    target.add(Calendar.DAY_OF_YEAR, 1)
-  }
-
-  // Calculate the delay in milliseconds
-  return target.timeInMillis - now.timeInMillis
 }
