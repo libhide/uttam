@@ -1,40 +1,67 @@
 # Uttam
 
-<img src="https://raw.githubusercontent.com/libhide/uttam/develop/art/branding.jpg" alt="Uttam Branding">
+<img src="https://raw.githubusercontent.com/libhide/uttam/develop/art/branding.jpg" alt="Uttam branding">
 
-Uttam is an Android app which gently updates your wallpaper with a perfectly crafted image everyday!
+Uttam is a small Android wallpaper app that gently refreshes your home screen with a photograph from Unsplash every day.
+
+## Features
+
+- Fetch a new wallpaper on demand
+- Refresh daily in the background when connected to a network
+- Optionally set the home-screen wallpaper automatically
+- Receive a rich notification when a new wallpaper is available
+- Preview, save, share, or set a wallpaper manually
+- Credit and link back to the Unsplash photographer
 
 ## Story
 
-[The Story](https://www.ratik.in/writing/uttam)
+Read [the story behind Uttam](https://www.ratik.in/writing/uttam).
 
 ## Development
 
-If you want to clone this repo and compile the project, you can use the following steps:
+### Requirements
 
-1. Clone the project.
-2. Add your Unsplash API Client ID to the `local.properties` file:
+- JDK 17
+- Android SDK with API 37
+- An [Unsplash API](https://unsplash.com/developers) client ID
 
+### Setup
+
+1. Clone the repository.
+2. Add your Unsplash client ID to `local.properties`:
+
+   ```properties
+   client_id=<UNSPLASH_CLIENT_ID>
+   ```
+
+3. Create the local signing-properties file required by the Gradle configuration:
+
+   ```shell
+   touch keystore.properties
+   ```
+
+4. Build the debug app:
+
+   ```shell
+   ./gradlew :app:assembleDebug
+   ```
+
+Run the project checks with:
+
+```shell
+./gradlew spotlessCheck test :app:lintDebug
 ```
-client_id=<UNSPLASH_CLIENT_ID>
-```
 
-3. That's it!
+## Technology
 
-## Postmortem
+Uttam is written in Kotlin and uses Jetpack Compose, Hilt, WorkManager, Retrofit, OkHttp, Coil, and Kotlin coroutines.
 
-A lot of has happened since I initially wrote this app. Unsplash has made using their API a bit annoying so scaling this project did not make sense in my eyes. That said, I still adore the app and use it everyday! I will probably keep using this project as a learning ground to experiment and pick up new skills!
+The app supports Android 7.0 and newer and currently targets Android API 37.
 
-## Todo
+## Maintenance
 
-- [x] MVP
-- [x] RxJava
-- [x] Dagger
-- [ ] Kotlin
-- [ ] WorkManager
-- [ ] Android Arch Components?
-- [ ] Android Jetpack?
+Uttam is a personal project maintained primarily for sentimental reasons. Unsplash API constraints mean it is not intended to scale into a commercial wallpaper service, but the app remains in active use and receives focused reliability and compatibility updates.
 
-## Huge Thanks
+## Thanks
 
-Thanks a ton to [Arun](http://http://twitter.com/voidmaindev) and [Chetan](https://twitter.com/chetsachdeva) for helping me countless number of times while I was taking this codebase from it's legacy state to what it is now I learned so much in the process! Cheers!
+Thanks to [Arun](https://twitter.com/voidmaindev) and [Chetan](https://twitter.com/chetsachdeva) for their help while Uttam evolved from its original legacy implementation into the app it is today.

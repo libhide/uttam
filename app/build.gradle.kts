@@ -37,8 +37,8 @@ android {
     applicationId = "com.ratik.uttam.prod"
     minSdk = 24
     targetSdk = 37
-    versionCode = 22
-    versionName = "4.5"
+    versionCode = 24
+    versionName = "5.1"
 
     buildConfigField(
       "String",
