@@ -2,7 +2,7 @@
 # Core
 kotlin = "2.2.10"
 android-gradle-plugin = "9.1.1"
-google-services = "4.4.2"
+google-services = "4.5.0"
 hilt = "2.60.1"
 ksp = "2.3.7"
 
