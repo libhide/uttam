@@ -18,7 +18,7 @@ class PhotoDao @Inject constructor(private val sharedPreferences: SharedPreferen
     editor.putString("photographerName", photo.photographer.name)
     editor.putString("photographerUsername", photo.photographer.username)
     editor.putString("photographerProfileUrl", photo.photographer.profileUrl)
-    editor.apply()
+    check(editor.commit()) { "Could not persist wallpaper details" }
   }
 
   fun getPhoto(): Photo? {

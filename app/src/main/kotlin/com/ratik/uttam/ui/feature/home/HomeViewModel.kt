@@ -1,15 +1,18 @@
 package com.ratik.uttam.ui.feature.home
 
+import com.ratik.uttam.R
 import com.ratik.uttam.core.BaseViewModel
 import com.ratik.uttam.core.DispatcherProvider
+import com.ratik.uttam.core.MessageState.Snack
+import com.ratik.uttam.core.contract.ViewEvent.DisplayMessage
 import com.ratik.uttam.core.contract.ViewEvent.Effect
 import com.ratik.uttam.data.extensions.collectBy
 import com.ratik.uttam.domain.PhotoRepo
 import com.ratik.uttam.domain.UserRepo
+import com.ratik.uttam.domain.WallpaperSetter
 import com.ratik.uttam.ui.feature.home.HomeAction.RefreshWallpaper
 import com.ratik.uttam.ui.feature.home.HomeAction.SetWallpaper
 import com.ratik.uttam.ui.feature.home.HomeEffect.LaunchCropAndSetWallpaperFlow
-import com.ratik.uttam.ui.feature.home.HomeEffect.SetWallpaperSilently
 import dagger.hilt.android.lifecycle.HiltViewModel
 import timber.log.Timber
 import javax.inject.Inject
@@ -19,6 +22,7 @@ internal class HomeViewModel @Inject constructor(
   dispatcherProvider: DispatcherProvider,
   private val photoRepo: PhotoRepo,
   private val userRepo: UserRepo,
+  private val wallpaperSetter: WallpaperSetter,
 ) : BaseViewModel<HomeState, HomeAction>(
   HomeState.initialState,
   dispatcherProvider,
@@ -56,9 +60,19 @@ internal class HomeViewModel @Inject constructor(
                 updateState { currentState ->
                   currentState.copy(isLoading = false, currentWallpaper = photo)
                 }
-                val shouldSetAutomatically = userRepo.shouldSetWallpaperAutomatically()
-                if (shouldSetAutomatically) {
-                  dispatchViewEvent(Effect(SetWallpaperSilently))
+                if (userRepo.shouldSetWallpaperAutomatically()) {
+                  wallpaperSetter.setHomeScreen(photo.rawPhotoUri)
+                    .onSuccess {
+                      dispatchViewEvent(
+                        DisplayMessage(Snack(resourceProvider.getString(R.string.wallpaper_set_text))),
+                      )
+                    }
+                    .onFailure { error ->
+                      handleError(error)
+                      dispatchViewEvent(
+                        DisplayMessage(Snack(resourceProvider.getString(R.string.generic_error))),
+                      )
+                    }
                 }
               },
               onError = {
@@ -70,7 +84,9 @@ internal class HomeViewModel @Inject constructor(
       }
 
       SetWallpaper -> {
-        dispatchViewEvent(Effect(LaunchCropAndSetWallpaperFlow))
+        currentState.currentWallpaper?.let { photo ->
+          dispatchViewEvent(Effect(LaunchCropAndSetWallpaperFlow(photo.rawPhotoUri)))
+        }
       }
     }
   }

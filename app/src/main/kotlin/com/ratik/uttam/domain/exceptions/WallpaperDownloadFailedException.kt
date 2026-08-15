@@ -1,3 +1,3 @@
 package com.ratik.uttam.domain.exceptions
 
-class WallpaperDownloadFailedException : Exception()
+class WallpaperDownloadFailedException(cause: Throwable? = null) : Exception(cause)
