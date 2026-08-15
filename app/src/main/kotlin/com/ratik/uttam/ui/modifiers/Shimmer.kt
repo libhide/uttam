@@ -42,7 +42,7 @@ fun Modifier.shimmerBackground(
       end = Offset(translateAnimation + GRADIENT_OFFSET, translateAnimation + GRADIENT_OFFSET),
       tileMode = TileMode.Mirror,
     )
-  return@composed this.then(background(brush = brush, shape = shape))
+  return@composed background(brush = brush, shape = shape)
 }
 
 private const val ANIM_DURATION = 1500

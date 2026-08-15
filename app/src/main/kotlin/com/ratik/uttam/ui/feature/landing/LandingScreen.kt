@@ -15,9 +15,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale.Companion.Crop
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.ratik.uttam.R
-import com.ratik.uttam.core.Ignored
 import com.ratik.uttam.core.contract.ViewEvent.Navigate
 import com.ratik.uttam.ui.components.UttamButton
 import com.ratik.uttam.ui.extensions.collectAsEffect
@@ -44,7 +43,7 @@ internal fun LandingScreen(
           is Onboarding -> navigateToOnboarding()
         }
       }
-      else -> Ignored
+      else -> Unit
     }
   }
 

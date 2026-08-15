@@ -37,8 +37,8 @@ android {
     applicationId = "com.ratik.uttam.prod"
     minSdk = 24
     targetSdk = 37
-    versionCode = 21
-    versionName = "4.4"
+    versionCode = 22
+    versionName = "4.5"
 
     buildConfigField(
       "String",
@@ -116,11 +116,9 @@ dependencies {
   // Compose
   val composeBom = platform(libs.androidx.compose.bom)
   implementation(composeBom)
-  androidTestImplementation(composeBom)
-  api(libs.bundles.compose.core)
+  implementation(libs.bundles.compose.core)
   implementation(libs.androidx.activity.compose)
   implementation(libs.androidx.hilt.navigation.compose)
-  implementation(libs.coil)
   implementation(libs.coil.compose)
   implementation(libs.androidx.compose.tooling.preview)
   debugImplementation(libs.androidx.compose.tooling)
@@ -136,7 +134,7 @@ dependencies {
   ksp(libs.hilt.compiler)
 
   // Logging
-  api(libs.timber)
+  implementation(libs.timber)
 
   // Testing
   testImplementation(libs.junit)
