@@ -73,7 +73,14 @@ internal fun SettingsScreen(
       navigateUp = navigateUp,
     )
 
-    LazyColumn(state = listState, contentPadding = PaddingValues(horizontal = SpacingNormal)) {
+    LazyColumn(
+      state = listState,
+      contentPadding = PaddingValues(
+        start = SpacingNormal,
+        top = SpacingLarge,
+        end = SpacingNormal,
+      ),
+    ) {
       item {
         UttamText.CaptionBold(
           text = stringResource(id = R.string.category_general),
