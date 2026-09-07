@@ -1,6 +1,6 @@
 [versions]
 # Core
-kotlin = "2.4.10"
+kotlin = "2.4.20"
 android-gradle-plugin = "9.3.1"
 hilt = "2.60.1"
 ksp = "2.3.11"
