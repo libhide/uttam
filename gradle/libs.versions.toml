@@ -11,7 +11,7 @@ hilt-work = "1.4.0"
 splashscreen = "1.2.0"
 
 # Compose
-androidx-compose-bom = "2026.08.00"
+androidx-compose-bom = "2026.09.00"
 androidx-activity = "1.13.0"
 androidx-hilt-navigation-compose = "1.4.0"
 coil = "2.7.0"
